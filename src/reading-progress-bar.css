@@ -60,17 +60,23 @@
 }
 
 .progressbar .labels {
+    display: flex;
+    flex-direction: row;
     max-width: 1280px;
     margin: 0 auto;
     padding: 0 2em;
+}
+
+.progressbar .labels-element {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
 }
 
 .progressbar h4 {
-    position: relative;
-    float: left;
-    cursor: pointer;
-    font-style: normal;
     color: #4598B5;
     transition:
         color 150ms ease-in,
@@ -81,7 +87,7 @@
     color: #1f4484;
 }
 
-.progressbar span::after {
+.progressbar span {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -98,6 +104,6 @@
         background-color 150ms ease-in;
 }
 
-.progressbar .read span::after {
+.progressbar .read span {
     border-color: #1f4484;
 }

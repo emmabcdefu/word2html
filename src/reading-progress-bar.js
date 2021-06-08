@@ -26,14 +26,11 @@ $(document).ready(function () {
     holder.append('<div class="labels"></div>');
     var labels = $('.progressbar .labels');
     $('h3').each(function () {
-        var code = '<div><h4>' + $(this).text() + '</h4><span></span></div>';
+        var code = '<div class="labels-element"><h4>' + $(this).text() + '</h4><span></span></div>';
         labels.append(code);
     });
-    var points = labels.find('div');
-    var h4 = labels.find('h4');
-    var span = labels.find('span');
-    h4.css('width', 100 / $('h3').length + '%');
-    span.css('width', 100 / $('h3').length + '%');
+    var divs = labels.find('div');
+    divs.css('width', 100 / $('h3').length + '%');
 
     // match height of shim
     // stop layout jumping when progress bar fixes to / unfixes
@@ -48,8 +45,7 @@ $(document).ready(function () {
 
     // position indicator bar so it starts at first dot
     function setIndicatorX() {
-        var point = h4.eq(0);
-        var xpos = point.offset().left + (point.width() / 2);
+        var xpos = divs.eq(0).offset().left + divs.eq(0).width() /2;
         indicator.css('left', xpos + 'px');
     }
     setIndicatorX();
@@ -100,7 +96,7 @@ $(document).ready(function () {
             // dots
             // if before first section
             if (currentPosition < $('h3').eq(0).offset().top) {
-                points.removeClass('reading read');
+                divs.removeClass('reading read');
                 section = -1;
             }
             // if after first section
@@ -108,12 +104,12 @@ $(document).ready(function () {
                 $('h3').each(function () {
                     var sectionTop = $(this).offset().top;
                     if (currentPosition >= sectionTop) {
-                        points.removeClass('reading');
-                        points.eq(sectionIndex).addClass('reading');
-                        points.eq(sectionIndex).addClass('read');
+                        divs.removeClass('reading');
+                        divs.eq(sectionIndex).addClass('reading');
+                        divs.eq(sectionIndex).addClass('read');
                         section = sectionIndex;
                     } else {
-                        points.eq(sectionIndex).removeClass('read');
+                        divs.eq(sectionIndex).removeClass('read');
                     }
                     sectionIndex++;
                 });
@@ -122,17 +118,17 @@ $(document).ready(function () {
             var barWidth = 0;
             // if before start
             if (section == -1) {
-                var point = h4.eq(0);
+                var point = divs.eq(0);
                 barWidth = point.offset().left + (point.width() / 2);
             }
             // if after end
-            else if (section >= (h4.length - 1)) {
-                var point = h4.eq((h4.length - 1));
+            else if (section >= (divs.length - 1)) {
+                var point = divs.eq((divs.length - 1));
                 barWidth = point.offset().left + (point.width() / 2);
             }
             // if within document
             else {
-                var startPoint = h4.eq(section);
+                var startPoint = divs.eq(section);
                 var startPointX = startPoint.offset().left;
                 var startPointWidth = startPoint.width();
                 var startSection = $('h3').eq(section);
@@ -151,14 +147,15 @@ $(document).ready(function () {
     setPosition();
     $(window).scroll(function () {
         setPosition();
+        setIndicatorX();
     });
     $(window).resize(function () {
         setPosition();
     });
 
     // on click, scroll to target section
-    points.click(function () {
-        var sectionIndex = points.index($(this));
+    divs.click(function () {
+        var sectionIndex = divs.index($(this));
         var targetY = $('h3').eq(sectionIndex).offset().top - (triggerPoint * .92);
         $('html, body').animate({
             scrollTop: targetY
