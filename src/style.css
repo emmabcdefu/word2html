@@ -1,6 +1,7 @@
 body {
     margin: 0;
     font-family: Lato;
+    background-color:#D6E1E5;
 }
 
 .container {
@@ -110,6 +111,8 @@ img {
     justify-content: center;
     align-items: center;
 }
+
+/* Responsive */
 
 @media only screen and (min-width: 1000px) {
     
