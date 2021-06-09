@@ -1,0 +1,22 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+body {
+  position: relative;
+  color: white;
+  height: calc(100vh - 16px);
+  background-color: #121212;
+  font-family: 'Open Sans',sans-serif;
+  overflow-y: hidden;
+}
+
+.divstyle {
+  max-width: calc(100% - 50px);
+  background-color: #1e1e1e;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 10px;
+  margin-right: auto;
+  margin-left: auto;
+}
