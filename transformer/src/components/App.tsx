@@ -1,9 +1,10 @@
 import { ThemeProvider } from '@material-ui/core/styles';
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import './App.global.css';
-import StepOne from './StepOne/StepOne';
+import StepOne from './Steps/StepOne';
+import StepTwo from './Steps/StepTwo';
 import Theme from '../theme/theme';
 
 export default function App() {
@@ -11,7 +12,9 @@ export default function App() {
     <ThemeProvider theme={Theme}>
       <Router>
         <Switch>
-          <Route path="/" component={StepOne} />
+          <Route exact path="/" component={StepOne} />
+          <Route path="/S2" component={StepTwo} />
+          <Redirect to={"/"} />
         </Switch>
       </Router>
     </ThemeProvider>

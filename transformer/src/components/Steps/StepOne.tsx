@@ -4,6 +4,7 @@ import fs from 'fs';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
 import { AddCircle } from '@material-ui/icons';
+import Information from './Transform';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,13 +20,15 @@ const useStyles = makeStyles((theme) => ({
 const StepOne = () => {
     const classes = useStyles();
 
-    const savefile = (e: any/* Typescript don't support input file */) => {
-        fs.readFile(e.target.files[0].path, 'utf8', (err, data) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            console.log(data);
+    const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        const element = event.target as HTMLInputElement;
+        element.value = '';
+    };
+
+    const readFile = (event: any/* Typescript don't support input file */) => {
+        fs.readFile(event.target.files[0].path, 'utf8', (_, data: string) => {
+            const file = new Information(data);
+            file.clean();
         });
     };
 
@@ -42,7 +45,8 @@ const StepOne = () => {
                     className={classes.input}
                     id="contained-button-file"
                     type="file"
-                    onChange={savefile}
+                    onChange={readFile}
+                    onClick={onInputClick}
                 />
                 <label htmlFor="contained-button-file">
                     <Button
