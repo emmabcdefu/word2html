@@ -1,7 +1,7 @@
 
 class Information {
     htm: string;
-    json: { [key: string]: string | Array<{ [key: string]: string | Array<{ [key: string]: string | Array<string> }> }> };
+    json: any;
 
     constructor(htm: string) {
         this.htm = htm;
@@ -106,10 +106,8 @@ class Information {
             // Detect what is inside the content
 
             // function to analyse what is inside a p html tag
-            const detect_inside_p = (j: number, start: number, content: Array<{ [key: string]: string | Array<string> }>) => {
-                let elem = section.substr(start+1, end-start-1).trim();
+            const detect_inside_p = (className: string, elem: string, content: any) => {
                 if (elem != "") {
-                    let className = section.substr(j + 9, Math.min(section.indexOf(" ", j + 9)-j-9, section.indexOf(">", j + 9)-j-9));
                     if (className == "MsoNormal") { // p or img
                         if (elem.substr(0, 4) == "<img") {
                             let srcStart = elem.indexOf("src=") + 5;
@@ -160,68 +158,91 @@ class Information {
                 }
             }
 
-            let content = [];
+            let content: any;
+            content = [];
             let end = 0;
             while (section.indexOf("<", end) != -1) {
                 let j = section.indexOf("<", end);
                 let start = section.indexOf(">", j + 1);
 
                 if (section[j + 1] == "p") { // p, img, list, title, figure caption
-
                     end = section.indexOf("</p>", start + 1);
-                    detect_inside_p(j, start, content);
+
+                    let className = section.substr(j + 9, Math.min(section.indexOf(" ", j + 9)-j-9, section.indexOf(">", j + 9)-j-9));
+                    let elem = section.substr(start+1, end-start-1).trim();
+                    detect_inside_p(className, elem, content);
 
                 } else if (section.substr(end+1, 5) == "table") {
                     end = section.indexOf("</table>", start + 1);
                     const table = section.substr(start+1, end-start-1);
                     
                     let tr_end = 0;
-                    while (section.indexOf("<tr", tr_end) != -1) {
-                        let tr_start = table.indexOf(">", table.indexOf("<tr", start + 1) + 1) + 1;
-                        let tr_end = table.indexOf("</tr>");
-                        let tr_inside = table.substr(tr_start, tr_end).trim();
+                    while (table.indexOf("<tr", tr_end) != -1) {
+                        let tr_start = table.indexOf(">", table.indexOf("<tr", tr_end)) + 1;
+                        tr_end = table.indexOf("</tr>", tr_start);
+                        let tr_inside = table.substr(tr_start, tr_end-tr_start).trim();
 
                         let nb_td = table.split('</td>').length;
                         if (nb_td == 1) {
-                            const td_start = tr_inside.indexOf(">", table.indexOf("<td", start + 1) + 1) + 1;
-                            const td_end = tr_inside.indexOf("</td>");
-                            const td_inside = tr_inside.substr(td_start, td_end).trim();
+                            let td_start = tr_inside.indexOf(">", table.indexOf("<td")) + 1;
+                            let td_end = tr_inside.indexOf("</td>", td_start);
+                            let td_inside = tr_inside.substr(td_start, td_end-td_start).trim();
     
                             let p_end = 0;
                             while (td_inside.indexOf("<p", p_end) != -1) {
-                                let p_start = td_inside.indexOf(">", table.indexOf("<p", start + 1) + 1) + 1;
-                                let start = td_inside.indexOf(">", j + 1);
-                                // No table inside a table
-                                td_inside_end = section.indexOf("</p>", start + 1);
-                                detect_inside_p(j, start, content);
-                            };
-                        }
-                    }
-                    
-                    
-                    if (nb_tr == 1 && nb_td == 1 ) {
-                        const td_start = table.indexOf(">", table.indexOf("<td", start + 1) + 1) + 1;
-                        const td_end = table.indexOf("</td>");
-                        const inside = table.substr(td_start, td_end).trim();
+                                let k = td_inside.indexOf("<p", p_end);
+                                let p_start = td_inside.indexOf(">", k) + 1;
+                                p_end = tr_inside.indexOf("</p>", p_start) + 4;
+                                let p_inside = tr_inside.substr(p_start, p_end-p_start).trim();
 
-                        let inside_end = 0;
-                        while (inside.indexOf("<", inside_end) != -1) {
-                            let j = inside.indexOf("<", inside_end);
-                            let start = inside.indexOf(">", j + 1);
-                            // No table inside a table
-                            inside_end = section.indexOf("</p>", start + 1);
-                            detect_inside_p(j, start, content);
-                        };
-                    } else {
-                        // let tr_end = 0;
-                        // while (table.indexOf("<tr ", tr_end) != -1) {
-                        //     let k = table.indexOf("<tr ", tr_end);
-                        //     let tr_start = table.indexOf(">", k + 1);
-                        // }
-                        content.push({
-                            element: "table",
-                            content: section.substr(start+1, end-start-1)
-                        });
+                                // No table inside a table
+                                let className = section.substr(k + 9, Math.min(section.indexOf(" ", k + 9)-k-9, section.indexOf(">", k + 9)-k-9));
+                                detect_inside_p(className, p_inside, content);
+                            };
+                        } else if (nb_td == 2) {
+                            let td_start1 = tr_inside.indexOf(">", table.indexOf("<td")) + 1;
+                            let td_end1 = tr_inside.indexOf("</td>", td_start1);
+                            let td_inside1 = tr_inside.substr(td_start1, td_end1-td_start1).trim();
+
+                            let content1: Array<{ [key: string]: string | Array<string> }>;
+                            content1 = [];
+                            let p_end = 0;
+                            while (td_inside1.indexOf("<p", p_end) != -1) {
+                                let k = td_inside1.indexOf("<p", p_end);
+                                let p_start = td_inside1.indexOf(">", k) + 1;
+                                p_end = tr_inside.indexOf("</p>", p_start) + 4;
+                                let p_inside = tr_inside.substr(p_start, p_end-p_start).trim();
+
+                                // No table inside a table
+                                let className = section.substr(k + 9, Math.min(section.indexOf(" ", k + 9)-k-9, section.indexOf(">", k + 9)-k-9));
+                                detect_inside_p(className, p_inside, content1);
+                            };
+
+                            let td_start2 = tr_inside.indexOf(">", table.indexOf("<td")) + 1;
+                            let td_end2 = tr_inside.indexOf("</td>", td_start2);
+                            let td_inside2 = tr_inside.substr(td_start2, td_end2-td_start2).trim();
+
+                            let content2: Array<{ [key: string]: string | Array<string> }>;
+                            content2 = [];
+                            p_end = 0;
+                            while (td_inside2.indexOf("<p", p_end) != -1) {
+                                let k = td_inside2.indexOf("<p", p_end);
+                                let p_start = td_inside2.indexOf(">", k) + 1;
+                                p_end = tr_inside.indexOf("</p>", p_start) + 4;
+                                let p_inside = tr_inside.substr(p_start, p_end-p_start).trim();
+
+                                // No table inside a table
+                                let className = section.substr(k + 9, Math.min(section.indexOf(" ", k + 9)-k-9, section.indexOf(">", k + 9)-k-9));
+                                detect_inside_p(className, p_inside, content2);
+                            };
+                            console.log(content1, content2);
+
+                            content.push({
+                                element: "div",
+                                content1: content1,
+                                content2: content2
+                            });
+                        }
                     }
                 } else {
                     end += 1;
