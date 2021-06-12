@@ -28,7 +28,7 @@ const StepOne = () => {
     const readFile = (event: any/* Typescript don't support input file */) => {
         fs.readFile(event.target.files[0].path, 'utf8', (_, data: string) => {
             const file = new Information(data);
-            file.clean();
+            file.analyse();
         });
     };
 

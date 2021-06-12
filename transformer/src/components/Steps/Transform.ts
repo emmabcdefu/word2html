@@ -8,7 +8,7 @@ class Information {
         this.json = {};
     };
 
-    clean() {
+    analyse() {
 
         // Collect the title
         const title_start = this.htm.indexOf("<title>");
@@ -102,60 +102,70 @@ class Information {
                 section = section.replace("</b>", "</strong>");
             }
 
-
             // Detect what is inside the content
 
-            // function to analyse what is inside a p html tag
-            const detect_inside_p = (className: string, elem: string, content: any) => {
-                if (elem != "") {
-                    if (className == "MsoNormal") { // p or img
-                        if (elem.substr(0, 4) == "<img") {
-                            let srcStart = elem.indexOf("src=") + 5;
-                            let srcEnd = elem.indexOf('"', srcStart);
-                            content.push({
-                                element: "img",
-                                src: elem.substr(srcStart, srcEnd-srcStart)
-                            });
-                        } else {
-                            content.push({
-                                element: "p",
-                                content: elem
-                            });
-                        }
-                    } else if (className == "MsoCaption" || className == "MsoCommentText") { // figure caption
-                        content.push({
-                            element: "fig-caption",
-                            content: elem
-                        });
-                    } else if (className == "MsoListParagraph") { // list
-                        if (content.length == 0 || content[content.length - 1].element != "list") {
-                            content.push({
-                                element: "list",
-                                content: [elem]
-                            });
-                        } else {
-                            // This is not an error "content[content.length - 1].content!" will always be a list
-                            // @ts-ignore
-                            content[content.length - 1].content!.push(elem);
-                        }
-                    } else if (className == "EHead2") { // title
-                        if (elem.substr(0, 4) == "<img") {
-                            let srcStart = elem.indexOf("src=") + 5;
-                            let srcEnd = elem.indexOf('"', srcStart);
-                            content.push({
-                                element: "img",
-                                src: elem.substr(srcStart, srcEnd-srcStart)
-                            });
-                        } else {
-                            content.push({
-                                element: "h2",
-                                content: elem
-                            });
-                        }
+            // function to analyse what class is a p html tag
+            const detect_class_p = (elem: string) => {
+                if (elem.indexOf("class=") == -1) {
+                    console.error(`The element ${elem} has no class !`);
+                    return null;
+                } else {
+                    let c_start = elem.indexOf("class=") + 6;
+                    if (elem.indexOf(" ", c_start) == -1) {
+                        let c_end = elem.indexOf(">", c_start);
+                        return elem.substr(c_start, c_end - c_start);
                     } else {
-                        console.error(`The element ${className} isn't recognize`);
-                    };
+                        let c_end = Math.min(elem.indexOf(" ", c_start), elem.indexOf(">", c_start));
+                        return elem.substr(c_start, c_end - c_start);
+                    }
+                    
                 }
+            }
+
+            // function to analyse what is inside a p html tag
+            const detect_inside_p = (className: string, elem: string) => {
+                if (className == "MsoNormal") { // p or img
+                    if (elem.substr(0, 4) == "<img") {
+                        let srcStart = elem.indexOf("src=") + 5;
+                        let srcEnd = elem.indexOf('"', srcStart);
+                        return {
+                            element: "img",
+                            src: elem.substr(srcStart, srcEnd-srcStart)
+                        };
+                    } else {
+                        return {
+                            element: "p",
+                            content: elem
+                        };
+                    }
+                } else if (className == "MsoCaption" || className == "MsoCommentText") { // figure caption
+                    return {
+                        element: "fig-caption",
+                        content: elem
+                    };
+                } else if (className == "MsoListParagraph") { // list
+                    return {
+                        element: "list",
+                        content: elem
+                    }
+                } else if (className == "EHead2") { // title
+                    if (elem.substr(0, 4) == "<img") {
+                        let srcStart = elem.indexOf("src=") + 5;
+                        let srcEnd = elem.indexOf('"', srcStart);
+                        return {
+                            element: "img",
+                            src: elem.substr(srcStart, srcEnd-srcStart)
+                        };
+                    } else {
+                        return {
+                            element: "h2",
+                            content: elem
+                        };
+                    }
+                } else {
+                    console.error(`The element ${className} isn't recognize`);
+                    return { element: null }
+                };
             }
 
             let content: any;
@@ -168,9 +178,17 @@ class Information {
                 if (section[j + 1] == "p") { // p, img, list, title, figure caption
                     end = section.indexOf("</p>", start + 1);
 
-                    let className = section.substr(j + 9, Math.min(section.indexOf(" ", j + 9)-j-9, section.indexOf(">", j + 9)-j-9));
                     let elem = section.substr(start+1, end-start-1).trim();
-                    detect_inside_p(className, elem, content);
+                    if (elem != "") {
+                        let className = detect_class_p(section.substr(j, start-j+1));
+                        if (className != null) {
+                            let result = detect_inside_p(className, elem);
+                            if (result.element !== null) {
+                                content.push(result);
+                            }
+                        };
+                    };
+                    
 
                 } else if (section.substr(end+1, 5) == "table") {
                     end = section.indexOf("</table>", start + 1);
@@ -196,15 +214,22 @@ class Information {
                                 let p_inside = tr_inside.substr(p_start, p_end-p_start).trim();
 
                                 // No table inside a table
-                                let className = section.substr(k + 9, Math.min(section.indexOf(" ", k + 9)-k-9, section.indexOf(">", k + 9)-k-9));
-                                detect_inside_p(className, p_inside, content);
+                                if (p_inside != "") {
+                                    let className = detect_class_p(td_inside.substr(k, p_start-k+1));
+                                    if (className != null) {
+                                        let result = detect_inside_p(className, p_inside)
+                                        if (result.element !== null) {
+                                            content.push(result);
+                                        }
+                                    };
+                                };
                             };
                         } else if (nb_td == 2) {
                             let td_start1 = tr_inside.indexOf(">", table.indexOf("<td")) + 1;
                             let td_end1 = tr_inside.indexOf("</td>", td_start1);
                             let td_inside1 = tr_inside.substr(td_start1, td_end1-td_start1).trim();
 
-                            let content1: Array<{ [key: string]: string | Array<string> }>;
+                            let content1: any;
                             content1 = [];
                             let p_end = 0;
                             while (td_inside1.indexOf("<p", p_end) != -1) {
@@ -214,15 +239,22 @@ class Information {
                                 let p_inside = tr_inside.substr(p_start, p_end-p_start).trim();
 
                                 // No table inside a table
-                                let className = section.substr(k + 9, Math.min(section.indexOf(" ", k + 9)-k-9, section.indexOf(">", k + 9)-k-9));
-                                detect_inside_p(className, p_inside, content1);
+                                if (p_inside != "") {
+                                    let className = detect_class_p(td_inside1.substr(k, p_start-k+1));
+                                    if (className != null) {
+                                        let result = detect_inside_p(className, p_inside)
+                                        if (result.element !== null) {
+                                            content1.push(result);
+                                        }
+                                    };
+                                };
                             };
 
                             let td_start2 = tr_inside.indexOf(">", table.indexOf("<td")) + 1;
                             let td_end2 = tr_inside.indexOf("</td>", td_start2);
                             let td_inside2 = tr_inside.substr(td_start2, td_end2-td_start2).trim();
 
-                            let content2: Array<{ [key: string]: string | Array<string> }>;
+                            let content2: any;
                             content2 = [];
                             p_end = 0;
                             while (td_inside2.indexOf("<p", p_end) != -1) {
@@ -232,10 +264,16 @@ class Information {
                                 let p_inside = tr_inside.substr(p_start, p_end-p_start).trim();
 
                                 // No table inside a table
-                                let className = section.substr(k + 9, Math.min(section.indexOf(" ", k + 9)-k-9, section.indexOf(">", k + 9)-k-9));
-                                detect_inside_p(className, p_inside, content2);
+                                if (p_inside != "") {
+                                    let className = detect_class_p(td_inside2.substr(k, p_start-k+1));
+                                    if (className != null) {
+                                        let result = detect_inside_p(className, p_inside)
+                                        if (result.element !== null) {
+                                            content2.push(result);
+                                        }
+                                    };
+                                };
                             };
-                            console.log(content1, content2);
 
                             content.push({
                                 element: "div",
