@@ -1,5 +1,6 @@
 class Information {
-  htm: string; json: any;
+  htm: string;
+  json: any;
 
   constructor(htm: string) {
     this.htm = htm;
@@ -25,6 +26,47 @@ class Information {
       index = body.indexOf('<p class=E1Level', indexSection[indexSection.length - 1] + 1);
     }
     this.json.sections = [];
+
+    // Function that clean an html file
+    const clean = (element: string) => {
+      let elem = element.trim();
+      while (elem.indexOf('<span') !== -1) {
+        const cut1 = elem.indexOf('<span');
+        const cut2 = elem.indexOf('>', cut1);
+        elem = elem.substr(0, cut1) + elem.substr(cut2 + 1, elem.length);
+      }
+      while (elem.indexOf('</span>') !== -1) {
+        elem = elem.replace('</span>', '');
+      }
+      while (elem.indexOf('&nbsp;') !== -1) {
+        elem = elem.replace('&nbsp;', '');
+      }
+      while (elem.indexOf('�') !== -1) {
+        elem = elem.replace('�', '');
+      }
+      while (elem.indexOf('&gt;') !== -1) {
+        elem = elem.replace('&gt;', '');
+      }
+      while (elem.indexOf('</i><i>') !== -1) {
+        elem = elem.replace('</i><i>', '');
+      }
+      while (elem.indexOf('<sup><sup>') !== -1) {
+        elem = elem.replace('<sup><sup>', '<sup>');
+      }
+      while (elem.indexOf('</sup></sup>') !== -1) {
+        elem = elem.replace('</sup></sup>', '</sup>');
+      }
+      while (elem.indexOf('<b></b>') !== -1) {
+        elem = elem.replace('<b></b>', '');
+      }
+      while (elem.indexOf('<b>') !== -1) {
+        elem = elem.replace('<b>', '<strong>');
+      }
+      while (elem.indexOf('</b>') !== -1) {
+        elem = elem.replace('</b>', '</strong>');
+      }
+      return elem;
+    };
 
     // Detect title of sections and element inside them
     for (const i in indexSection) {
@@ -62,44 +104,7 @@ class Information {
       let section = body.substr(elem1, elem2 - elem1);
 
       // Clean content
-      section = section.trim();
-      while (section.indexOf('<span') !== -1) {
-        const cut1 = section.indexOf('<span');
-        const cut2 = section.indexOf('>', cut1);
-        section = section.substr(0, cut1) + section.substr(cut2 + 1, section.length);
-      }
-      while (section.indexOf('</span>') !== -1) {
-        section = section.replace('</span>', '');
-      }
-      while (section.indexOf('&nbsp;') !== -1) {
-        section = section.replace('&nbsp;', '');
-      }
-      while (section.indexOf('�') !== -1) {
-        section = section.replace('�', '');
-      }
-      while (section.indexOf('&gt;') !== -1) {
-        section = section.replace('&gt;', '');
-      }
-      while (section.indexOf('</i><i>') !== -1) {
-        section = section.replace('</i><i>', '');
-      }
-      while (section.indexOf('<sup><sup>') !== -1) {
-        section = section.replace('<sup><sup>', '<sup>');
-      }
-      while (section.indexOf('</sup></sup>') !== -1) {
-        section = section.replace('</sup></sup>', '</sup>');
-      }
-      while (section.indexOf('<b></b>') !== -1) {
-        section = section.replace('<b></b>', '');
-      }
-      while (section.indexOf('<b>') !== -1) {
-        section = section.replace('<b>', '<strong>');
-      }
-      while (section.indexOf('</b>') !== -1) {
-        section = section.replace('</b>', '</strong>');
-      }
-
-      // Detect what is inside the content
+      section = clean(section);
 
       // function to analyse what class is a p html tag
       const detectClassP = (elem: string) => {
@@ -117,11 +122,11 @@ class Information {
       };
 
       // function to analyse what is inside a p html tag
-      const detectInsideP = (className: string, elem: string) => {
-        elem = elem.trim();
+      const detectInsideP = (className: string, element: string) => {
+        let elem = element.trim();
         if (elem.substr(0, 4) === '<img') {
           const srcStart = elem.indexOf('src=') + 5;
-          const srcEnd = elem.indexOf("'", srcStart);
+          const srcEnd = elem.indexOf('"', srcStart);
           return { element: 'img', src: elem.substr(srcStart, srcEnd - srcStart) };
         }
         if (className === 'MsoNormal') { // p or img
@@ -152,8 +157,26 @@ class Information {
         return null;
       };
 
-      let content: any;
-      content = [];
+      // function that analyse
+      const rewriteA = (elem: string) => {
+        const beforeA = elem.indexOf('<a');
+        const beforeA2 = elem.indexOf('>', beforeA) + 1;
+        const afterA = elem.indexOf('</a>');
+        const tagA = elem.substr(beforeA, beforeA2 - beforeA);
+        const insideA = elem.substr(beforeA2, afterA - beforeA2);
+
+        if (tagA.indexOf('href="#_ftn') === -1) { // This is not a footnote
+          const txt = elem.substr(0, beforeA) + insideA + elem.substr(afterA + 4, elem.length);
+          return { footnote: false, txt: txt };
+        }
+        const number = tagA[tagA.indexOf('#_ftn') + 5];
+        const txt = elem.substr(0, beforeA) + `<a href="#footnote${number}">` + insideA + '</a>' + elem.substr(afterA + 4, elem.length);
+        return { footnote: true, nb: number, txt: txt };
+      };
+
+      // Detect what is inside the content
+      const content = [];
+      const footnote = [];
       let end = 0;
       while (section.indexOf('<', end) !== -1) {
         const start = section.indexOf('<', end);
@@ -164,7 +187,15 @@ class Information {
           end = section.indexOf('</p>', start);
           const elem = section.substr(start, end - start);
           const result = detectP(elem);
-          if (result != null) content.push(result);
+          if (result != null) {
+            if (result?.content && result.content.indexOf('<a') !== -1) {
+              const newContent = rewriteA(result?.content);
+              if (newContent.footnote) footnote.push(newContent.nb);
+              content.push({element: result.element, content: newContent.txt });
+            } else {
+              content.push(result);
+            }
+          }
         } else if (section.substr(start + 1, 5) === 'table') {
           end = section.indexOf('</table>', start);
           const table = section.substr(start + 1, end - start - 1);
@@ -192,7 +223,6 @@ class Information {
                 if (result != null) content.push(result);
               }
             } else {
-              
               let mainResult: any;
               mainResult = { element: nbTd === 2 ? 'div' : 'row-images' };
 
@@ -229,6 +259,25 @@ class Information {
       this.json.sections.push({
         title: body.substr(index1 + 1, index2 - index1 - 1),
         content: content,
+        footnote: footnote,
+      });
+    }
+
+    // Add info of footnote
+    this.json.footnote = [];
+    let end = 0;
+    while (body.indexOf('<p class=MsoFootnoteText', end) !== -1) {
+      
+      const start = body.indexOf('>', body.indexOf('<p class=MsoFootnoteText', end)) + 1;
+      end = body.indexOf('</p>', start);
+      const inside = clean(body.substr(start, end - start));
+
+      const number = inside[inside.indexOf('#_ftnref') + 8];
+      const afterA = inside.indexOf('</a>') + 4;
+
+      this.json.footnote.push({
+        nb: number,
+        info: inside.substr(afterA, inside.length).trim(),
       });
     }
 
