@@ -280,8 +280,6 @@ class Information {
         info: inside.substr(afterA, inside.length).trim(),
       });
     }
-
-    console.log(this.json);
   }
 }
 
