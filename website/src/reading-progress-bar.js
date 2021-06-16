@@ -159,7 +159,7 @@ $(document).ready(function () {
         var targetY = $('h3').eq(sectionIndex).offset().top - (triggerPoint * .92);
         $('html, body').animate({
             scrollTop: targetY
-        }, 600, 'easeInOutCubic');
+        }, 0, 'easeInOutCubic');
     });
 
 });

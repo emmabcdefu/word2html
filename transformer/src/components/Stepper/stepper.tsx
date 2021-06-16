@@ -12,104 +12,110 @@ import EditIcon from '@material-ui/icons/Edit';
 import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
-    stepper: {
-        background: '#424242',
-    },
-    txt: {
-        color: '#fff',
-    }
+  stepper: {
+    background: '#424242',
+  },
+  activate: {
+    color: '#fff',
+  },
+  default: {
+    color: 'rgba(255, 255, 255, 0.5)',
+  },
 }));
 
 const Connector = withStyles({
-    alternativeLabel: {
-        top: 22,
+  alternativeLabel: {
+    top: 22,
+  },
+  active: {
+    '& $line': {
+      backgroundImage:
+        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
     },
-    active: {
-        '& $line': {
-            backgroundImage:
-                'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-        },
+  },
+  completed: {
+    '& $line': {
+      backgroundImage:
+        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
     },
-    completed: {
-        '& $line': {
-            backgroundImage:
-                'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-        },
-    },
-    line: {
-        height: 3,
-        border: 0,
-        backgroundColor: '#eaeaf0',
-        borderRadius: 1,
-    },
+  },
+  line: {
+    height: 3,
+    border: 0,
+    backgroundColor: '#eaeaf0',
+    borderRadius: 1,
+  },
 })(StepConnector);
 
 const useStepIconStyles = makeStyles({
-    root: {
-        backgroundColor: '#ccc',
-        zIndex: 1,
-        color: '#fff',
-        width: 50,
-        height: 50,
-        display: 'flex',
-        borderRadius: '50%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    active: {
-        backgroundImage:
-            'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
-        boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
-    },
-    completed: {
-        backgroundImage:
-            'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
-    },
+  root: {
+    backgroundColor: '#ccc',
+    zIndex: 1,
+    color: '#fff',
+    width: 50,
+    height: 50,
+    display: 'flex',
+    borderRadius: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  active: {
+    backgroundImage:
+      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+  },
+  completed: {
+    backgroundImage:
+      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+  },
 });
 
 function StepIcon(props: StepIconProps) {
-    const classes = useStepIconStyles();
-    const { active, completed } = props;
+  const classes = useStepIconStyles();
+  const { active, completed } = props;
 
-    const icons: { [index: string]: React.ReactElement } = {
-        1: <SaveIcon />,
-        2: <DescriptionIcon />,
-        3: <EditIcon />,
-    };
+  const icons: { [index: string]: React.ReactElement } = {
+    1: <SaveIcon />,
+    2: <DescriptionIcon />,
+    3: <EditIcon />,
+  };
 
-    return (
-        <div
-            className={clsx(classes.root, {
-                [classes.active]: active,
-                [classes.completed]: completed,
-            })}
-        >
-            {icons[String(props.icon)]}
-        </div>
-    );
+  return (
+    <div
+      className={clsx(classes.root, {
+        [classes.active]: active,
+        [classes.completed]: completed,
+      })}
+    >
+      {icons[String(props.icon)]}
+    </div>
+  );
 }
 
-const CustomStepper = (props: { steps: string[]; activeStep: number; }) => {
+const CustomStepper = (props: { steps: string[]; activeStep: number }) => {
+  const { steps, activeStep } = props;
+  const classes = useStyles();
 
-    const { steps, activeStep } = props;
-    const classes = useStyles();
-
-    return (
-        <div>
-            <Stepper
-                activeStep={activeStep}
-                alternativeLabel
-                connector={<Connector />}
-                className={classes.stepper}
-            >
-                {steps.map((label: string) => (
-                    <Step key={label}>
-                        <StepLabel StepIconComponent={StepIcon}><Typography className={classes.txt}>{label}</Typography></StepLabel>
-                    </Step>
-                ))}
-            </Stepper>
-        </div>
-    );
-}
+  return (
+    <div>
+      <Stepper
+        activeStep={activeStep}
+        alternativeLabel
+        connector={<Connector />}
+        className={classes.stepper}
+      >
+        {steps.map((label: string) => (
+          <Step key={label}>
+            <StepLabel StepIconComponent={StepIcon}>
+              <Typography className={steps[activeStep] === label ? classes.activate: classes.default}>
+                {label}
+              </Typography>
+            </StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+    </div>
+  );
+};
 
 export default CustomStepper;
