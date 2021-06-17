@@ -36,8 +36,9 @@ const StepTwo: React.FC<ChildProps> = (props) => {
 
   const readFile = (event: any /* Typescript don't support input file */) => {
     fs.readFile(event.target.files[0].path, 'utf8', (_, data: string) => {
-      //TODO: need to save the path
-      props.setInfo(analyse(data));
+      const info = analyse(data);
+      info.path = event.target.files[0].path.split('\\').slice(0, -1).reduce( (a:string ,b:string) => { return a+'\\'+b });
+      props.setInfo(info);
       props.handleNext();
     });
   };

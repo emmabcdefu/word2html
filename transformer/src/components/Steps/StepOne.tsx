@@ -9,6 +9,10 @@ const StepOne: React.FC = () => {
       <p>
         Warning: Do not try to delete the folder of image that has been created
       </p>
+      {/* TODO: 
+        * - add images
+        * - tell to put the htm file into the folder
+        */}
     </div>
   );
 };

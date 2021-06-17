@@ -19,13 +19,13 @@ const useStyles = makeStyles(() => ({
     'justify-content': 'space-evenly',
   },
   flexitem: {
-    width: 'calc(50% - 52px)',
+    width: 'calc(50% - 68px)',
   },
   blacktext: {
     color: 'black',
     'background-color': '#D6E1E5',
     'border-radius': '16px',
-    padding: '16px',
+    padding: '16px 16px 16px 42px',
     margin: '10px',
     'margin-right': 'auto',
     'margin-left': 'auto',
@@ -161,7 +161,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
           </div>
         ))}
       </div>
-      <Showresult className={clsx(classes.blacktext, classes.flexitem)} info={props.info} />
+      <Showresult className={clsx(classes.blacktext, classes.flexitem)} info={props.info}/>
     </div>
   );
 };
