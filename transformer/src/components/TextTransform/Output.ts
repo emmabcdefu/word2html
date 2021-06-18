@@ -1,4 +1,5 @@
-const simpleElem: any = (json:any, content: any, tag: string, e: number, s: number) => {
+const simpleElem: any = (content: any, e: number, numbers: any, path: string) => {
+  const tag = content[e].element;
   if (tag === 'p') {
     return `<p>${content[e].content}</p>`;
   }
@@ -15,81 +16,82 @@ const simpleElem: any = (json:any, content: any, tag: string, e: number, s: numb
   }
   if (tag === 'img') {
     const src = content[e].src;
-    return `<img class="center-image image-clickable" src="${json.path + src.substr(src.indexOf('/'), src.length)}">`;
+    return `<img class="center-image image-clickable" src="${path + src.substr(src.indexOf('/'), src.length)}">`;
   }
   if (tag === 'fig-caption') {
     return `<p class="fig-caption">${content[e].content}</p>`;
   }
-  if (tag === 'h2') {
-    let ss = 1;
-    for (let i = 0; i < e; i++) {
-      if (content[i].element === 'h2') {
-        ss++;
-      }
-    }
-    return `<h4 id="${s}.${ss}"><span class="chapter">${s}.${ss}</span>${content[e].content}</h4>`;
+  if (tag === 'footnote') {
+    return `${content[e].content}</br>`;
   }
-  return ``;
+  if (tag === 'h2') {
+    return `<h3 id="${numbers.h2}"><span class="chapter">${numbers.h2}. </span>${content[e].content}</h4>`;
+  }
+  if (tag === 'h3') {
+    return `<h4 id="${numbers.h2}.${numbers.h3}"><span class="chapter">${numbers.h2}.${numbers.h3}</span>${content[e].content}</h4>`;
+  }
+  console.error(`The element ${tag} is not yet handle !`);
+  return '';
 };
 
 export default function write(json: any) {
   let html = `<h1>${json.title}</h1>`;
 
-  for (let s = 0; s < json.sections.length; s++) {
-    const section = json.sections[s];
-    html += `<section>`;
-    html += `<h3 id="${s}"><span class="chapter">${s}. </span>${section.title}</h3>`;
+  const numbers = {
+    h2: 0,
+    h3: 0,
+    footnote: 0,
+  };
 
-    for (let e = 0; e < section.content.length; e++) {
-      const tag = section.content[e].element;
+  for (let e = 0; e < json.content.length; e++) {
+    const tag = json.content[e].element;
 
-      if (tag === 'div') {
-        html += '<div class="two-column"><div>';
-        for (let ee = 0; ee < section.content[e].content1.length; ee++) {
-          const etag = section.content[e].content1[ee].element;
-          html += simpleElem(json, section.content[e].content1, etag, ee, s);
-        }
-        html += '</div><div>';
-        for (let ee = 0; ee < section.content[e].content2.length; ee++) {
-          const etag = section.content[e].content2[ee].element;
-          html += simpleElem(json, section.content[e].content2, etag, ee, s);
-        }
-        html += '</div></div>';
-      } else if (tag === 'row-images') {
+    if (tag === 'h2') {
+      if (numbers.h2 === 0) {
+        html += '<section>';
+      } else {
+        html += '</section><section>';
+      }
+      numbers.h2++;
+      numbers.h3 = 0;
+    } else if (tag === 'h3') {
+      numbers.h3++;
+    } else if (tag === 'footnote') {
+      if (numbers.footnote === 0) {
+        html += '<p class="footnote">';
+      }
+      numbers.footnote++;
+    }
+
+    if (tag === 'row-images' || tag === 'div') {
+      if (tag === 'row-images') {
         html += '<div class="row-images">';
-        let ee = 1;
-        while (Object.prototype.hasOwnProperty.call(section.content[e], `content${ee}`)) {
-          html += '<div>';
-          for (let eee = 0; eee < section.content[e][`content${ee}`].length; eee++) {
-            const etag = section.content[e][`content${ee}`][eee].element;
-            html += simpleElem(json, section.content[e][`content${ee}`], etag, eee, s)
-          }
-          html += '</div>';
-          ee++;
+      } else {
+        html += '<div class="two-column">';
+      }
+
+      let ee = 1;
+      while (Object.prototype.hasOwnProperty.call(json.content[e], `content${ee}`)) {
+        html += '<div>';
+        for (let eee = 0; eee < json.content[e][`content${ee}`].length; eee++) {
+          html += simpleElem(json.content[e][`content${ee}`], eee, numbers, json.path)
         }
         html += '</div>';
-      } else {
-        html += simpleElem(json, section.content, tag, e, s);
+        ee++;
       }
+      html += '</div>';
+    } else {
+      html += simpleElem(json.content, e, numbers, json.path);
     }
-
-    if (section.footnote.length !== 0) {
-      html += `<p class="footnote">`;
-      for (let f = 0; f < section.footnote.length; f++) {
-        const nb = section.footnote[f];
-        const txt = json.footnote[nb - 1].info;
-        html += `<sup id="footnote${nb}">${nb}</sup> ${txt}</br>`;
-      }
-      html += `</p>`;
-    }
-
-    html += `</section>`;
   }
 
+  if (numbers.footnote !== 0) html += `</p>`;
+
+  html += '</section>';
   return style + html;
 }
 
-const style: string = `<style>.container {
+const style = `<style>.container {
   font-family: Lato;
 }
 

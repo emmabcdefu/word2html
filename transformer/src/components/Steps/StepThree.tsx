@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
     '& div:first-of-type': {
       'padding-right': '40px',
     },
-  }
+  },
 }));
 
 interface ChildProps {
@@ -51,17 +51,17 @@ const StepThree: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
   const update = (element: string) => {
-    const html = document.getElementById("html")!;
+    const html = document.getElementById('html')!;
     html.innerHTML = element;
-  }
+  };
 
   return (
     <div className={classes.flex}>
-      <div className={clsx("divstyle", classes.flexitem)}>
+      <div className={clsx('divstyle', classes.flexitem)}>
         <p>Title :</p>
         <TextareaAutosize
-          aria-label="textarea"
-          placeholder="Title"
+          aria-label='textarea'
+          placeholder='Title'
           defaultValue={props.info.title}
           className={classes.textarea}
           onChange={(event) => {
@@ -71,97 +71,80 @@ const StepThree: React.FC<ChildProps> = (props) => {
           }}
         />
 
-        {props.info.sections.map((section: any, s: number) => (
-          <div key={`s${s}`}>
-            <p>Title of the section :</p>
-            <TextareaAutosize
-              aria-label="textarea"
-              placeholder="Title of the section"
-              defaultValue={section.title}
-              className={classes.textarea}
-              onChange={(event) => {
-                props.info.sections[s].title = event.target.value;
-                props.setInfo(props.info);
-                update(write(props.info));
-              }}
-            />
-            {section.content.map((content: any, e: number) => (
-              <div key={`s${s}-e${e}`}>
-                {["p", "list", "h2", "h3", "fig-caption"].includes(content.element) ?
-                  <div>
-                    <Select
-                      defaultValue={content.element}
-                      onChange={(event) => {
-                        props.info.sections[s].content[e].element = event.target.value;
-                        props.setInfo(props.info);
-                        update(write(props.info));
-                      }}
-                    >
-                      <MenuItem value={"p"}>Paragraph</MenuItem>
-                      <MenuItem value={"list"}>Item list</MenuItem>
-                      <MenuItem value={"h2"}>Title (h2)</MenuItem>
-                      <MenuItem value={"h3"}>Title (h3)</MenuItem>
-                      <MenuItem value={"fig-caption"}>Figure caption</MenuItem>
-                    </Select>
-                    <TextareaAutosize
-                      aria-label="textarea"
-                      placeholder="Element"
-                      defaultValue={content.content}
-                      className={classes.textarea}
-                      onChange={(event) => {
-                        props.info.sections[s].content[e].content = event.target.value;
-                        props.setInfo(props.info);
-                        update(write(props.info));
-                      }}
-                    />
-                  </div> : content.element === "div" ?
-                    <div>
-                      <p>complexe element : table</p>
-                      <div className={classes.two_column}>
-                        {["1", "2"].map((nb: string) => {
-                          {
-                            content[`content${nb}`].map((econtent: any, ee: number) => (
-                              <div key={`s${s}-e${e}-nb${nb}-ee${ee}`}>
-                                <Select
-                                  defaultValue={econtent.element}
-                                  onChange={(event) => {
-                                    props.info.sections[s].content[e][`content${nb}`][ee].element = event.target.value;
-                                    props.setInfo(props.info);
-                                    update(write(props.info));
-                                  }}
-                                >
-                                  <MenuItem value={"p"}>Paragraph</MenuItem>
-                                  <MenuItem value={"list"}>Item list</MenuItem>
-                                  <MenuItem value={"h2"}>Title (h2)</MenuItem>
-                                  <MenuItem value={"h3"}>Title (h3)</MenuItem>
-                                  <MenuItem value={"fig-caption"}>Figure caption</MenuItem>
-                                </Select>
-                                <TextareaAutosize
-                                  aria-label="textarea"
-                                  placeholder="Element"
-                                  defaultValue={econtent.content}
-                                  className={classes.textarea}
-                                  onChange={(event) => {
-                                    props.info.sections[s].content[e][`content${nb}`][ee].content = event.target.value;
-                                    props.setInfo(props.info);
-                                    update(write(props.info));
-                                  }}
-                                />
-                              </div>
-                            ))
-                          }
-                        })}
+        {props.info.content.map((content: any, e: number) => (
+          <div key={`s${e}`}>
+            {['p', 'list', 'h2', 'h3', 'fig-caption'].includes(content.element) ?
+              <div>
+                <Select
+                  defaultValue={content.element}
+                  onChange={(event) => {
+                    props.info.content[e].element = event.target.value;
+                    props.setInfo(props.info);
+                    update(write(props.info));
+                  }}
+                >
+                  <MenuItem value='p'>Paragraph</MenuItem>
+                  <MenuItem value='list'>Item list</MenuItem>
+                  <MenuItem value='h2'>Title (h2)</MenuItem>
+                  <MenuItem value='h3'>Title (h3)</MenuItem>
+                  <MenuItem value='fig-caption'>Figure caption</MenuItem>
+                </Select>
+                <TextareaAutosize
+                  aria-label='textarea'
+                  placeholder='Element'
+                  defaultValue={content.content}
+                  className={classes.textarea}
+                  onChange={(event) => {
+                    props.info.content[e].content = event.target.value;
+                    props.setInfo(props.info);
+                    update(write(props.info));
+                  }}
+                />
+              </div> : content.element === 'div' ?
+              <div>
+                <p>complexe element : table</p>
+                <div className={classes.two_column}>
+                  {['1', '2'].map((nb: string) => {
+                    content[`content${nb}`].map((econtent: any, ee: number) => (
+                      <div key={`e${e}-nb${nb}-ee${ee}`}>
+                        <Select
+                          defaultValue={econtent.element}
+                          onChange={(event) => {
+                            props.info.content[e][`content${nb}`][ee].element = event.target.value;
+                            props.setInfo(props.info);
+                            update(write(props.info));
+                          }}
+                        >
+                          <MenuItem value={'p'}>Paragraph</MenuItem>
+                          <MenuItem value={'list'}>Item list</MenuItem>
+                          <MenuItem value={'h2'}>Title (h2)</MenuItem>
+                          <MenuItem value={'h3'}>Title (h3)</MenuItem>
+                          <MenuItem value={'fig-caption'}>Figure caption</MenuItem>
+                        </Select>
+                        <TextareaAutosize
+                          aria-label='textarea'
+                          placeholder='Element'
+                          defaultValue={econtent.content}
+                          className={classes.textarea}
+                          onChange={(event) => {
+                            props.info.content[e][`content${nb}`][ee].content = event.target.value;
+                            props.setInfo(props.info);
+                            update(write(props.info));
+                          }}
+                        />
                       </div>
-                    </div> :
-                    <div>
-                      {content.element}
-                    </div>}
+                    ))
+                  })}
+                </div>
+              </div> :
+              <div>
+                {content.element}
               </div>
-            ))}
+            }
           </div>
         ))}
       </div>
-      <Showresult className={clsx(classes.blacktext, classes.flexitem)} info={props.info}/>
+      <Showresult className={clsx(classes.blacktext, classes.flexitem)} info={props.info} />
     </div>
   );
 };

@@ -1,12 +1,9 @@
-* {
-  margin: 0;
-}
-
 html {
   scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
   position: relative;
   color: white;
   height: calc(100vh - 16px);
