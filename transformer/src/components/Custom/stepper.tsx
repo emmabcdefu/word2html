@@ -97,24 +97,22 @@ const CustomStepper = (props: { steps: string[]; activeStep: number }) => {
   const classes = useStyles();
 
   return (
-    <div>
-      <Stepper
-        activeStep={activeStep}
-        alternativeLabel
-        connector={<Connector />}
-        className={classes.stepper}
-      >
-        {steps.map((label: string) => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={StepIcon}>
-              <Typography className={steps[activeStep] === label ? classes.activate: classes.default}>
-                {label}
-              </Typography>
-            </StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-    </div>
+    <Stepper
+      activeStep={activeStep}
+      alternativeLabel
+      connector={<Connector />}
+      className={classes.stepper}
+    >
+      {steps.map((label: string) => (
+        <Step key={label}>
+          <StepLabel StepIconComponent={StepIcon}>
+            <Typography className={steps[activeStep] === label ? classes.activate: classes.default}>
+              {label}
+            </Typography>
+          </StepLabel>
+        </Step>
+      ))}
+    </Stepper>
   );
 };
 

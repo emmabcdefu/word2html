@@ -15,7 +15,7 @@ const simpleElem: any = (content: any, e: number, numbers: any, path: string) =>
     return txt;
   }
   if (tag === 'img') {
-    const src = content[e].src;
+    const src = content[e].content;
     return `<img class="center-image image-clickable" src="${path + src.substr(src.indexOf('/'), src.length)}">`;
   }
   if (tag === 'fig-caption') {

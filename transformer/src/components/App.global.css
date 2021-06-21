@@ -9,15 +9,4 @@ body {
   height: calc(100vh - 16px);
   background-color: #333;
   font-family: 'Open Sans',sans-serif;
-  /* overflow-y: hidden; */
-}
-
-.divstyle {
-  max-width: calc(100% - 50px);
-  background-color: #424242;
-  border-radius: 16px;
-  padding: 16px;
-  margin: 10px;
-  margin-right: auto;
-  margin-left: auto;
 }

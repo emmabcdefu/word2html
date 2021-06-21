@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import fs from 'fs';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
@@ -18,6 +17,11 @@ const useStyles: any = makeStyles(() => ({
     '& h3': {
       'margin-right': '15px',
     },
+    'max-width': 'calc(100% - 50px)',
+    'background-color': '#424242',
+    'border-radius': '16px',
+    padding: '16px',
+    margin: '10px auto 10px auto',
   },
 }));
 
@@ -44,7 +48,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
   };
 
   return (
-    <div className={clsx('divstyle', classes.flex)}>
+    <div className={classes.flex}>
       <h3>Select the htm file of your report :</h3>
       <input
         accept=".htm"

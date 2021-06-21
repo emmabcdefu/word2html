@@ -3,7 +3,7 @@ import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 import './App.global.css';
-import CustomStepper from './Stepper/stepper';
+import CustomStepper from './Custom/stepper';
 import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
@@ -20,6 +20,7 @@ const useStyles: any = makeStyles(() => ({
     '& div + div': {
       'margin-left': '15px',
     },
+    padding: 16,
   },
 }));
 
@@ -47,56 +48,74 @@ const App: React.FC = () => {
 
   const setInfo: any = (res: any) => {
     info = res;
-  }
+  };
 
   return (
     <ThemeProvider theme={Theme}>
       <CustomStepper steps={steps} activeStep={activeStep} />
-      {activeStep === steps.length ? (
+
+      {activeStep === 0 ? <StepOne /> :
+        activeStep === 1 ?
+          <StepTwo
+            setInfo={setInfo}
+            handleNext={handleNext}
+          /> : activeStep === 2 ?
+            <StepThree
+              info={info}
+              setInfo={setInfo}
+            /> :
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleReset}
+            >
+              Want to do another report ?
+            </Button>
+      }
+      
+      <div className={classes.flex}>
         <div>
-          All steps completed - you&apos;re finished
-          <Button variant="contained" color="primary" onClick={handleReset}>
-            Want to do another report ?
+          <Button
+            variant="contained"
+            disabled={activeStep === 0}
+            onClick={handleBack}
+          >
+            Back
           </Button>
         </div>
-      ) : (
         <div>
-
-          {activeStep === 0 ? <StepOne /> :
-            activeStep === 1 ?
-              <StepTwo
-                setInfo={setInfo}
-                handleNext={handleNext}
-              /> :
-              <StepThree
-                info={info}
-                setInfo={setInfo}
-              />}
-
-          <div className={classes.flex}>
-            <div>
-              <Button variant="contained" disabled={activeStep === 0} onClick={handleBack}>
-                Back
-              </Button>
-            </div>
-            <div>
-              <Button variant="contained" disabled={activeStep === 1} color="primary" onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Save your report' : 'Next'}
-              </Button>
-            </div>
-            <div>
-              <Button variant="contained" color="secondary" onClick={() => { console.log(info) }}>
-                Show data
-              </Button>
-            </div>
-            <div>
-              <Button variant="contained" color="secondary" onClick={() => { if (Object.prototype.hasOwnProperty.call(info, `title`)) { console.log(write(info)) } }}>
-                Show html
-              </Button>
-            </div>
-          </div>
+          <Button
+            variant="contained"
+            disabled={activeStep === 1}
+            color="primary"
+            onClick={handleNext}
+          >
+            {activeStep === steps.length - 1 ? 'Save your report' : 'Next'}
+          </Button>
         </div>
-      )}
+        <div>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => { console.log(info) }}
+          >
+            Show data
+          </Button>
+        </div>
+        <div>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              if (Object.prototype.hasOwnProperty.call(info, `title`)) {
+                console.log(write(info));
+              }
+            }}
+          >
+            Show html
+          </Button>
+        </div>
+      </div>
     </ThemeProvider>
   );
 };

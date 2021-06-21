@@ -42,7 +42,7 @@ const detectInsideP: any = (className: string, element: string) => {
       start = srcEnd;
       content.push({
         element: 'img',
-        src: elem.substr(srcStart, srcEnd - srcStart),
+        content: elem.substr(srcStart, srcEnd - srcStart),
       });
     }
     return { element: 'img', content: content };
