@@ -24,7 +24,7 @@ const rewriteA: any = (elem: string) => {
     const afterA = elem.indexOf('</a>', beforeA2);
     const insideA = elem.substr(beforeA2, afterA - beforeA2);
     elem = elem.substr(0, beforeA) + insideA + elem.substr(afterA + 4, elem.length);
-    
+
   }
   return elem;
 };
@@ -178,11 +178,11 @@ export default function analyse(htm: string) {
             }
           }
         } else {
-          const mainResult: any = { element: nbTd === 2 ? 'div' : 'row-images' };
+          const mainResult: any = { element: nbTd === 2 ? 'div' : 'row-images', content: [] };
 
           let advence = 0;
           for (let j = 0; j < nbTd; j++) {
-            mainResult[`content${j + 1}`] = [];
+            let jcontent = [];
 
             const tdStart = trInside.indexOf('>', advence) + 1;
             const tdEnd = trInside.indexOf('</td>', tdStart);
@@ -200,22 +200,19 @@ export default function analyse(htm: string) {
               if (result != null) {
                 if (result.element === 'img') {
                   for (const out in result.content) {
-                    mainResult[`content${j + 1}`].push(result.content[parseInt(out, 10)]);
+                    jcontent.push(result.content[parseInt(out, 10)]);
                   }
                 } else {
-                  mainResult[`content${j + 1}`].push(result);
+                  jcontent.push(result);
                 }
               }
             }
-          }
-          let j = 0;
-          let empty = true;
-          while (empty && j < nbTd) {
-            if (mainResult[`content${j + 1}`].length !== 0) {
-              empty = false;
-              json.content.push(mainResult);
+            if (jcontent.length !== 0) {
+              mainResult.content.push(jcontent);
             }
-            j++;
+          }
+          if (mainResult.content.length !== 0) {
+            json.content.push(mainResult);
           }
         }
       }

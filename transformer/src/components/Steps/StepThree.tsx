@@ -11,24 +11,29 @@ const useStyles = makeStyles(() => ({
   },
   flex: {
     display: 'flex',
-    'flex-direction': 'row',
-    'align-items': 'stretch',
-    'justify-content': 'space-evenly',
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-evenly',
   },
   flexitem: {
     width: 'calc(50% - 68px)',
-    'border-radius': '16px',
+    borderRadius: 16,
     padding: 16,
   },
   blacktext: {
     color: 'black',
-    'background-color': '#D6E1E5',
+    backgroundColor: '#D6E1E5',
     marginTop: 10,
     padding: '16px 16px 16px 42px',
   },
-  two_column: {
+  table: {
     display: 'flex',
-    'justify-content': 'space-evenly',
+    '&> div': {
+      flexGrow: 1,
+    }
+  },
+  tableElement: {
+    border: '1px solid white'
   },
 }));
 
@@ -38,7 +43,7 @@ interface ChildProps {
 }
 
 const StepThree: React.FC<ChildProps> = (props) => {
-  
+
   const classes = useStyles();
 
   const update = (element: string) => {
@@ -49,23 +54,35 @@ const StepThree: React.FC<ChildProps> = (props) => {
   return (
     <div className={classes.flex}>
       <div className={classes.flexitem} id="edit">
-        {props.info.content.map((content: any, e: number) => (
-          <div key={e}>
-            {['p', 'list', 'h2', 'h3', 'fig-caption', 'footnote', 'img'].includes(content.element) ?
+        {props.info.content.map((object: any, o: number) => (
+          <div key={o}>
+            {['p', 'list', 'h2', 'h3', 'fig-caption', 'footnote', 'img'].includes(object.element) ?
               <CustomEditBox
-                item={content}
+                item={object}
                 info={props.info}
                 setInfo={props.setInfo}
                 update={update}
-              /> : content.element === 'div' ?
+              /> : ['div', 'row-images'].includes(object.element) ?
                 <div>
-                  <p>complexe element : table</p>
-                  <div className={classes.two_column}>
-
+                  <div className={classes.table}>
+                    {object.content.map((listobject: any) => (
+                      <div className={classes.tableElement}>
+                        {listobject.map((subobject: any, lo: number) => (
+                          <div key={lo}>
+                            <CustomEditBox
+                              item={subobject}
+                              info={props.info}
+                              setInfo={props.setInfo}
+                              update={update}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ))}
                   </div>
                 </div> :
                 <div>
-                  {content.element}
+                  Sorry, {object.element} is not yet handle.
                 </div>
             }
           </div>

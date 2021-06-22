@@ -70,14 +70,12 @@ export default function write(json: any) {
         html += '<div class="two-column">';
       }
 
-      let ee = 1;
-      while (Object.prototype.hasOwnProperty.call(json.content[e], `content${ee}`)) {
+      for (let ee = 0; ee < json.content[e].content.length ; ee++) {
         html += '<div>';
-        for (let eee = 0; eee < json.content[e][`content${ee}`].length; eee++) {
-          html += simpleElem(json.content[e][`content${ee}`], eee, numbers, json.path)
+        for (let eee = 0; eee < json.content[e].content[ee].length; eee++) {
+          html += simpleElem(json.content[e].content[ee], eee, numbers, json.path)
         }
         html += '</div>';
-        ee++;
       }
       html += '</div>';
     } else {

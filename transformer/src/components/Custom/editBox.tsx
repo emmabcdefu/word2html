@@ -31,7 +31,7 @@ const BootstrapInput = withStyles(() =>
 
 const useStyles = makeStyles(() => ({
   root: {
-    'padding': '0.7rem',
+    padding: '0.7rem',
   },
   textarea: {
     width: 'calc(100% - 1.4rem)',
@@ -50,15 +50,14 @@ const useStyles = makeStyles(() => ({
     },
   },
   box: {
-    width: 'calc(100% - 26px)',
-    'background-color': '#424242',
+    backgroundColor: '#424242',
     padding: '10px 10px 6px 10px',
-    margin: '10px 0 10px 0',
+    margin: 10,
   },
   firstrow: {
     display: 'flex',
-    'align-items': 'center',
-    'justify-content': 'space-between',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 }));
 
