@@ -30,7 +30,7 @@ const rewriteA: any = (elem: string) => {
 };
 
 // function to analyse what is inside a p html tag
-const detectInsideP: any = (className: string, element: string) => {
+const detectInsideP: any = (className: string, element: string, path: string) => {
   const elem = element.trim();
   if (elem.substr(0, 4) === '<img') {
     // multiple image in the p tag
@@ -42,7 +42,7 @@ const detectInsideP: any = (className: string, element: string) => {
       start = srcEnd;
       content.push({
         element: 'img',
-        content: elem.substr(srcStart, srcEnd - srcStart),
+        content: path + '\\' + elem.substr(srcStart, srcEnd - srcStart).split('/')[1],
       });
     }
     return { element: 'img', content: content };
@@ -82,13 +82,13 @@ const detectInsideP: any = (className: string, element: string) => {
 };
 
 // function that understand p tag
-const detectP: any = (elem: string) => {
+const detectP: any = (elem: string, path: string) => {
   const inside = elem.substr(elem.indexOf('>') + 1, elem.length).trim();
   if (inside !== '') {
     const className = detectClassP(elem);
     if (className != null) {
-      const result = detectInsideP(className, inside);
-      if (result.element !== null) {
+      const result = detectInsideP(className, inside, path);
+      if (result.element !== null && result.content !== '') {
         return result;
       }
     }
@@ -96,7 +96,7 @@ const detectP: any = (elem: string) => {
   return null;
 };
 
-export default function analyse(htm: string) {
+export default function analyse(htm: string, path: string) {
   const json: any = {};
 
   // Collect the title
@@ -116,7 +116,9 @@ export default function analyse(htm: string) {
     body = body.substr(0, cut1) + body.substr(cut2 + 1, body.length);
   }
   body = body.replace(/(<\/span>|&nbsp;|�|&gt;)/gm, '');
-  body = body.replace(/(<\/i><i>|<b><\/b>)/gm, '');
+  body = body.replace(/(<\/i><i>)/gm, '');
+  body = body.replace(/(<i><\/i>)/gm, '');
+  body = body.replace(/(<b><\/b>)/gm, '');
   body = body.replace(/(<sup><sup>)/gm, '<sup>');
   body = body.replace(/(<\/sup><\/sup>)/gm, '</sup>');
   body = body.replace(/(b>)/gm, 'strong>');
@@ -133,7 +135,7 @@ export default function analyse(htm: string) {
 
       end = body.indexOf('</p>', start);
       const elem = body.substr(start, end - start);
-      const result = detectP(elem);
+      const result = detectP(elem, path);
       if (result != null) {
         if (result.element === 'img') {
           for (const out in result.content) {
@@ -166,7 +168,7 @@ export default function analyse(htm: string) {
 
             // No table inside a table
             const elem = tdInside.substr(pStart, pEnd - pStart);
-            const result = detectP(elem);
+            const result = detectP(elem, path);
             if (result != null) {
               if (result.element === 'img') {
                 for (const out in result.content) {
@@ -196,7 +198,7 @@ export default function analyse(htm: string) {
 
               // No table inside a table
               const elem = tdInside.substr(pStart, pEnd - pStart);
-              const result = detectP(elem);
+              const result = detectP(elem, path);
               if (result != null) {
                 if (result.element === 'img') {
                   for (const out in result.content) {

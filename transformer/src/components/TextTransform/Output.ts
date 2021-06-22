@@ -1,4 +1,4 @@
-const simpleElem: any = (content: any, e: number, numbers: any, path: string) => {
+const simpleElem: any = (content: any, e: number, numbers: any) => {
   const tag = content[e].element;
   if (tag === 'p') {
     return `<p>${content[e].content}</p>`;
@@ -15,8 +15,7 @@ const simpleElem: any = (content: any, e: number, numbers: any, path: string) =>
     return txt;
   }
   if (tag === 'img') {
-    const src = content[e].content;
-    return `<img class="center-image image-clickable" src="${path + src.substr(src.indexOf('/'), src.length)}">`;
+    return `<img class="center-image image-clickable" src="${content[e].content}">`;
   }
   if (tag === 'fig-caption') {
     return `<p class="fig-caption">${content[e].content}</p>`;
@@ -73,13 +72,13 @@ export default function write(json: any) {
       for (let ee = 0; ee < json.content[e].content.length ; ee++) {
         html += '<div>';
         for (let eee = 0; eee < json.content[e].content[ee].length; eee++) {
-          html += simpleElem(json.content[e].content[ee], eee, numbers, json.path)
+          html += simpleElem(json.content[e].content[ee], eee, numbers)
         }
         html += '</div>';
       }
       html += '</div>';
     } else {
-      html += simpleElem(json.content, e, numbers, json.path);
+      html += simpleElem(json.content, e, numbers);
     }
   }
 

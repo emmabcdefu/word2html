@@ -8,6 +8,8 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize/TextareaAutosiz
 import IconButton from '@material-ui/core/IconButton/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Button from '@material-ui/core/Button/Button';
+import { AddCircle } from '@material-ui/icons';
 
 import write from '../TextTransform/Output';
 import Theme from '../../theme/theme';
@@ -30,8 +32,8 @@ const BootstrapInput = withStyles(() =>
 )(InputBase);
 
 const useStyles = makeStyles(() => ({
-  root: {
-    padding: '0.7rem',
+  input: {
+    display: 'none',
   },
   textarea: {
     width: 'calc(100% - 1.4rem)',
@@ -71,6 +73,13 @@ interface ChildProps {
 const CustomEditBox: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
+  const [image, setImg] = React.useState(props.item.element === 'img');
+
+  const onInputClick: any = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    const element = event.target as HTMLInputElement;
+    element.value = '';
+  };
+
   const items = [
     { value: 'h1', text: 'Title (h1)' },
     { value: 'h2', text: 'Title (h2)' },
@@ -83,6 +92,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   ];
 
   const boxborderColor = (value: string) => {
+
     switch (value) {
       case 'p':
         return '#D6E1E5';
@@ -108,6 +118,19 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     return mystyle;
   };
 
+  const diplay = (value: boolean) => {
+    if (value) {
+      const mystyle: CSSProperties = {
+        display: 'block',
+      };
+      return mystyle;
+    }
+    const mystyle: CSSProperties = {
+      display: 'none',
+    };
+    return mystyle;
+  };
+
   const hex = () => {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   };
@@ -120,10 +143,15 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   };
 
   const updateElement = (event: React.ChangeEvent<any>) => {
+    //update style of the div
+    if (event.target.value === 'img') setImg(true);
+    else if (props.info.content[index()].element === 'img') setImg(false);
+    document.getElementById(id)!.style.borderLeftColor = boxborderColor(event.target.value);
+
     props.info.content[index()].element = event.target.value;
     props.setInfo(props.info);
     props.update(write(props.info));
-    document.getElementById(id)!.style.borderLeftColor = boxborderColor(event.target.value);
+
   };
 
   const updateContent = (event: React.ChangeEvent<any>) => {
@@ -164,6 +192,16 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     parent!.insertBefore(newElement, parent!.children[index() + 1]);
   };
 
+  const readPath = (event: React.ChangeEvent<any>) => {
+    // update text
+    console.log(id) // TODO: fix id
+    document.getElementById(id)!.children[1].children[0].innerHTML = event.target.files[0].path;
+
+    props.info.content[index()].content = event.target.files[0].path;
+    props.setInfo(props.info);
+    props.update(write(props.info));
+  }
+
   return (
     <div
       className={classes.box}
@@ -181,6 +219,27 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           ))}
         </Select>
 
+        <div style={diplay(image)}>
+          <input
+            accept="image/png, image/jpeg"
+            className={classes.input}
+            id="button-html"
+            type="file"
+            onChange={readPath}
+            onClick={onInputClick}
+          />
+          <label htmlFor="button-html">
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              startIcon={<AddCircle />}
+            >
+              Change
+            </Button>
+          </label>
+        </div>
+
         <div>
           <IconButton onClick={deleteBox}>
             <DeleteIcon />
@@ -191,9 +250,14 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         </div>
       </div>
 
+
+      <div style={diplay(image)}>
+        <p className={classes.textarea}>
+          {props.item.content}
+        </p>
+      </div>
       <TextareaAutosize
-        aria-label="textarea"
-        placeholder="Content"
+        style={diplay(!image)}
         defaultValue={props.item.content}
         className={classes.textarea}
         onChange={updateContent}

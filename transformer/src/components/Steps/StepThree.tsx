@@ -54,8 +54,8 @@ const StepThree: React.FC<ChildProps> = (props) => {
   return (
     <div className={classes.flex}>
       <div className={classes.flexitem} id="edit">
-        {props.info.content.map((object: any, o: number) => (
-          <div key={o}>
+        {props.info.content.map((object: any, key: number) => (
+          <div key={key}>
             {['p', 'list', 'h2', 'h3', 'fig-caption', 'footnote', 'img'].includes(object.element) ?
               <CustomEditBox
                 item={object}
@@ -65,10 +65,10 @@ const StepThree: React.FC<ChildProps> = (props) => {
               /> : ['div', 'row-images'].includes(object.element) ?
                 <div>
                   <div className={classes.table}>
-                    {object.content.map((listobject: any) => (
-                      <div className={classes.tableElement}>
-                        {listobject.map((subobject: any, lo: number) => (
-                          <div key={lo}>
+                    {object.content.map((listobject: any, key2: number) => (
+                      <div className={classes.tableElement} key={key2}>
+                        {listobject.map((subobject: any, key3: number) => (
+                          <div key={key3}>
                             <CustomEditBox
                               item={subobject}
                               info={props.info}

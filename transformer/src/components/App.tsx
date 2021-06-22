@@ -28,9 +28,11 @@ const App: React.FC = () => {
   const classes = useStyles();
 
   const [activeStep, setActiveStep] = React.useState(0);
+  const [disable, setEnable] = React.useState(false);
+
   const steps = [
     'Save a copy of your word report',
-    'Select the htm file of your report',
+    'Input your report and style',
     'Edit your report',
   ];
 
@@ -58,7 +60,7 @@ const App: React.FC = () => {
         activeStep === 1 ?
           <StepTwo
             setInfo={setInfo}
-            handleNext={handleNext}
+            enableNext={() => setEnable(true)}
           /> : activeStep === 2 ?
             <StepThree
               info={info}
@@ -86,7 +88,7 @@ const App: React.FC = () => {
         <div>
           <Button
             variant="contained"
-            disabled={activeStep === 1}
+            disabled={(activeStep === 1 && !disable)}
             color="primary"
             onClick={handleNext}
           >
