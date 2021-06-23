@@ -101,7 +101,7 @@ var countryNames = {
     "ESP": "Spain",
     "SWE": "Sweden",
     "GBR": "United Kingdom",
-}
+};
 
 var colorGradient = ["#feebe2", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177"];
 
@@ -129,11 +129,6 @@ function setResults() {
 
     return {
         "background-color": "#FFF",
-        "gui": {
-            "watermark": {
-                "position": "RT"
-            }
-        },
         "globals": {
             "font-family": "Open Sans Condensed",
             "shadow": false
@@ -144,13 +139,12 @@ function setResults() {
             "color": "#333",
             "font-size": 24,
             "text-align": "left",
-            "x": 10,
-            "y": 10
+            "offset-x": 40,
         },
         "legend": {
             "toggle-action": "none",
             "offset-y": -10,
-            "border-width": 0,
+            "border-width": 1,
             "background-color": "none",
             "vertical-align": "bottom",
             "marker": {
@@ -232,8 +226,8 @@ function setResults() {
             {
                 "type": "zingchart.maps",
                 "options": {
-                    zoom: 2,
-                    offsetY: -200,
+                    zoom: 1.5,
+                    offsetY: -150,
                     id: "map",
                     name: 'world.countries',
                     ignore: ['TUR', 'CYP', 'RUS', 'ISL'],
@@ -260,7 +254,7 @@ zingchart.loadModules('maps, maps-world-countries', function (e) {
     zingchart.render({
         id: 'myChart',
         data: setResults(),
-        height: '100%',
-        width: '100%'
+        height: 800,
+        width: 1200
     });
 });

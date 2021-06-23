@@ -13,7 +13,7 @@ jQuery.extend(jQuery.easing, {
 $(document).ready(function () {
 
     // set up and create progress bar in DOM
-    $('h3').eq(0).before('<div class="progressbar"></div>');
+    $('h2.number').eq(0).before('<div class="progressbar"></div>');
     var container = $('.progressbar');
     container.append('<div class="shim"></div>');
     var shim = $('.progressbar .shim');
@@ -25,12 +25,12 @@ $(document).ready(function () {
     var indicator = $('.progressbar .indicator');
     holder.append('<div class="labels"></div>');
     var labels = $('.progressbar .labels');
-    $('h3').each(function () {
+    $('h2.number').each(function () {
         var code = '<div class="labels-element"><h4>' + $(this).text() + '</h4><span></span></div>';
         labels.append(code);
     });
     var divs = labels.find('div');
-    divs.css('width', 100 / $('h3').length + '%');
+    divs.css('width', 100 / $('h2.number').length + '%');
 
     // match height of shim
     // stop layout jumping when progress bar fixes to / unfixes
@@ -95,13 +95,13 @@ $(document).ready(function () {
             var currentPosition = $(window).scrollTop() + triggerPoint;
             // dots
             // if before first section
-            if (currentPosition < $('h3').eq(0).offset().top) {
+            if (currentPosition < $('h2.number').eq(0).offset().top) {
                 divs.removeClass('reading read');
                 section = -1;
             }
             // if after first section
             else {
-                $('h3').each(function () {
+                $('h2.number').each(function () {
                     var sectionTop = $(this).offset().top;
                     if (currentPosition >= sectionTop) {
                         divs.removeClass('reading');
@@ -131,8 +131,8 @@ $(document).ready(function () {
                 var startPoint = divs.eq(section);
                 var startPointX = startPoint.offset().left;
                 var startPointWidth = startPoint.width();
-                var startSection = $('h3').eq(section);
-                var endSection = $('h3').eq(section + 1);
+                var startSection = $('h2.number').eq(section);
+                var endSection = $('h2.number').eq(section + 1);
                 var startSectionY = startSection.offset().top;
                 var endSectionY = endSection.offset().top;
                 var sectionLength = endSectionY - startSectionY;
@@ -156,7 +156,7 @@ $(document).ready(function () {
     // on click, scroll to target section
     divs.click(function () {
         var sectionIndex = divs.index($(this));
-        var targetY = $('h3').eq(sectionIndex).offset().top - (triggerPoint * .92);
+        var targetY = $('h2.number').eq(sectionIndex).offset().top - (triggerPoint * .92);
         $('html, body').animate({
             scrollTop: targetY
         }, 0, 'easeInOutCubic');
