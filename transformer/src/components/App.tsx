@@ -1,6 +1,8 @@
 import React from 'react';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import fs from 'fs';
+import path from 'path';
 
 import './App.global.css';
 import CustomStepper from './Custom/stepper';
@@ -8,19 +10,22 @@ import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import Theme from '../theme/theme';
-import write from './TextTransform/Output';
+import { final_write } from './TextTransform/Output';
 
 var info: any = {};
 
 const useStyles: any = makeStyles(() => ({
   flex: {
     display: 'flex',
-    'flex-direction': 'row',
-    'justify-content': 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
     '& div + div': {
-      'margin-left': '15px',
+      marginLeft: 15,
     },
     padding: 16,
+  },
+  root: {
+    height: '100vh',
   },
 }));
 
@@ -48,77 +53,101 @@ const App: React.FC = () => {
     setActiveStep(0);
   };
 
+  const saveHTML: any = () => {
+    const html = final_write(info.content, info.style);
+    const filePath = path.join(info.path, '/my_report.html');
+
+    fs.writeFile(filePath, html, (err: any) => {
+      if (err) console.error(err);
+      console.log(`JSON succesfully saved here : ${filePath}`);
+    });
+  };
+
   const setInfo: any = (res: any) => {
     info = res;
   };
 
   return (
-    <ThemeProvider theme={Theme}>
-      <CustomStepper steps={steps} activeStep={activeStep} />
+    <div className={classes.root}>
+      <ThemeProvider theme={Theme}>
+        <CustomStepper steps={steps} activeStep={activeStep} />
 
-      {activeStep === 0 ? <StepOne /> :
-        activeStep === 1 ?
-          <StepTwo
-            setInfo={setInfo}
-            enableNext={() => setEnable(true)}
-          /> : activeStep === 2 ?
-            <StepThree
+        {activeStep === 0 ? <StepOne /> :
+          activeStep === 1 ?
+            <StepTwo
               info={info}
               setInfo={setInfo}
-            /> :
+              enableNext={() => setEnable(true)}
+            /> : activeStep === 2 ?
+              <StepThree
+                info={info}
+                setInfo={setInfo}
+              /> :
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleReset}
+              >
+                Want to do another report ?
+              </Button>
+        }
+
+        <div className={classes.flex}>
+          <div>
             <Button
               variant="contained"
-              color="primary"
-              onClick={handleReset}
+              disabled={activeStep === 0}
+              onClick={handleBack}
             >
-              Want to do another report ?
+              Back
             </Button>
-      }
-      
-      <div className={classes.flex}>
-        <div>
-          <Button
-            variant="contained"
-            disabled={activeStep === 0}
-            onClick={handleBack}
-          >
-            Back
-          </Button>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              disabled={((activeStep === 1 && !disable) || (activeStep === steps.length - 1))}
+              color="primary"
+              onClick={handleNext}
+            >
+              Next
+            </Button>
+          </div>
+          {activeStep === steps.length - 1 &&
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={saveHTML}
+              >
+                Save your report
+              </Button>
+            </div>
+          }
+          {/* <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => { console.log(info) }}
+            >
+              Show data
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                if (Object.prototype.hasOwnProperty.call(info, `title`)) {
+                  console.log(write(info));
+                }
+              }}
+            >
+              Show html
+            </Button>
+          </div> */}
         </div>
-        <div>
-          <Button
-            variant="contained"
-            disabled={(activeStep === 1 && !disable)}
-            color="primary"
-            onClick={handleNext}
-          >
-            {activeStep === steps.length - 1 ? 'Save your report' : 'Next'}
-          </Button>
-        </div>
-        <div>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => { console.log(info) }}
-          >
-            Show data
-          </Button>
-        </div>
-        <div>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              if (Object.prototype.hasOwnProperty.call(info, `title`)) {
-                console.log(write(info));
-              }
-            }}
-          >
-            Show html
-          </Button>
-        </div>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </div>
   );
 };
 

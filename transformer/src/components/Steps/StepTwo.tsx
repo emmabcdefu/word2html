@@ -30,6 +30,7 @@ const useStyles: any = makeStyles(() => ({
 }));
 
 interface ChildProps {
+  info: any;
   setInfo: (info: string) => void;
   enableNext: () => void;
 }
@@ -48,7 +49,9 @@ const StepTwo: React.FC<ChildProps> = (props) => {
   const readFile = (event: React.ChangeEvent<any>) => {
     fs.readFile(event.target.files[0].path, 'utf8', (_, data: string) => {
       const path = event.target.files[0].path.split('\\').slice(0, -1).reduce( (a:string ,b:string) => { return a+'\\'+b });
-      props.setInfo(analyse(data, path));
+      props.info.content = analyse(data, path);
+      props.info.path = path;
+      props.setInfo(props.info);
     });
     htmInput = true;
     if (cssInput) props.enableNext();
@@ -57,7 +60,10 @@ const StepTwo: React.FC<ChildProps> = (props) => {
   const readCSS = (event: React.ChangeEvent<any>) => {
     cssInput = true;
     if (htmInput) props.enableNext();
-    console.log("reading css located here: ", event.target.files[0].path)
+    fs.readFile(event.target.files[0].path, 'utf8', (_, data: string) => {
+      props.info.style = data;
+      props.setInfo(props.info);
+    });
   };
 
   return (

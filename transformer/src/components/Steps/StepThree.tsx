@@ -1,8 +1,7 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 
-import write from '../TextTransform/Output';
+import { write } from '../TextTransform/Output';
 import CustomEditBox from '../Custom/editBox';
 
 const useStyles = makeStyles(() => ({
@@ -14,17 +13,28 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'space-evenly',
+    height: 'calc(100vh - 206px)',
   },
   flexitem: {
-    width: 'calc(50% - 68px)',
-    borderRadius: 16,
+    width: '50%',
     padding: 16,
-  },
-  blacktext: {
-    color: 'black',
-    backgroundColor: '#D6E1E5',
-    marginTop: 10,
-    padding: '16px 16px 16px 42px',
+    '& .container': {
+      padding: '16px 16px 16px 42px',
+      color: 'black',
+      backgroundColor: '#D6E1E5',
+      borderRadius: 16,
+    },
+    'overflow-x': 'none',
+    'overflow-y': 'scroll',
+    '&::-webkit-scrollbar': {
+      width: '0.7em',
+      backgroundColor: '#424242',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'white',
+      borderRadius: 4,
+    },
+    'scroll-behavior': 'smooth'
   },
   table: {
     display: 'flex',
@@ -88,12 +98,14 @@ const StepThree: React.FC<ChildProps> = (props) => {
           </div>
         ))}
       </div>
-      <div className={clsx('container', classes.blacktext, classes.flexitem)}>
-        <div
-          className='report'
-          id="html"
-          dangerouslySetInnerHTML={{ __html: write(props.info) }}
-        />
+      <div className={classes.flexitem}>
+        <div className='container'>
+          <div
+            className='report'
+            id="html"
+            dangerouslySetInnerHTML={{ __html: write(props.info.content) }}
+          />
+        </div>
       </div>
     </div>
   );

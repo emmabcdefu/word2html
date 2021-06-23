@@ -16,21 +16,8 @@ const detectClassP: any = (elem: string) => {
   return null;
 };
 
-// function that rewrite inside p tag if necessary
-const rewriteA: any = (elem: string) => {
-  while (elem.indexOf('<a name') !== -1) {
-    const beforeA = elem.indexOf('<a name');
-    const beforeA2 = elem.indexOf('>', beforeA) + 1;
-    const afterA = elem.indexOf('</a>', beforeA2);
-    const insideA = elem.substr(beforeA2, afterA - beforeA2);
-    elem = elem.substr(0, beforeA) + insideA + elem.substr(afterA + 4, elem.length);
-
-  }
-  return elem;
-};
-
 // function to analyse what is inside a p html tag
-const detectInsideP: any = (className: string, element: string, path: string) => {
+const detectInsideP: any = (className: string, element: string, path: string, titleLevel:boolean) => {
   const elem = element.trim();
   if (elem.substr(0, 4) === '<img') {
     // multiple image in the p tag
@@ -48,24 +35,48 @@ const detectInsideP: any = (className: string, element: string, path: string) =>
     return { element: 'img', content: content };
   }
   switch (className) {
+    // title h1
+    case 'EHead0':
+      return { element: 'h1', content: elem };
+    case 'EHead0Sub':
+      return { element: 'h1', content: elem };
+    // title h2
+    case 'E1Level':
+      return { element: 'h2', number: true, content: elem };
+    case 'EHead1':
+      return { element: 'h2', number: false, content: elem };
+    // title h3
+    case 'E2Level':
+      return { element: 'h3', content: elem };
+    case 'EHead2':
+      if (titleLevel) return { element: 'list', content: elem };
+      return { element: 'h3', content: elem };
+    // title h4
+    case 'E3Level':
+      return { element: 'h4', content: elem };
+    case 'EHead3':
+      if (titleLevel) return { element: 'list', content: elem };
+      return { element: 'h4', content: elem };
+    // p
+    case 'E4Level':
+      return { element: 'p', content: elem };
+    case 'E5Level':
+      return { element: 'p', content: elem };
+    case 'EHead4':
+      if (titleLevel) return { element: 'list', content: elem };
+      return { element: 'p', content: elem };
+    // p or img
     case 'MsoNormal':
-      // p or img
-      return { element: 'p', content: rewriteA(elem) };
+      return { element: 'p', content: elem };
     case 'MsoCaption':
       // figure caption
-      return { element: 'fig-caption', content: rewriteA(elem) };
+      return { element: 'fig-caption', content: elem };
     case 'MsoCommentText':
       // figure caption
-      return { element: 'fig-caption', content: rewriteA(elem) };
+      return { element: 'fig-caption', content: elem };
     case 'MsoListParagraph':
       // list
-      return { element: 'list', content: rewriteA(elem) };
-    case 'E1Level':
-      // title
-      return { element: 'h2', content: rewriteA(elem) };
-    case 'EHead2':
-      // sub-title
-      return { element: 'h3', content: rewriteA(elem) };
+      return { element: 'list', content: elem };
     case 'MsoFootnoteText':
       // footnote
       return { element: 'footnote', content: elem };
@@ -75,6 +86,12 @@ const detectInsideP: any = (className: string, element: string, path: string) =>
     case 'MsoToc1':
       // element of the table of content
       return { element: null };
+    case 'MsoToc2':
+      // element of the table of content
+      return { element: null };
+    case 'MsoToc3':
+      // element of the table of content
+      return { element: null };
     default:
       console.error(`The element ${className} isn't recognize`);
       return { element: null };
@@ -82,12 +99,12 @@ const detectInsideP: any = (className: string, element: string, path: string) =>
 };
 
 // function that understand p tag
-const detectP: any = (elem: string, path: string) => {
+const detectP: any = (elem: string, path: string, titleLevel:boolean) => {
   const inside = elem.substr(elem.indexOf('>') + 1, elem.length).trim();
   if (inside !== '') {
     const className = detectClassP(elem);
     if (className != null) {
-      const result = detectInsideP(className, inside, path);
+      const result = detectInsideP(className, inside, path, titleLevel);
       if (result.element !== null && result.content !== '') {
         return result;
       }
@@ -97,34 +114,48 @@ const detectP: any = (elem: string, path: string) => {
 };
 
 export default function analyse(htm: string, path: string) {
-  const json: any = {};
-
-  // Collect the title
-  const titleStart = htm.indexOf('<title>');
-  const tittleEnd = htm.indexOf('</title>');
-  json.title = htm.substr(titleStart + 7, tittleEnd - titleStart - 7);
 
   // Collect only the body part
   const bodyStart = htm.indexOf('<body');
   const bodyEnd = htm.indexOf('</body>');
   let body = htm.substr(bodyStart, bodyEnd - bodyStart + 7);
 
+  const titleLevel = body.indexOf('E1Level') !== -1;
+
   // Clean the body
+  body = body.replace(/(\r\n|\n|\r)/gm, ' ');
+
   while (body.indexOf('<span') !== -1) {
     const cut1 = body.indexOf('<span');
     const cut2 = body.indexOf('>', cut1);
     body = body.substr(0, cut1) + body.substr(cut2 + 1, body.length);
   }
+  while (body.indexOf('<br') !== -1) {
+    const cut1 = body.indexOf('<br');
+    const cut2 = body.indexOf('>', cut1);
+    body = body.substr(0, cut1) + body.substr(cut2 + 1, body.length);
+  }
+  while (body.indexOf('<a name') !== -1) {
+    const beforeA = body.indexOf('<a name');
+    const beforeA2 = body.indexOf('>', beforeA) + 1;
+    const afterA = body.indexOf('</a>', beforeA2);
+    body = body.substr(0, beforeA) + body.substr(beforeA2, afterA - beforeA2) + body.substr(afterA + 4, body.length);
+  }
+  body = body.replace(/( title="")/gm, '');
   body = body.replace(/(<\/span>|&nbsp;|�|&gt;)/gm, '');
-  body = body.replace(/(<\/i><i>)/gm, '');
-  body = body.replace(/(<i><\/i>)/gm, '');
-  body = body.replace(/(<b><\/b>)/gm, '');
+  let newbody = body;
+  do {
+    body = newbody;
+    newbody = newbody.replace(/(<\/i><i>)/gm, '');
+    newbody = newbody.replace(/(<i><\/i>)/gm, '');
+    newbody = newbody.replace(/(<\/b><b>)/gm, '');
+    newbody = newbody.replace(/(<b><\/b>)/gm, '');
+  } while (body !== newbody);
   body = body.replace(/(<sup><sup>)/gm, '<sup>');
   body = body.replace(/(<\/sup><\/sup>)/gm, '</sup>');
   body = body.replace(/(b>)/gm, 'strong>');
-  body = body.replace(/(\r\n|\n|\r)/gm, ' ');
 
-  json.content = [];
+  const content = [];
   // Analyse every p component
   let end = 0;
   while (body.indexOf('<', end) !== -1) {
@@ -135,14 +166,14 @@ export default function analyse(htm: string, path: string) {
 
       end = body.indexOf('</p>', start);
       const elem = body.substr(start, end - start);
-      const result = detectP(elem, path);
+      const result = detectP(elem, path, titleLevel);
       if (result != null) {
         if (result.element === 'img') {
           for (const out in result.content) {
-            json.content.push(result.content[parseInt(out, 10)]);
+            content.push(result.content[parseInt(out, 10)]);
           }
         } else {
-          json.content.push(result);
+          content.push(result);
         }
       }
     } else if (body.substr(start + 1, 5) === 'table') {
@@ -168,14 +199,14 @@ export default function analyse(htm: string, path: string) {
 
             // No table inside a table
             const elem = tdInside.substr(pStart, pEnd - pStart);
-            const result = detectP(elem, path);
+            const result = detectP(elem, path, titleLevel);
             if (result != null) {
               if (result.element === 'img') {
                 for (const out in result.content) {
-                  json.content.push(result.content[parseInt(out, 10)]);
+                  content.push(result.content[parseInt(out, 10)]);
                 }
               } else {
-                json.content.push(result);
+                content.push(result);
               }
             }
           }
@@ -198,7 +229,7 @@ export default function analyse(htm: string, path: string) {
 
               // No table inside a table
               const elem = tdInside.substr(pStart, pEnd - pStart);
-              const result = detectP(elem, path);
+              const result = detectP(elem, path, titleLevel);
               if (result != null) {
                 if (result.element === 'img') {
                   for (const out in result.content) {
@@ -214,7 +245,7 @@ export default function analyse(htm: string, path: string) {
             }
           }
           if (mainResult.content.length !== 0) {
-            json.content.push(mainResult);
+            content.push(mainResult);
           }
         }
       }
@@ -223,5 +254,5 @@ export default function analyse(htm: string, path: string) {
     }
   }
 
-  return json;
+  return content;
 }
