@@ -69,6 +69,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
             {['p', 'list', 'h2', 'h3', 'fig-caption', 'footnote', 'img'].includes(object.element) ?
               <CustomEditBox
                 item={object}
+                inDiv={false}
                 info={props.info}
                 setInfo={props.setInfo}
                 update={update}
@@ -81,6 +82,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
                           <div key={key3}>
                             <CustomEditBox
                               item={subobject}
+                              inDiv={true}
                               info={props.info}
                               setInfo={props.setInfo}
                               update={update}

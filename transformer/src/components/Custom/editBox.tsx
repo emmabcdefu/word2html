@@ -120,6 +120,7 @@ const diplay = (value: boolean) => {
 
 interface ChildProps {
   info: any;
+  inDiv: boolean;
   item: { [name: string]: string };
   setInfo: (info: string) => void;
   update: (element: string) => void;
@@ -131,7 +132,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   // const [image, setImg] = React.useState(props.item.element === 'img');
   const [h2, setH2] = React.useState(props.item.element === 'h2');
 
-  // const onInputClick: any = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+  // const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
   //   const element = event.target as HTMLInputElement;
   //   element.value = '';
   // };
@@ -147,38 +148,69 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     return Array.prototype.indexOf.call(child!.parentElement!.children, child);
   };
 
+  const indexColumn = () => {
+    const child = document.getElementById(id)!.parentElement!.parentElement!;
+    return Array.prototype.indexOf.call(child!.parentElement!.children, child);
+  };
+
+  const indexDiv = () => {
+    const child = document.getElementById(id)!.parentElement!.parentElement!.parentElement!.parentElement!.parentElement;
+    return Array.prototype.indexOf.call(child!.parentElement!.children, child);
+  };
+
   const updateElement = (event: React.ChangeEvent<any>) => {
     //update style of the div
-    // if (event.target.value === 'img') setImg(true);
-    // else if (props.info.content[index()].element === 'img') setImg(false);
-    if (event.target.value === 'h2') setH2(true);
-    else if (props.info.content[index()].element === 'h2') setH2(false);
     document.getElementById(id)!.style.borderLeftColor = boxborderColor(event.target.value);
+    if (props.inDiv) {
+      //update style of the div
+      // if (event.target.value === 'img') setImg(true);
+      // else if (props.info.content[index()].element === 'img') setImg(false);
+      if (event.target.value === 'h2') setH2(true);
+      else if (props.info.content[indexDiv()].content[indexColumn()][index()].element === 'h2') setH2(false);
+      //update info
+      props.info.content[indexDiv()].content[indexColumn()][index()].element = event.target.value;
+    } else {
+      //update style of the div
+      // if (event.target.value === 'img') setImg(true);
+      // else if (props.info.content[index()].element === 'img') setImg(false);
+      if (event.target.value === 'h2') setH2(true);
+      else if (props.info.content[index()].element === 'h2') setH2(false);
+      //update info
+      props.info.content[index()].element = event.target.value;
+    }
     //update info
-    props.info.content[index()].element = event.target.value;
     props.setInfo(props.info);
-    props.update(write(props.info));
+    props.update(write(props.info.content));
   };
 
   const updateNumber = (event: React.ChangeEvent<any>) => {
     //update info
     props.info.content[index()].number = event.target.value;
     props.setInfo(props.info);
-    props.update(write(props.info));
+    props.update(write(props.info.content));
   };
 
   const updateContent = (event: React.ChangeEvent<any>) => {
     //update info
-    props.info.content[index()].content = event.target.value;
+    console.log(index(), indexColumn(), indexDiv())
+    if (props.inDiv) {
+      props.info.content[indexDiv()].content[indexColumn()][index()].content = event.target.value;
+    } else {
+      props.info.content[index()].content = event.target.value;
+    }
     props.setInfo(props.info);
-    props.update(write(props.info));
+    props.update(write(props.info.content));
   };
 
   const deleteBox = () => {
     //update info
-    props.info.content.splice(index(), 1);
+    if (props.inDiv) {
+      props.info.content[indexDiv()].content[indexColumn()].splice(index(), 1);
+    } else {
+      props.info.content.splice(index(), 1);
+    }
     props.setInfo(props.info);
-    props.update(write(props.info));
+    props.update(write(props.info.content));
     //remove the box
     const child = document.getElementById(id)!.parentElement;
     child!.parentElement!.removeChild(child!);
@@ -186,19 +218,28 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
   const addBox = () => {
     //update info
-    props.info.content = props.info.content.slice(0, index() + 1).concat(
-      [{ element: 'p', content: '' }].concat(
-        props.info.content.slice(index() + 1, props.info.content.length)
-      )
-    );
+    if (props.inDiv) {
+      props.info.content[indexDiv()].content[indexColumn()] = props.info.content[indexDiv()].content[indexColumn()].slice(0, index() + 1).concat(
+        [{ element: 'p', content: '' }].concat(
+          props.info.content[indexDiv()].content[indexColumn()].slice(index() + 1, props.info.content[indexDiv()].content[indexColumn()].length)
+        )
+      );
+    } else {
+      props.info.content = props.info.content.slice(0, index() + 1).concat(
+        [{ element: 'p', content: '' }].concat(
+          props.info.content.slice(index() + 1, props.info.content.length)
+        )
+      );
+    }
     props.setInfo(props.info);
-    props.update(write(props.info));
+    props.update(write(props.info.content));
     //create a new box
     const newElement = document.createElement('div');
     ReactDOM.render(
       <ThemeProvider theme={Theme}>
         <CustomEditBox
           item={{ element: 'p', content: '' }}
+          inDiv={props.inDiv}
           info={props.info}
           setInfo={props.setInfo}
           update={props.update}
@@ -218,7 +259,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   //   //update info
   //   props.info.content[index()].content = event.target.files[0].path;
   //   props.setInfo(props.info);
-  //   props.update(write(props.info));
+  //   props.update(write(props.info.content));
   // }
 
   return (
@@ -254,11 +295,8 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
             className={classes.input}
             id="button-html"
             type="file"
-            onChange={readPath}
-            onClick={() => {
-              console.log(id)
-              onInputClick
-            }}
+            onChange={() => (console.log(id))readPath}
+            onClick={onInputClick}
           />
           <Button
             variant="contained"
@@ -288,7 +326,6 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           </IconButton>
         </div>
       </div>
-
 
       {/* <div style={diplay(image)}>
         <p className={classes.textarea}>

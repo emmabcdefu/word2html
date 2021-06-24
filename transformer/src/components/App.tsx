@@ -131,19 +131,6 @@ const App: React.FC = () => {
             >
               Show data
             </Button>
-          </div>
-          <div>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                if (Object.prototype.hasOwnProperty.call(info, `title`)) {
-                  console.log(write(info));
-                }
-              }}
-            >
-              Show html
-            </Button>
           </div> */}
         </div>
       </ThemeProvider>

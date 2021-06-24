@@ -120,8 +120,6 @@ export default function analyse(htm: string, path: string) {
   const bodyEnd = htm.indexOf('</body>');
   let body = htm.substr(bodyStart, bodyEnd - bodyStart + 7);
 
-  const titleLevel = body.indexOf('E1Level') !== -1;
-
   // Clean the body
   body = body.replace(/(\r\n|\n|\r)/gm, ' ');
 
@@ -154,6 +152,8 @@ export default function analyse(htm: string, path: string) {
   body = body.replace(/(<sup><sup>)/gm, '<sup>');
   body = body.replace(/(<\/sup><\/sup>)/gm, '</sup>');
   body = body.replace(/(b>)/gm, 'strong>');
+
+  const titleLevel = body.indexOf('E2Level') !== -1;
 
   const content = [];
   // Analyse every p component
