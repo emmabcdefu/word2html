@@ -10,9 +10,9 @@ import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import Theme from '../theme/theme';
-import { final_write } from './TextTransform/Output';
+import { finalWrite } from './TextTransform/Output';
 
-var info: any = {};
+let info: any = {};
 
 const useStyles: any = makeStyles(() => ({
   flex: {
@@ -54,7 +54,7 @@ const App: React.FC = () => {
   };
 
   const saveHTML: any = () => {
-    const html = final_write(info.content, info.style);
+    const html = finalWrite(info.content, info.style);
     const filePath = path.join(info.path, '/my_report.html');
 
     fs.writeFile(filePath, html, (err: any) => {
@@ -72,25 +72,17 @@ const App: React.FC = () => {
       <ThemeProvider theme={Theme}>
         <CustomStepper steps={steps} activeStep={activeStep} />
 
-        {activeStep === 0 ? <StepOne /> :
-          activeStep === 1 ?
-            <StepTwo
-              info={info}
-              setInfo={setInfo}
-              enableNext={() => setEnable(true)}
-            /> : activeStep === 2 ?
-              <StepThree
-                info={info}
-                setInfo={setInfo}
-              /> :
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleReset}
-              >
-                Want to do another report ?
-              </Button>
-        }
+        {activeStep === 0 ? (
+          <StepOne />
+        ) : activeStep === 1 ? (
+          <StepTwo
+            info={info}
+            setInfo={setInfo}
+            enableNext={() => setEnable(true)}
+          />
+        ) : (
+          <StepThree info={info} setInfo={setInfo} />
+        )}
 
         <div className={classes.flex}>
           <div>
@@ -105,24 +97,23 @@ const App: React.FC = () => {
           <div>
             <Button
               variant="contained"
-              disabled={((activeStep === 1 && !disable) || (activeStep === steps.length - 1))}
+              disabled={
+                (activeStep === 1 && !disable) ||
+                activeStep === steps.length - 1
+              }
               color="primary"
               onClick={handleNext}
             >
               Next
             </Button>
           </div>
-          {activeStep === steps.length - 1 &&
+          {activeStep === steps.length - 1 && (
             <div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={saveHTML}
-              >
+              <Button variant="contained" color="primary" onClick={saveHTML}>
                 Save your report
               </Button>
             </div>
-          }
+          )}
           {/* <div>
             <Button
               variant="contained"

@@ -6,7 +6,7 @@ import { AddCircle } from '@material-ui/icons';
 
 import analyse from '../TextTransform/Analyse';
 
-const useStyles: any = makeStyles(() => ({
+const useStyles = makeStyles(() => ({
   input: {
     display: 'none',
   },
@@ -31,24 +31,31 @@ const useStyles: any = makeStyles(() => ({
 
 interface ChildProps {
   info: any;
-  setInfo: (info: string) => void;
+  setInfo: (info: any) => void;
   enableNext: () => void;
 }
 
 const StepTwo: React.FC<ChildProps> = (props) => {
   const classes: any = useStyles();
 
-  let htmInput:boolean = false;
-  let cssInput:boolean = false;
+  let htmInput = false;
+  let cssInput = false;
 
-  const onInputClick: any = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+  const onInputClick: any = (
+    event: React.MouseEvent<HTMLInputElement, MouseEvent>
+  ) => {
     const element = event.target as HTMLInputElement;
     element.value = '';
   };
 
   const readFile = (event: React.ChangeEvent<any>) => {
     fs.readFile(event.target.files[0].path, 'utf8', (_, data: string) => {
-      const path = event.target.files[0].path.split('\\').slice(0, -1).reduce( (a:string ,b:string) => { return a+'\\'+b });
+      const path = event.target.files[0].path
+        .split('\\')
+        .slice(0, -1)
+        .reduce((a: string, b: string) => {
+          return `${a}\\${b}`;
+        });
       props.info.content = analyse(data, path);
       props.info.path = path;
       props.setInfo(props.info);

@@ -1,6 +1,11 @@
 import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider, createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
+import {
+  ThemeProvider,
+  createStyles,
+  makeStyles,
+  withStyles,
+} from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select/Select';
 import InputBase from '@material-ui/core/InputBase/InputBase';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
@@ -28,7 +33,7 @@ const BootstrapInput = withStyles(() =>
         boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
       },
     },
-  }),
+  })
 )(InputBase);
 
 const useStyles = makeStyles(() => ({
@@ -77,7 +82,6 @@ const items = [
 ];
 
 const boxborderColor = (value: string) => {
-
   switch (value) {
     case 'p':
       return '#D6E1E5';
@@ -102,7 +106,7 @@ const boxborderColor = (value: string) => {
 
 const boxborder = (value: string) => {
   const mystyle: CSSProperties = {
-    borderLeft: '5px solid ' + boxborderColor(value)
+    borderLeft: `5px solid ${boxborderColor(value)}`,
   };
   return mystyle;
 };
@@ -122,7 +126,7 @@ interface ChildProps {
   info: any;
   inDiv: boolean;
   item: { [name: string]: string };
-  setInfo: (info: string) => void;
+  setInfo: (info: any) => void;
   update: (element: string) => void;
 }
 
@@ -138,10 +142,12 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   // };
 
   const hex = () => {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
   };
 
-  const id = hex() + '-' + hex() + '-' + hex() + '-' + hex();
+  const id = `${hex()}-${hex()}-${hex()}-${hex()}`;
 
   const index = () => {
     const child = document.getElementById(id)!.parentElement;
@@ -154,47 +160,56 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   };
 
   const indexDiv = () => {
-    const child = document.getElementById(id)!.parentElement!.parentElement!.parentElement!.parentElement!.parentElement;
+    const child = document.getElementById(id)!.parentElement!.parentElement!
+      .parentElement!.parentElement!.parentElement;
     return Array.prototype.indexOf.call(child!.parentElement!.children, child);
   };
 
   const updateElement = (event: React.ChangeEvent<any>) => {
-    //update style of the div
-    document.getElementById(id)!.style.borderLeftColor = boxborderColor(event.target.value);
+    // update style of the div
+    document.getElementById(id)!.style.borderLeftColor = boxborderColor(
+      event.target.value
+    );
     if (props.inDiv) {
-      //update style of the div
+      // update style of the div
       // if (event.target.value === 'img') setImg(true);
       // else if (props.info.content[index()].element === 'img') setImg(false);
       if (event.target.value === 'h2') setH2(true);
-      else if (props.info.content[indexDiv()].content[indexColumn()][index()].element === 'h2') setH2(false);
-      //update info
-      props.info.content[indexDiv()].content[indexColumn()][index()].element = event.target.value;
+      else if (
+        props.info.content[indexDiv()].content[indexColumn()][index()]
+          .element === 'h2'
+      )
+        setH2(false);
+      // update info
+      props.info.content[indexDiv()].content[indexColumn()][index()].element =
+        event.target.value;
     } else {
-      //update style of the div
+      // update style of the div
       // if (event.target.value === 'img') setImg(true);
       // else if (props.info.content[index()].element === 'img') setImg(false);
       if (event.target.value === 'h2') setH2(true);
       else if (props.info.content[index()].element === 'h2') setH2(false);
-      //update info
+      // update info
       props.info.content[index()].element = event.target.value;
     }
-    //update info
+    // update info
     props.setInfo(props.info);
     props.update(write(props.info.content));
   };
 
   const updateNumber = (event: React.ChangeEvent<any>) => {
-    //update info
+    // update info
     props.info.content[index()].number = event.target.value;
     props.setInfo(props.info);
     props.update(write(props.info.content));
   };
 
   const updateContent = (event: React.ChangeEvent<any>) => {
-    //update info
-    console.log(index(), indexColumn(), indexDiv())
+    // update info
+    console.log(index(), indexColumn(), indexDiv());
     if (props.inDiv) {
-      props.info.content[indexDiv()].content[indexColumn()][index()].content = event.target.value;
+      props.info.content[indexDiv()].content[indexColumn()][index()].content =
+        event.target.value;
     } else {
       props.info.content[index()].content = event.target.value;
     }
@@ -203,7 +218,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   };
 
   const deleteBox = () => {
-    //update info
+    // update info
     if (props.inDiv) {
       props.info.content[indexDiv()].content[indexColumn()].splice(index(), 1);
     } else {
@@ -211,29 +226,38 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     }
     props.setInfo(props.info);
     props.update(write(props.info.content));
-    //remove the box
+    // remove the box
     const child = document.getElementById(id)!.parentElement;
     child!.parentElement!.removeChild(child!);
   };
 
   const addBox = () => {
-    //update info
+    // update info
     if (props.inDiv) {
-      props.info.content[indexDiv()].content[indexColumn()] = props.info.content[indexDiv()].content[indexColumn()].slice(0, index() + 1).concat(
-        [{ element: 'p', content: '' }].concat(
-          props.info.content[indexDiv()].content[indexColumn()].slice(index() + 1, props.info.content[indexDiv()].content[indexColumn()].length)
-        )
-      );
+      props.info.content[indexDiv()].content[
+        indexColumn()
+      ] = props.info.content[indexDiv()].content[indexColumn()]
+        .slice(0, index() + 1)
+        .concat(
+          [{ element: 'p', content: '' }].concat(
+            props.info.content[indexDiv()].content[indexColumn()].slice(
+              index() + 1,
+              props.info.content[indexDiv()].content[indexColumn()].length
+            )
+          )
+        );
     } else {
-      props.info.content = props.info.content.slice(0, index() + 1).concat(
-        [{ element: 'p', content: '' }].concat(
-          props.info.content.slice(index() + 1, props.info.content.length)
-        )
-      );
+      props.info.content = props.info.content
+        .slice(0, index() + 1)
+        .concat(
+          [{ element: 'p', content: '' }].concat(
+            props.info.content.slice(index() + 1, props.info.content.length)
+          )
+        );
     }
     props.setInfo(props.info);
     props.update(write(props.info.content));
-    //create a new box
+    // create a new box
     const newElement = document.createElement('div');
     ReactDOM.render(
       <ThemeProvider theme={Theme}>
@@ -247,7 +271,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       </ThemeProvider>,
       newElement
     );
-    //add a new box
+    // add a new box
     const parent = document.getElementById(id)!.parentElement!.parentElement;
     parent!.insertBefore(newElement, parent!.children[index() + 1]);
   };
@@ -263,11 +287,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   // }
 
   return (
-    <div
-      className={classes.box}
-      style={boxborder(props.item.element)}
-      id={id}
-    >
+    <div className={classes.box} style={boxborder(props.item.element)} id={id}>
       <div className={classes.firstrow}>
         <Select
           defaultValue={props.item.element}
@@ -275,7 +295,9 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           input={<BootstrapInput />}
         >
           {items.map((elem: any) => (
-            <MenuItem value={elem.value} key={elem.value}>{elem.text}</MenuItem>
+            <MenuItem value={elem.value} key={elem.value}>
+              {elem.text}
+            </MenuItem>
           ))}
         </Select>
         <Select
@@ -284,8 +306,13 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           onChange={updateNumber}
           input={<BootstrapInput />}
         >
-          {[{value: false, text: 'Not numbered'}, {value: true, text: 'Numbered'}].map((elem: any) => (
-            <MenuItem value={elem.value} key={elem.value}>{elem.text}</MenuItem>
+          {[
+            { value: false, text: 'Not numbered' },
+            { value: true, text: 'Numbered' },
+          ].map((elem: any) => (
+            <MenuItem value={elem.value} key={elem.value}>
+              {elem.text}
+            </MenuItem>
           ))}
         </Select>
 

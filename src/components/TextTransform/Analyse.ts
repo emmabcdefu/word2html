@@ -6,10 +6,7 @@ const detectClassP: any = (elem: string) => {
       const cEnd = elem.indexOf('>', cStart);
       return elem.substr(cStart, cEnd - cStart);
     }
-    const cEnd = Math.min(
-      elem.indexOf(' ', cStart),
-      elem.indexOf('>', cStart)
-    );
+    const cEnd = Math.min(elem.indexOf(' ', cStart), elem.indexOf('>', cStart));
     return elem.substr(cStart, cEnd - cStart);
   }
   console.error(`The element ${elem} has no class !`);
@@ -17,7 +14,12 @@ const detectClassP: any = (elem: string) => {
 };
 
 // function to analyse what is inside a p html tag
-const detectInsideP: any = (className: string, element: string, path: string, titleLevel:boolean) => {
+const detectInsideP: any = (
+  className: string,
+  element: string,
+  path: string,
+  titleLevel: boolean
+) => {
   const elem = element.trim();
   if (elem.substr(0, 4) === '<img') {
     // multiple image in the p tag
@@ -29,10 +31,12 @@ const detectInsideP: any = (className: string, element: string, path: string, ti
       start = srcEnd;
       content.push({
         element: 'img',
-        content: path + '\\' + elem.substr(srcStart, srcEnd - srcStart).split('/')[1],
+        content: `${path}\\${
+          elem.substr(srcStart, srcEnd - srcStart).split('/')[1]
+        }`,
       });
     }
-    return { element: 'img', content: content };
+    return { element: 'img', content };
   }
   switch (className) {
     // title h1
@@ -99,7 +103,7 @@ const detectInsideP: any = (className: string, element: string, path: string, ti
 };
 
 // function that understand p tag
-const detectP: any = (elem: string, path: string, titleLevel:boolean) => {
+const detectP: any = (elem: string, path: string, titleLevel: boolean) => {
   const inside = elem.substr(elem.indexOf('>') + 1, elem.length).trim();
   if (inside !== '') {
     const className = detectClassP(elem);
@@ -114,7 +118,6 @@ const detectP: any = (elem: string, path: string, titleLevel:boolean) => {
 };
 
 export default function analyse(htm: string, path: string) {
-
   // Collect only the body part
   const bodyStart = htm.indexOf('<body');
   const bodyEnd = htm.indexOf('</body>');
@@ -137,7 +140,10 @@ export default function analyse(htm: string, path: string) {
     const beforeA = body.indexOf('<a name');
     const beforeA2 = body.indexOf('>', beforeA) + 1;
     const afterA = body.indexOf('</a>', beforeA2);
-    body = body.substr(0, beforeA) + body.substr(beforeA2, afterA - beforeA2) + body.substr(afterA + 4, body.length);
+    body =
+      body.substr(0, beforeA) +
+      body.substr(beforeA2, afterA - beforeA2) +
+      body.substr(afterA + 4, body.length);
   }
   body = body.replace(/( title="")/gm, '');
   body = body.replace(/(<\/span>|&nbsp;|�|&gt;)/gm, '');
@@ -211,11 +217,14 @@ export default function analyse(htm: string, path: string) {
             }
           }
         } else {
-          const mainResult: any = { element: nbTd === 2 ? 'div' : 'row-images', content: [] };
+          const mainResult: any = {
+            element: nbTd === 2 ? 'div' : 'row-images',
+            content: [],
+          };
 
           let advence = 0;
           for (let j = 0; j < nbTd; j++) {
-            let jcontent = [];
+            const jcontent = [];
 
             const tdStart = trInside.indexOf('>', advence) + 1;
             const tdEnd = trInside.indexOf('</td>', tdStart);

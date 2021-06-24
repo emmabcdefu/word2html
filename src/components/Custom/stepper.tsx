@@ -106,7 +106,11 @@ const CustomStepper = (props: { steps: string[]; activeStep: number }) => {
       {steps.map((label: string) => (
         <Step key={label}>
           <StepLabel StepIconComponent={StepIcon}>
-            <Typography className={steps[activeStep] === label ? classes.activate: classes.default}>
+            <Typography
+              className={
+                steps[activeStep] === label ? classes.activate : classes.default
+              }
+            >
               {label}
             </Typography>
           </StepLabel>

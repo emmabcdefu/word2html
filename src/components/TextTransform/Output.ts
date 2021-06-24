@@ -35,7 +35,8 @@ const simpleElem: any = (content: any, e: number, numbers: any) => {
     return `<h1>${content[e].content}</h1>`;
   }
   if (tag === 'h2') {
-    if (content[e].number) return `<h2 id="${numbers.h2}" class="number"><span class="chapter">${numbers.h2}. </span>${content[e].content}</h2>`
+    if (content[e].number)
+      return `<h2 id="${numbers.h2}" class="number"><span class="chapter">${numbers.h2}. </span>${content[e].content}</h2>`;
     return `<h2>${content[e].content}</h2>`;
   }
   if (tag === 'h3') {
@@ -92,7 +93,7 @@ const generate = (content: Array<any>) => {
       for (let ee = 0; ee < content[e].content.length; ee++) {
         html += '<div>';
         for (let eee = 0; eee < content[e].content[ee].length; eee++) {
-          html += simpleElem(content[e].content[ee], eee, numbers)
+          html += simpleElem(content[e].content[ee], eee, numbers);
         }
         html += '</div>';
       }
@@ -106,14 +107,13 @@ const generate = (content: Array<any>) => {
 
   html += '</section>';
   return html;
-}
+};
 
 const write = (content: Array<any>) => {
-  return my_style + generate(content);
-}
+  return myStyle + generate(content);
+};
 
-const final_write = (content: Array<any>, style: string) => {
-
+const finalWrite = (content: Array<any>, style: string) => {
   const head = `
   <!DOCTYPE html>
   <html lang="en">
@@ -142,7 +142,7 @@ const final_write = (content: Array<any>, style: string) => {
     <div id="image-viewer">
         <span class="close">&times;</span>
         <img class="modal-content" id="full-image">
-    </div>`
+    </div>`;
 
   const script = `
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -156,11 +156,11 @@ const final_write = (content: Array<any>, style: string) => {
   </html>`;
 
   return head + allStyle + body + script;
-}
+};
 
-export { write, final_write }
+export { write, finalWrite };
 
-const my_style = `
+const myStyle = `
 <style>.container {
   font-family: Lato;
 }
