@@ -1,3 +1,4 @@
+const styleProgressBar = `
 /*
  * Reading Progress Bar
  * Adapted from https://codepen.io/blucube/pen/bdGgzg
@@ -106,4 +107,6 @@
 
 .progressbar .read span {
     border-color: #1f4484;
-}
+}`;
+
+export default styleProgressBar;

@@ -1,3 +1,4 @@
+const scriptProgressBar = `
 /*
  * Reading Progress Bar
  * Adapted from https://codepen.io/blucube/pen/bdGgzg
@@ -162,4 +163,6 @@ $(document).ready(function () {
         }, 0, 'easeInOutCubic');
     });
 
-});
+});`;
+
+export default scriptProgressBar;

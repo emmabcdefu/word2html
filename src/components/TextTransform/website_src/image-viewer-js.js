@@ -1,3 +1,4 @@
+const scriptImage = `
 /*
  * Image viewer
  * source code : https://codepen.io/abmin/pen/jZKrze
@@ -12,4 +13,6 @@ $(".image-clickable").click(function () {
 
 $("#image-viewer .close").click(function () {
     $('#image-viewer').hide();
-});
+});`;
+
+export default scriptImage;

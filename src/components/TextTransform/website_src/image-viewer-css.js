@@ -1,3 +1,4 @@
+const styleImage = `
 /*
  * Image viewer
  * source code : https://codepen.io/abmin/pen/jZKrze
@@ -58,4 +59,6 @@
     .modal-content {
         width: 100%;
     }
-}
+}`;
+
+export default styleImage;
