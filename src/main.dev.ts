@@ -96,7 +96,7 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  Menu.setApplicationMenu(null)
+  Menu.setApplicationMenu(null);
 
   // Open urls in the user's browser
   mainWindow.webContents.on('new-window', (event, url) => {
