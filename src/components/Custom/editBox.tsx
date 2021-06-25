@@ -133,8 +133,11 @@ interface ChildProps {
 const CustomEditBox: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
+  const { item } = props;
+  const { element, number, content } = item;
+
   // const [image, setImg] = React.useState(props.item.element === 'img');
-  const [h2, setH2] = React.useState(props.item.element === 'h2');
+  const [h2, setH2] = React.useState(element === 'h2');
 
   // const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
   //   const element = event.target as HTMLInputElement;
@@ -287,14 +290,14 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   // }
 
   return (
-    <div className={classes.box} style={boxborder(props.item.element)} id={id}>
+    <div className={classes.box} style={boxborder(element)} id={id}>
       <div className={classes.firstrow}>
         <Select
-          defaultValue={props.item.element}
+          defaultValue={element}
           onChange={updateElement}
           input={<BootstrapInput />}
         >
-          {items.map((elem: any) => (
+          {items.map((elem: { [name: string]: string }) => (
             <MenuItem value={elem.value} key={elem.value}>
               {elem.text}
             </MenuItem>
@@ -302,7 +305,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         </Select>
         <Select
           style={diplay(h2)}
-          defaultValue={props.item.number || false}
+          defaultValue={number || false}
           onChange={updateNumber}
           input={<BootstrapInput />}
         >
@@ -361,7 +364,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       </div> */}
       <TextareaAutosize
         // style={diplay(!image)}
-        defaultValue={props.item.content}
+        defaultValue={content}
         className={classes.textarea}
         onChange={updateContent}
       />

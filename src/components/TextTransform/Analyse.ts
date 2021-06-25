@@ -175,9 +175,7 @@ export default function analyse(htm: string, path: string) {
       const result = detectP(elem, path, titleLevel);
       if (result != null) {
         if (result.element === 'img') {
-          for (const out in result.content) {
-            content.push(result.content[parseInt(out, 10)]);
-          }
+          Object.values(result.content).forEach((out) => content.push(out));
         } else {
           content.push(result);
         }
@@ -208,9 +206,9 @@ export default function analyse(htm: string, path: string) {
             const result = detectP(elem, path, titleLevel);
             if (result != null) {
               if (result.element === 'img') {
-                for (const out in result.content) {
-                  content.push(result.content[parseInt(out, 10)]);
-                }
+                Object.values(result.content).forEach((out) =>
+                  content.push(out)
+                );
               } else {
                 content.push(result);
               }
@@ -223,7 +221,7 @@ export default function analyse(htm: string, path: string) {
           };
 
           let advence = 0;
-          for (let j = 0; j < nbTd; j++) {
+          for (let j = 0; j < nbTd; j += 1) {
             const jcontent = [];
 
             const tdStart = trInside.indexOf('>', advence) + 1;
@@ -241,9 +239,9 @@ export default function analyse(htm: string, path: string) {
               const result = detectP(elem, path, titleLevel);
               if (result != null) {
                 if (result.element === 'img') {
-                  for (const out in result.content) {
-                    jcontent.push(result.content[parseInt(out, 10)]);
-                  }
+                  Object.values(result.content).forEach((out) =>
+                    jcontent.push(out)
+                  );
                 } else {
                   jcontent.push(result);
                 }
