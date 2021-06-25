@@ -1,6 +1,8 @@
 import React from 'react';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import fs from 'fs';
 import path from 'path';
 
@@ -29,11 +31,43 @@ const useStyles: any = makeStyles(() => ({
   },
 }));
 
+const Alert = (props: AlertProps) => {
+  const { onClose, severity, children } = props;
+  return (
+    <MuiAlert
+      elevation={6}
+      variant="filled"
+      {...{ onClose, severity, children }}
+    />
+  );
+};
+
 const App: React.FC = () => {
   const classes = useStyles();
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [disable, setEnable] = React.useState(false);
+  const [openAlert1, setOpenAlert1] = React.useState(false);
+  const [openAlert2, setOpenAlert2] = React.useState(false);
+  const [pathHTML, setPath] = React.useState('');
+
+  const handleClose1: (
+    _event?: React.SyntheticEvent,
+    reason?: string
+  ) => void = (_event?: React.SyntheticEvent, reason?: string) => {
+    if (reason !== 'clickaway') {
+      setOpenAlert1(false);
+    }
+  };
+
+  const handleClose2: (
+    _event?: React.SyntheticEvent,
+    reason?: string
+  ) => void = (_event?: React.SyntheticEvent, reason?: string) => {
+    if (reason !== 'clickaway') {
+      setOpenAlert2(false);
+    }
+  };
 
   const steps = [
     'Save a copy of your word report',
@@ -54,8 +88,9 @@ const App: React.FC = () => {
     const filePath = path.join(info.path, '/my_report.html');
 
     fs.writeFile(filePath, html, (err: any) => {
-      if (err) console.error(err);
-      console.log(`JSON succesfully saved here : ${filePath}`);
+      setPath(filePath);
+      if (err) setOpenAlert1(true);
+      else setOpenAlert2(true);
     });
   };
 
@@ -127,6 +162,26 @@ const App: React.FC = () => {
             </Button>
           </div> */}
         </div>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={openAlert1}
+          autoHideDuration={2000}
+          onClose={handleClose1}
+        >
+          <Alert onClose={handleClose1} severity="error">
+            The HTML file failed to be saved here : {pathHTML}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={openAlert2}
+          autoHideDuration={2000}
+          onClose={handleClose2}
+        >
+          <Alert onClose={handleClose2} severity="success">
+            The HTML file has been successfully saved here: {pathHTML}
+          </Alert>
+        </Snackbar>
       </ThemeProvider>
     </div>
   );
