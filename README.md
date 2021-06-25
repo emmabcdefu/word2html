@@ -21,8 +21,6 @@ If you have any problem with the instalation, need a specific version or need th
 
 If you have any problem with the instalation, please [create an issue](https://github.com/Tuddual/word2html/issues/new).
 
-First, clone the repo via git and install dependencies:
-
 ## Starting Development
 
 Once all the installation is done, launch the project with `yarn start`.
