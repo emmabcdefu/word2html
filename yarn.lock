@@ -1831,10 +1831,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/semver@^7.3.1":
-  "integrity" "sha512-+nVsLKlcUCeMzD2ufHEYuJ9a2ovstb6Dp52A5VsoKxDXgvE051XgHI/33I1EymwkRGQkwnA0LkhnUzituGs4EQ=="
-  "resolved" "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.4.tgz"
-  "version" "7.3.4"
+"@types/semver@^7.3.5":
+  "integrity" "sha512-0caWDWmpCp0uifxFh+FaqK3CuZ2SkRR/ZRxAV5+zNdC3QVUi6wyOJnefhPvtNt8NQWXB5OA93BUvZsXpWat2Xw=="
+  "resolved" "https://registry.npmjs.org/@types/semver/-/semver-7.3.6.tgz"
+  "version" "7.3.6"
 
 "@types/stack-utils@^2.0.0":
   "integrity" "sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw=="
@@ -2413,7 +2413,7 @@
 
 "argparse@^2.0.1":
   "integrity" "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
-  "resolved" "https://registry.yarnpkg.com/argparse/-/argparse-2.0.1.tgz"
+  "resolved" "https://registry.npmjs.org/argparse/-/argparse-2.0.1.tgz"
   "version" "2.0.1"
 
 "aria-query@^4.2.2":
@@ -3050,18 +3050,18 @@
     "ieee754" "^1.1.4"
     "isarray" "^1.0.0"
 
-"builder-util-runtime@8.7.2":
-  "integrity" "sha512-xBqv+8bg6cfnzAQK1k3OGpfaHg+QkPgIgpEkXNhouZ0WiUkyZCftuRc2LYzQrLucFywpa14Xbc6+hTbpq83yRA=="
-  "resolved" "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-8.7.2.tgz"
-  "version" "8.7.2"
-  dependencies:
-    "debug" "^4.1.1"
-    "sax" "^1.2.4"
-
 "builder-util-runtime@8.7.3":
   "integrity" "sha512-1Q2ReBqFblimF5g/TLg2+0M5Xzv0Ih5LxJ/BMWXvEy/e6pQKeeEpbkPMGsN6OiQgkygaZo5VXCXIjOkOQG5EoQ=="
   "resolved" "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-8.7.3.tgz"
   "version" "8.7.3"
+  dependencies:
+    "debug" "^4.3.2"
+    "sax" "^1.2.4"
+
+"builder-util-runtime@8.7.5":
+  "integrity" "sha512-fgUFHKtMNjdvH6PDRFntdIGUPgwZ69sXsAqEulCtoiqgWes5agrMq/Ud274zjJRTbckYh2PHh8/1CpFc6dpsbQ=="
+  "resolved" "https://registry.npmjs.org/builder-util-runtime/-/builder-util-runtime-8.7.5.tgz"
+  "version" "8.7.5"
   dependencies:
     "debug" "^4.3.2"
     "sax" "^1.2.4"
@@ -4721,17 +4721,18 @@
   "version" "1.3.600"
 
 "electron-updater@^4.3.4":
-  "integrity" "sha512-5jjN7ebvfj1cLI0VZMdCnJk6aC4bP+dy7ryBf21vArR0JzpRVk0OZHA2QBD+H5rm6ZSeDYHOY6+8PrMEqJ4wlQ=="
-  "resolved" "https://registry.yarnpkg.com/electron-updater/-/electron-updater-4.3.5.tgz"
-  "version" "4.3.5"
+  "integrity" "sha512-LCNfedSwZfS4Hza+pDyPR05LqHtGorCStaBgVpRnfKxOlZcvpYEX0AbMeH5XUtbtGRoH2V8osbbf2qKPNb7AsA=="
+  "resolved" "https://registry.npmjs.org/electron-updater/-/electron-updater-4.3.9.tgz"
+  "version" "4.3.9"
   dependencies:
-    "@types/semver" "^7.3.1"
-    "builder-util-runtime" "8.7.2"
-    "fs-extra" "^9.0.1"
-    "js-yaml" "^3.14.0"
+    "@types/semver" "^7.3.5"
+    "builder-util-runtime" "8.7.5"
+    "fs-extra" "^10.0.0"
+    "js-yaml" "^4.1.0"
     "lazy-val" "^1.0.4"
+    "lodash.escaperegexp" "^4.1.2"
     "lodash.isequal" "^4.5.0"
-    "semver" "^7.3.2"
+    "semver" "^7.3.5"
 
 "electron@^11.0.1", "electron@^7.0.0":
   "integrity" "sha512-UefDvxeyTREL1FpC0BcXwzLjcYiQICFSZONbwarpoqTXQU5rzEguIegHPqg5AqwYH4FVYfEuigj/Vm94rtZOzg=="
@@ -5799,6 +5800,15 @@
   "integrity" "sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac="
   "resolved" "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz"
   "version" "0.5.2"
+
+"fs-extra@^10.0.0":
+  "integrity" "sha512-C5owb14u9eJwizKGdchcDUQeFtlSHHthBk8pbX9Vc1PFZrLombudjDnNns88aYslCyF6IY5SUw3Roz6xShcEIQ=="
+  "resolved" "https://registry.npmjs.org/fs-extra/-/fs-extra-10.0.0.tgz"
+  "version" "10.0.0"
+  dependencies:
+    "graceful-fs" "^4.2.0"
+    "jsonfile" "^6.0.1"
+    "universalify" "^2.0.0"
 
 "fs-extra@^8.1.0":
   "integrity" "sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g=="
@@ -7491,7 +7501,7 @@
   "resolved" "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz"
   "version" "4.0.0"
 
-"js-yaml@^3.13.1", "js-yaml@^3.14.0":
+"js-yaml@^3.13.1":
   "integrity" "sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A=="
   "resolved" "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.0.tgz"
   "version" "3.14.0"
@@ -7502,6 +7512,13 @@
 "js-yaml@^4.0.0":
   "integrity" "sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA=="
   "resolved" "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.0.tgz"
+  "version" "4.1.0"
+  dependencies:
+    "argparse" "^2.0.1"
+
+"js-yaml@^4.1.0":
+  "integrity" "sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA=="
+  "resolved" "https://registry.npmjs.org/js-yaml/-/js-yaml-4.1.0.tgz"
   "version" "4.1.0"
   dependencies:
     "argparse" "^2.0.1"
@@ -7987,6 +8004,11 @@
   "integrity" "sha1-yQRGkMIeBClL6qUXcS/e0fqI3pg="
   "resolved" "https://registry.yarnpkg.com/lodash.escape/-/lodash.escape-4.0.1.tgz"
   "version" "4.0.1"
+
+"lodash.escaperegexp@^4.1.2":
+  "integrity" "sha1-ZHYsSGGAglGKw99Mz11YhtriA0c="
+  "resolved" "https://registry.npmjs.org/lodash.escaperegexp/-/lodash.escaperegexp-4.1.2.tgz"
+  "version" "4.1.2"
 
 "lodash.flattendeep@^4.4.0":
   "integrity" "sha1-+wMJF/hqMTTlvJvsDWngAT3f7bI="
@@ -9938,7 +9960,7 @@
     "minimist" "^1.2.0"
     "strip-json-comments" "~2.0.1"
 
-"react-dom@*", "react-dom@^16.0.0-0", "react-dom@^16.8.0 || ^17.0.0", "react-dom@>=16.6.0":
+"react-dom@*", "react-dom@^16.0.0-0", "react-dom@^16.8.0 || ^17.0.0", "react-dom@^17.0.1", "react-dom@>=16.6.0":
   "integrity" "sha512-6eV150oJZ9U2t9svnsspTMrWNyHc6chX0KzDeAOXftRa8bNeOKTTfCJ7KorIwenkHd2xqVTBTCZd79yk/lx/Ug=="
   "resolved" "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.1.tgz"
   "version" "17.0.1"
@@ -10725,7 +10747,7 @@
   "resolved" "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz"
   "version" "6.3.0"
 
-"semver@^7.2.1", "semver@^7.3.2", "semver@^7.3.4":
+"semver@^7.2.1", "semver@^7.3.2", "semver@^7.3.4", "semver@^7.3.5":
   "integrity" "sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ=="
   "resolved" "https://registry.yarnpkg.com/semver/-/semver-7.3.5.tgz"
   "version" "7.3.5"

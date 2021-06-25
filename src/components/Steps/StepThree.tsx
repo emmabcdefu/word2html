@@ -34,16 +34,16 @@ const useStyles = makeStyles(() => ({
       backgroundColor: 'white',
       borderRadius: 4,
     },
-    'scroll-behavior': 'smooth'
+    'scroll-behavior': 'smooth',
   },
   table: {
     display: 'flex',
     '&> div': {
       flexGrow: 1,
-    }
+    },
   },
   tableElement: {
-    border: '1px solid white'
+    border: '1px solid white',
   },
 }));
 
@@ -53,59 +53,63 @@ interface ChildProps {
 }
 
 const StepThree: React.FC<ChildProps> = (props) => {
-
   const classes = useStyles();
+
+  const { info } = props;
+  const { content } = info;
 
   const update = (element: string) => {
     const html = document.getElementById('html')!;
     html.innerHTML = element;
   };
 
+  const editBoxes: (object: any) => any = (object: any) => {
+    if (
+      ['p', 'list', 'h2', 'h3', 'fig-caption', 'footnote', 'img'].includes(
+        object.element
+      )
+    ) {
+      return (
+        <CustomEditBox
+          item={object}
+          inDiv={false}
+          info={props.info}
+          setInfo={props.setInfo}
+          update={update}
+        />
+      );
+    }
+    if (['div', 'row-images'].includes(object.element)) {
+      return (
+        <div>
+          <div className={classes.table}>
+            {object.content.map((listobject: any, key2: number) => (
+              <div className={classes.tableElement} key={key2}>
+                {listobject.map((subobject: any, key3: number) => (
+                  <div key={key3}>{editBoxes(subobject)}</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return <div>Sorry, {object.element} is not yet handle.</div>;
+  };
+
   return (
     <div className={classes.flex}>
       <div className={classes.flexitem} id="edit">
-        {props.info.content.map((object: any, key: number) => (
-          <div key={key}>
-            {['p', 'list', 'h2', 'h3', 'fig-caption', 'footnote', 'img'].includes(object.element) ?
-              <CustomEditBox
-                item={object}
-                inDiv={false}
-                info={props.info}
-                setInfo={props.setInfo}
-                update={update}
-              /> : ['div', 'row-images'].includes(object.element) ?
-                <div>
-                  <div className={classes.table}>
-                    {object.content.map((listobject: any, key2: number) => (
-                      <div className={classes.tableElement} key={key2}>
-                        {listobject.map((subobject: any, key3: number) => (
-                          <div key={key3}>
-                            <CustomEditBox
-                              item={subobject}
-                              inDiv={true}
-                              info={props.info}
-                              setInfo={props.setInfo}
-                              update={update}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </div> :
-                <div>
-                  Sorry, {object.element} is not yet handle.
-                </div>
-            }
-          </div>
+        {content.map((object: any, key: number) => (
+          <div key={key}>{editBoxes(object)}</div>
         ))}
       </div>
       <div className={classes.flexitem}>
-        <div className='container'>
+        <div className="container">
           <div
-            className='report'
+            className="report"
             id="html"
-            dangerouslySetInnerHTML={{ __html: write(props.info.content) }}
+            dangerouslySetInnerHTML={{ __html: write(content) }}
           />
         </div>
       </div>

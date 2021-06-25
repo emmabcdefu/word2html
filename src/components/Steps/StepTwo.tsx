@@ -77,15 +77,15 @@ const StepTwo: React.FC<ChildProps> = (props) => {
     <div className={classes.flex}>
       <div className={classes.flexrow}>
         <h3>Select the htm file of your report :</h3>
-        <input
-          accept=".htm"
-          className={classes.input}
-          id="button-html"
-          type="file"
-          onChange={readFile}
-          onClick={onInputClick}
-        />
         <label htmlFor="button-html">
+          <input
+            accept=".htm"
+            className={classes.input}
+            id="button-html"
+            type="file"
+            onChange={readFile}
+            onClick={onInputClick}
+          />
           <Button
             variant="contained"
             color="primary"
@@ -98,15 +98,15 @@ const StepTwo: React.FC<ChildProps> = (props) => {
       </div>
       <div className={classes.flexrow}>
         <h3>Select the css file for the style of your report :</h3>
-        <input
-          accept=".css"
-          className={classes.input}
-          id="button-css"
-          type="file"
-          onChange={readCSS}
-          onClick={onInputClick}
-        />
         <label htmlFor="button-css">
+          <input
+            accept=".css"
+            className={classes.input}
+            id="button-css"
+            type="file"
+            onChange={readCSS}
+            onClick={onInputClick}
+          />
           <Button
             variant="contained"
             color="primary"

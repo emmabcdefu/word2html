@@ -80,6 +80,8 @@ function StepIcon(props: StepIconProps) {
     3: <EditIcon />,
   };
 
+  const { icon } = props;
+
   return (
     <div
       className={clsx(classes.root, {
@@ -87,7 +89,7 @@ function StepIcon(props: StepIconProps) {
         [classes.completed]: completed,
       })}
     >
-      {icons[String(props.icon)]}
+      {icons[String(icon)]}
     </div>
   );
 }

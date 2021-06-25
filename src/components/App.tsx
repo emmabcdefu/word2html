@@ -41,19 +41,15 @@ const App: React.FC = () => {
     'Edit your report',
   ];
 
-  const handleNext: any = () => {
+  const handleNext: () => void = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack: any = () => {
+  const handleBack: () => void = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset: any = () => {
-    setActiveStep(0);
-  };
-
-  const saveHTML: any = () => {
+  const saveHTML: () => void = () => {
     const html = finalWrite(info.content, info.style);
     const filePath = path.join(info.path, '/my_report.html');
 
@@ -63,8 +59,25 @@ const App: React.FC = () => {
     });
   };
 
-  const setInfo: any = (res: any) => {
+  const setInfo: (res: any) => void = (res: any) => {
     info = res;
+  };
+
+  const step = (thisStep: number) => {
+    switch (thisStep) {
+      case 0:
+        return <StepOne />;
+      case 1:
+        return (
+          <StepTwo
+            info={info}
+            setInfo={setInfo}
+            enableNext={() => setEnable(true)}
+          />
+        );
+      default:
+        return <StepThree info={info} setInfo={setInfo} />;
+    }
   };
 
   return (
@@ -72,17 +85,7 @@ const App: React.FC = () => {
       <ThemeProvider theme={Theme}>
         <CustomStepper steps={steps} activeStep={activeStep} />
 
-        {activeStep === 0 ? (
-          <StepOne />
-        ) : activeStep === 1 ? (
-          <StepTwo
-            info={info}
-            setInfo={setInfo}
-            enableNext={() => setEnable(true)}
-          />
-        ) : (
-          <StepThree info={info} setInfo={setInfo} />
-        )}
+        {step(activeStep)}
 
         <div className={classes.flex}>
           <div>
