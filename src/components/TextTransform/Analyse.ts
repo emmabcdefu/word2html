@@ -1,5 +1,5 @@
 // function to analyse what class is a p html tag
-const detectClassP: any = (elem: string) => {
+const detectClassP: (elem: string) => any = (elem: string) => {
   if (elem.indexOf('class=') !== -1) {
     const cStart = elem.indexOf('class=') + 6;
     if (elem.indexOf(' ', cStart) === -1) {
@@ -9,12 +9,16 @@ const detectClassP: any = (elem: string) => {
     const cEnd = Math.min(elem.indexOf(' ', cStart), elem.indexOf('>', cStart));
     return elem.substr(cStart, cEnd - cStart);
   }
-  console.error(`The element ${elem} has no class !`);
   return null;
 };
 
 // function to analyse what is inside a p html tag
-const detectInsideP: any = (
+const detectInsideP: (
+  className: string,
+  element: string,
+  path: string,
+  titleLevel: boolean
+) => any = (
   className: string,
   element: string,
   path: string,
@@ -97,13 +101,16 @@ const detectInsideP: any = (
       // element of the table of content
       return { element: null };
     default:
-      console.error(`The element ${className} isn't recognize`);
       return { element: null };
   }
 };
 
 // function that understand p tag
-const detectP: any = (elem: string, path: string, titleLevel: boolean) => {
+const detectP: (elem: string, path: string, titleLevel: boolean) => any = (
+  elem: string,
+  path: string,
+  titleLevel: boolean
+) => {
   const inside = elem.substr(elem.indexOf('>') + 1, elem.length).trim();
   if (inside !== '') {
     const className = detectClassP(elem);

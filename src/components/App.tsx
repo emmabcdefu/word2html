@@ -51,18 +51,22 @@ const App: React.FC = () => {
   const [openAlert2, setOpenAlert2] = React.useState(false);
   const [pathHTML, setPath] = React.useState('');
 
-  const handleClose1 = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
+  const handleClose1: (
+    _event?: React.SyntheticEvent,
+    reason?: string
+  ) => void = (_event?: React.SyntheticEvent, reason?: string) => {
+    if (reason !== 'clickaway') {
+      setOpenAlert1(false);
     }
-    setOpenAlert1(false);
   };
 
-  const handleClose2 = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
+  const handleClose2: (
+    _event?: React.SyntheticEvent,
+    reason?: string
+  ) => void = (_event?: React.SyntheticEvent, reason?: string) => {
+    if (reason !== 'clickaway') {
+      setOpenAlert2(false);
     }
-    setOpenAlert2(false);
   };
 
   const steps = [
