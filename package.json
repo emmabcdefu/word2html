@@ -255,7 +255,8 @@
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",
     "fs": "^0.0.1-security",
-    "react": "^17.0.1"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devEngines": {
     "node": ">=10.x",
