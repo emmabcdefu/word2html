@@ -27,12 +27,32 @@ const useStyles = makeStyles(() => ({
     'overflow-x': 'none',
     'overflow-y': 'scroll',
     '&::-webkit-scrollbar': {
-      width: '0.7em',
+      width: 16,
       backgroundColor: '#424242',
     },
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: 'white',
+      backgroundClip: 'padding-box',
+      border: '1px solid transparent',
       borderRadius: 4,
+    },
+    '&::-webkit-scrollbar-button:single-button': {
+      backgroundColor: 'white',
+      display: 'block',
+      backgroundSize: 10,
+      backgroundRepeat: 'no-repeat',
+    },
+    '&::-webkit-scrollbar-button:single-button:vertical:decrement': {
+      height: 12,
+      width: 16,
+      backgroundPosition: 'center 4px',
+      backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='black'><polygon points='50,00 0,50 100,50'/></svg>")`,
+    },
+    '&::-webkit-scrollbar-button:single-button:vertical:increment': {
+      height: 12,
+      width: 16,
+      backgroundPosition: 'center 4px',
+      backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='black'><polygon points='0,0 100,0 50,50'/></svg>")`,
     },
     'scroll-behavior': 'smooth',
   },

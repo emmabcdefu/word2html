@@ -209,7 +209,6 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
   const updateContent = (event: React.ChangeEvent<any>) => {
     // update info
-    console.log(index(), indexColumn(), indexDiv());
     if (props.inDiv) {
       props.info.content[indexDiv()].content[indexColumn()][index()].content =
         event.target.value;
