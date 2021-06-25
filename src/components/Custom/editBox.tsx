@@ -6,6 +6,7 @@ import {
   makeStyles,
   withStyles,
 } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import Select from '@material-ui/core/Select/Select';
 import InputBase from '@material-ui/core/InputBase/InputBase';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
@@ -55,6 +56,12 @@ const useStyles = makeStyles(() => ({
       borderColor: '#80bdff',
       boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
     },
+  },
+  textareasize: {
+    width: 40,
+    marginTop: 0,
+    marginLeft: 10,
+    textAlign: 'center',
   },
   box: {
     backgroundColor: '#424242',
@@ -138,6 +145,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
   // const [image, setImg] = React.useState(props.item.element === 'img');
   const [h2, setH2] = React.useState(element === 'h2');
+  const [iframe, setiframe] = React.useState(element === 'iframe');
 
   // const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
   //   const element = event.target as HTMLInputElement;
@@ -177,12 +185,25 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       // update style of the div
       // if (event.target.value === 'img') setImg(true);
       // else if (props.info.content[index()].element === 'img') setImg(false);
-      if (event.target.value === 'h2') setH2(true);
-      else if (
+      if (event.target.value === 'h2') {
+        setH2(true);
+        props.info.content[indexDiv()].content[indexColumn()][
+          index()
+        ].width = 800;
+        props.info.content[indexDiv()].content[indexColumn()][
+          index()
+        ].height = 600;
+      } else if (
         props.info.content[indexDiv()].content[indexColumn()][index()]
           .element === 'h2'
       )
         setH2(false);
+      if (event.target.value === 'iframe') setiframe(true);
+      else if (
+        props.info.content[indexDiv()].content[indexColumn()][index()]
+          .element === 'iframe'
+      )
+        setiframe(false);
       // update info
       props.info.content[indexDiv()].content[indexColumn()][index()].element =
         event.target.value;
@@ -192,6 +213,12 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       // else if (props.info.content[index()].element === 'img') setImg(false);
       if (event.target.value === 'h2') setH2(true);
       else if (props.info.content[index()].element === 'h2') setH2(false);
+      if (event.target.value === 'iframe') {
+        setiframe(true);
+        props.info.content[index()].width = 800;
+        props.info.content[index()].height = 600;
+      } else if (props.info.content[index()].element === 'iframe')
+        setiframe(false);
       // update info
       props.info.content[index()].element = event.target.value;
     }
@@ -214,6 +241,30 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         event.target.value;
     } else {
       props.info.content[index()].content = event.target.value;
+    }
+    props.setInfo(props.info);
+    props.update(write(props.info.content));
+  };
+
+  const updateWidth = (event: React.ChangeEvent<any>) => {
+    // update info
+    if (props.inDiv) {
+      props.info.content[indexDiv()].content[indexColumn()][index()].width =
+        event.target.value;
+    } else {
+      props.info.content[index()].width = event.target.value;
+    }
+    props.setInfo(props.info);
+    props.update(write(props.info.content));
+  };
+
+  const updateHeight = (event: React.ChangeEvent<any>) => {
+    // update info
+    if (props.inDiv) {
+      props.info.content[indexDiv()].content[indexColumn()][index()].height =
+        event.target.value;
+    } else {
+      props.info.content[index()].height = event.target.value;
     }
     props.setInfo(props.info);
     props.update(write(props.info.content));
@@ -317,6 +368,23 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
             </MenuItem>
           ))}
         </Select>
+
+        <div style={diplay(iframe)} className={classes.firstrow}>
+          <p>Width :</p>
+          <TextareaAutosize
+            defaultValue={800}
+            className={clsx(classes.textarea, classes.textareasize)}
+            onChange={updateWidth}
+          />
+        </div>
+        <div style={diplay(iframe)} className={classes.firstrow}>
+          <p>Height : </p>
+          <TextareaAutosize
+            defaultValue={600}
+            className={clsx(classes.textarea, classes.textareasize)}
+            onChange={updateHeight}
+          />
+        </div>
 
         {/* <div style={diplay(image)}>
           <input
