@@ -157,7 +157,7 @@ const simpleElem: (content: any, e: number, numbers: any) => string = (
     return `<img class="center-image image-clickable" src="${content[e].content}">`;
   }
   if (tag === 'iframe') {
-    return `<iframe class="center-image" width="800" height="600" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;
+    return `<iframe class="center-image" width="${content[e].width}" height="${content[e].height}" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;
   }
   if (tag === 'fig-caption') {
     return `<p class="fig-caption">${content[e].content}</p>`;

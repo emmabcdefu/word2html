@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 
 import { write } from '../TextTransform/Output';
 import CustomEditBox from '../Custom/editBox';
@@ -18,13 +19,6 @@ const useStyles = makeStyles(() => ({
   flexitem: {
     width: '50%',
     padding: 16,
-    '& .container': {
-      padding: '16px 16px 16px 42px',
-      color: 'black',
-      backgroundColor: '#D6E1E5',
-      borderRadius: 16,
-    },
-    'overflow-x': 'none',
     'overflow-y': 'scroll',
     '&::-webkit-scrollbar': {
       width: 16,
@@ -55,6 +49,15 @@ const useStyles = makeStyles(() => ({
       backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='black'><polygon points='0,0 100,0 50,50'/></svg>")`,
     },
     'scroll-behavior': 'smooth',
+  },
+  report: {
+    'overflow-x': 'hidden',
+    '& .container': {
+      padding: '16px 16px 16px 42px',
+      color: 'black',
+      backgroundColor: '#D6E1E5',
+      borderRadius: 16,
+    },
   },
   table: {
     display: 'flex',
@@ -124,7 +127,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
           <div key={key}>{editBoxes(object)}</div>
         ))}
       </div>
-      <div className={classes.flexitem}>
+      <div className={clsx(classes.flexitem, classes.report)}>
         <div className="container">
           <div
             className="report"
