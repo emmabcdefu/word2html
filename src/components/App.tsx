@@ -51,19 +51,13 @@ const App: React.FC = () => {
   const [openAlert2, setOpenAlert2] = React.useState(false);
   const [pathHTML, setPath] = React.useState('');
 
-  const handleClose1: (
-    _event?: React.SyntheticEvent,
-    reason?: string
-  ) => void = (_event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose1 = (_event?: React.SyntheticEvent, reason?: string) => {
     if (reason !== 'clickaway') {
       setOpenAlert1(false);
     }
   };
 
-  const handleClose2: (
-    _event?: React.SyntheticEvent,
-    reason?: string
-  ) => void = (_event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose2 = (_event?: React.SyntheticEvent, reason?: string) => {
     if (reason !== 'clickaway') {
       setOpenAlert2(false);
     }
@@ -75,15 +69,26 @@ const App: React.FC = () => {
     'Edit your report',
   ];
 
-  const handleNext: () => void = () => {
+  const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack: () => void = () => {
+  const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const saveHTML: () => void = () => {
+  const saveJSON = () => {
+    const json = JSON.stringify(info);
+    const filePath = path.join(info.path, '/my_report.json');
+
+    fs.writeFile(filePath, json, (err: any) => {
+      setPath(filePath);
+      if (err) setOpenAlert1(true);
+      else setOpenAlert2(true);
+    });
+  };
+
+  const saveHTML = () => {
     const html = output(info.content, info.style);
     const filePath = path.join(info.path, '/my_report.html');
 
@@ -94,7 +99,7 @@ const App: React.FC = () => {
     });
   };
 
-  const setInfo: (res: any) => void = (res: any) => {
+  const setInfo = (res: any) => {
     info = res;
   };
 
@@ -147,20 +152,18 @@ const App: React.FC = () => {
           </div>
           {activeStep === steps.length - 1 && (
             <div>
-              <Button variant="contained" color="primary" onClick={saveHTML}>
-                Save your report
+              <Button variant="contained" color="primary" onClick={saveJSON}>
+                Save information
               </Button>
             </div>
           )}
-          {/* <div>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => { console.log(info) }}
-            >
-              Show data
-            </Button>
-          </div> */}
+          {activeStep === steps.length - 1 && (
+            <div>
+              <Button variant="contained" color="primary" onClick={saveHTML}>
+                Export your report
+              </Button>
+            </div>
+          )}
         </div>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
