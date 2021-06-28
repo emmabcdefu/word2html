@@ -1,5 +1,5 @@
 version: 2
-update_configs:
+update:
   - package_manager: "javascript"
     directory: "/"
     update_schedule: "live"
