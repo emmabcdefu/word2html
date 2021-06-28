@@ -1,6 +1,8 @@
 import React from 'react';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import fs from 'fs';
 import path from 'path';
 
@@ -10,7 +12,7 @@ import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import Theme from '../theme/theme';
-import { finalWrite } from './TextTransform/Output';
+import output from './TextTransform/Output';
 
 let info: any = {};
 
@@ -29,11 +31,37 @@ const useStyles: any = makeStyles(() => ({
   },
 }));
 
+const Alert = (props: AlertProps) => {
+  const { onClose, severity, children } = props;
+  return (
+    <MuiAlert
+      elevation={6}
+      variant="filled"
+      {...{ onClose, severity, children }}
+    />
+  );
+};
+
 const App: React.FC = () => {
   const classes = useStyles();
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [disable, setEnable] = React.useState(false);
+  const [openAlert1, setOpenAlert1] = React.useState(false);
+  const [openAlert2, setOpenAlert2] = React.useState(false);
+  const [pathHTML, setPath] = React.useState('');
+
+  const handleClose1 = (_event?: React.SyntheticEvent, reason?: string) => {
+    if (reason !== 'clickaway') {
+      setOpenAlert1(false);
+    }
+  };
+
+  const handleClose2 = (_event?: React.SyntheticEvent, reason?: string) => {
+    if (reason !== 'clickaway') {
+      setOpenAlert2(false);
+    }
+  };
 
   const steps = [
     'Save a copy of your word report',
@@ -41,25 +69,37 @@ const App: React.FC = () => {
     'Edit your report',
   ];
 
-  const handleNext: () => void = () => {
+  const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack: () => void = () => {
+  const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const saveHTML: () => void = () => {
-    const html = finalWrite(info.content, info.style);
-    const filePath = path.join(info.path, '/my_report.html');
+  const saveJSON = () => {
+    const json = JSON.stringify(info);
+    const filePath = path.join(info.path, '/my_report.json');
 
-    fs.writeFile(filePath, html, (err: any) => {
-      if (err) console.error(err);
-      console.log(`JSON succesfully saved here : ${filePath}`);
+    fs.writeFile(filePath, json, (err: any) => {
+      setPath(filePath);
+      if (err) setOpenAlert1(true);
+      else setOpenAlert2(true);
     });
   };
 
-  const setInfo: (res: any) => void = (res: any) => {
+  const saveHTML = () => {
+    const html = output(info.content, info.style);
+    const filePath = path.join(info.path, '/my_report.html');
+
+    fs.writeFile(filePath, html, (err: any) => {
+      setPath(filePath);
+      if (err) setOpenAlert1(true);
+      else setOpenAlert2(true);
+    });
+  };
+
+  const setInfo = (res: any) => {
     info = res;
   };
 
@@ -112,21 +152,39 @@ const App: React.FC = () => {
           </div>
           {activeStep === steps.length - 1 && (
             <div>
-              <Button variant="contained" color="primary" onClick={saveHTML}>
-                Save your report
+              <Button variant="contained" color="primary" onClick={saveJSON}>
+                Save information
               </Button>
             </div>
           )}
-          {/* <div>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => { console.log(info) }}
-            >
-              Show data
-            </Button>
-          </div> */}
+          {activeStep === steps.length - 1 && (
+            <div>
+              <Button variant="contained" color="primary" onClick={saveHTML}>
+                Export your report
+              </Button>
+            </div>
+          )}
         </div>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={openAlert1}
+          autoHideDuration={2000}
+          onClose={handleClose1}
+        >
+          <Alert onClose={handleClose1} severity="error">
+            The HTML file failed to be saved here : {pathHTML}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={openAlert2}
+          autoHideDuration={2000}
+          onClose={handleClose2}
+        >
+          <Alert onClose={handleClose2} severity="success">
+            The HTML file has been successfully saved here: {pathHTML}
+          </Alert>
+        </Snackbar>
       </ThemeProvider>
     </div>
   );

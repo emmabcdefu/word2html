@@ -6,6 +6,7 @@ import {
   makeStyles,
   withStyles,
 } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import Select from '@material-ui/core/Select/Select';
 import InputBase from '@material-ui/core/InputBase/InputBase';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
@@ -16,8 +17,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 // import Button from '@material-ui/core/Button/Button';
 // import { AddCircle } from '@material-ui/icons';
 
-import { write } from '../TextTransform/Output';
+import render from '../TextTransform/Render';
 import Theme from '../../theme/theme';
+import generateId from '../Other/id';
 
 const BootstrapInput = withStyles(() =>
   createStyles({
@@ -55,6 +57,12 @@ const useStyles = makeStyles(() => ({
       borderColor: '#80bdff',
       boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
     },
+  },
+  textareasize: {
+    width: 40,
+    marginTop: 0,
+    marginLeft: 10,
+    textAlign: 'center',
   },
   box: {
     backgroundColor: '#424242',
@@ -125,7 +133,7 @@ const diplay = (value: boolean) => {
 interface ChildProps {
   info: any;
   inDiv: boolean;
-  item: { [name: string]: string };
+  item: any;
   setInfo: (info: any) => void;
   update: (element: string) => void;
 }
@@ -134,23 +142,19 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
   const { item } = props;
-  const { element, number, content } = item;
+  const { id, element, number, content, small } = item;
 
   // const [image, setImg] = React.useState(props.item.element === 'img');
-  const [h2, setH2] = React.useState(element === 'h2');
+  const [title, settitle] = React.useState(
+    element === 'h2' || element === 'h3' || element === 'h4'
+  );
+  const [iframe, setiframe] = React.useState(element === 'iframe');
+  const [txt, settxt] = React.useState(element === 'p' || element === 'list');
 
   // const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
   //   const element = event.target as HTMLInputElement;
   //   element.value = '';
   // };
-
-  const hex = () => {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  };
-
-  const id = `${hex()}-${hex()}-${hex()}-${hex()}`;
 
   const index = () => {
     const child = document.getElementById(id)!.parentElement;
@@ -169,47 +173,75 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   };
 
   const updateElement = (event: React.ChangeEvent<any>) => {
-    // update style of the div
-    document.getElementById(id)!.style.borderLeftColor = boxborderColor(
-      event.target.value
-    );
     if (props.inDiv) {
       // update style of the div
       // if (event.target.value === 'img') setImg(true);
       // else if (props.info.content[index()].element === 'img') setImg(false);
-      if (event.target.value === 'h2') setH2(true);
-      else if (
-        props.info.content[indexDiv()].content[indexColumn()][index()]
-          .element === 'h2'
-      )
-        setH2(false);
+
+      const newElem = event.target.value;
+      const oldElem =
+        props.info.content[indexDiv()].content[indexColumn()][index()].element;
+
+      if (newElem === 'h2' || newElem === 'h3' || newElem === 'h4')
+        settitle(true);
+      else if (oldElem === 'h2' || oldElem === 'h3' || oldElem === 'h4')
+        settitle(false);
+      if (newElem === 'iframe') setiframe(true);
+      else if (oldElem === 'iframe') setiframe(false);
+      if (newElem === 'p' || newElem === 'list') settxt(true);
+      else if (oldElem === 'p' || oldElem === 'list') settxt(false);
+
+      if (newElem === 'iframe') {
+        props.info.content[indexDiv()].content[indexColumn()][
+          index()
+        ].width = 800;
+        props.info.content[indexDiv()].content[indexColumn()][
+          index()
+        ].height = 600;
+      }
+
       // update info
-      props.info.content[indexDiv()].content[indexColumn()][index()].element =
-        event.target.value;
+      props.info.content[indexDiv()].content[indexColumn()][
+        index()
+      ].element = newElem;
     } else {
       // update style of the div
       // if (event.target.value === 'img') setImg(true);
       // else if (props.info.content[index()].element === 'img') setImg(false);
-      if (event.target.value === 'h2') setH2(true);
-      else if (props.info.content[index()].element === 'h2') setH2(false);
-      // update info
-      props.info.content[index()].element = event.target.value;
-    }
-    // update info
-    props.setInfo(props.info);
-    props.update(write(props.info.content));
-  };
 
-  const updateNumber = (event: React.ChangeEvent<any>) => {
+      const newElem = event.target.value;
+      const oldElem = props.info.content[index()].element;
+
+      if (newElem === 'h2' || newElem === 'h3' || newElem === 'h4')
+        settitle(true);
+      else if (oldElem === 'h2' || oldElem === 'h3' || oldElem === 'h4')
+        settitle(false);
+      if (newElem === 'iframe') setiframe(true);
+      else if (oldElem === 'iframe') setiframe(false);
+      if (newElem === 'p' || newElem === 'list') settxt(true);
+      else if (oldElem === 'p' || oldElem === 'list') settxt(false);
+
+      if (newElem === 'iframe') {
+        props.info.content[index()].width = 800;
+        props.info.content[index()].height = 600;
+      }
+
+      // update info
+      props.info.content[index()].element = newElem;
+    }
+
     // update info
-    props.info.content[index()].number = event.target.value;
     props.setInfo(props.info);
-    props.update(write(props.info.content));
+    props.update(render(props.info.content));
+
+    // update style of the div
+    document.getElementById(id)!.style.borderLeftColor = boxborderColor(
+      event.target.value
+    );
   };
 
   const updateContent = (event: React.ChangeEvent<any>) => {
     // update info
-    console.log(index(), indexColumn(), indexDiv());
     if (props.inDiv) {
       props.info.content[indexDiv()].content[indexColumn()][index()].content =
         event.target.value;
@@ -217,7 +249,19 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       props.info.content[index()].content = event.target.value;
     }
     props.setInfo(props.info);
-    props.update(write(props.info.content));
+    props.update(render(props.info.content));
+  };
+
+  const update = (event: React.ChangeEvent<any>, name: string) => {
+    // update info
+    if (props.inDiv) {
+      props.info.content[indexDiv()].content[indexColumn()][index()][name] =
+        event.target.value;
+    } else {
+      props.info.content[index()][name] = event.target.value;
+    }
+    props.setInfo(props.info);
+    props.update(render(props.info.content));
   };
 
   const deleteBox = () => {
@@ -228,7 +272,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       props.info.content.splice(index(), 1);
     }
     props.setInfo(props.info);
-    props.update(write(props.info.content));
+    props.update(render(props.info.content));
     // remove the box
     const child = document.getElementById(id)!.parentElement;
     child!.parentElement!.removeChild(child!);
@@ -236,13 +280,14 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
   const addBox = () => {
     // update info
+    const newId = generateId();
     if (props.inDiv) {
       props.info.content[indexDiv()].content[
         indexColumn()
       ] = props.info.content[indexDiv()].content[indexColumn()]
         .slice(0, index() + 1)
         .concat(
-          [{ element: 'p', content: '' }].concat(
+          [{ id: newId, element: 'p', small: false, content: '' }].concat(
             props.info.content[indexDiv()].content[indexColumn()].slice(
               index() + 1,
               props.info.content[indexDiv()].content[indexColumn()].length
@@ -253,19 +298,19 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       props.info.content = props.info.content
         .slice(0, index() + 1)
         .concat(
-          [{ element: 'p', content: '' }].concat(
+          [{ id: newId, element: 'p', small: false, content: '' }].concat(
             props.info.content.slice(index() + 1, props.info.content.length)
           )
         );
     }
     props.setInfo(props.info);
-    props.update(write(props.info.content));
+    props.update(render(props.info.content));
     // create a new box
     const newElement = document.createElement('div');
     ReactDOM.render(
       <ThemeProvider theme={Theme}>
         <CustomEditBox
-          item={{ element: 'p', content: '' }}
+          item={{ id: newId, element: 'p', small: false, content: '' }}
           inDiv={props.inDiv}
           info={props.info}
           setInfo={props.setInfo}
@@ -304,9 +349,9 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           ))}
         </Select>
         <Select
-          style={diplay(h2)}
+          style={diplay(title)}
           defaultValue={number || false}
-          onChange={updateNumber}
+          onChange={(event: React.ChangeEvent<any>) => update(event, 'number')}
           input={<BootstrapInput />}
         >
           {[
@@ -318,6 +363,41 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
             </MenuItem>
           ))}
         </Select>
+
+        <Select
+          style={diplay(txt)}
+          defaultValue={small || false}
+          onChange={(event: React.ChangeEvent<any>) => update(event, 'small')}
+          input={<BootstrapInput />}
+        >
+          {[
+            { value: false, text: 'Normal size' },
+            { value: true, text: 'Small size' },
+          ].map((elem: any) => (
+            <MenuItem value={elem.value} key={elem.value}>
+              {elem.text}
+            </MenuItem>
+          ))}
+        </Select>
+
+        <div style={diplay(iframe)} className={classes.firstrow}>
+          <p>Width :</p>
+          <TextareaAutosize
+            defaultValue={800}
+            className={clsx(classes.textarea, classes.textareasize)}
+            onChange={(event: React.ChangeEvent<any>) => update(event, 'width')}
+          />
+        </div>
+        <div style={diplay(iframe)} className={classes.firstrow}>
+          <p>Height : </p>
+          <TextareaAutosize
+            defaultValue={600}
+            className={clsx(classes.textarea, classes.textareasize)}
+            onChange={(event: React.ChangeEvent<any>) =>
+              update(event, 'height')
+            }
+          />
+        </div>
 
         {/* <div style={diplay(image)}>
           <input

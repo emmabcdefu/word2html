@@ -1,5 +1,7 @@
+import generateId from '../Other/id';
+
 // function to analyse what class is a p html tag
-const detectClassP: any = (elem: string) => {
+const detectClassP: (elem: string) => any = (elem: string) => {
   if (elem.indexOf('class=') !== -1) {
     const cStart = elem.indexOf('class=') + 6;
     if (elem.indexOf(' ', cStart) === -1) {
@@ -9,12 +11,16 @@ const detectClassP: any = (elem: string) => {
     const cEnd = Math.min(elem.indexOf(' ', cStart), elem.indexOf('>', cStart));
     return elem.substr(cStart, cEnd - cStart);
   }
-  console.error(`The element ${elem} has no class !`);
   return null;
 };
 
 // function to analyse what is inside a p html tag
-const detectInsideP: any = (
+const detectInsideP: (
+  className: string,
+  element: string,
+  path: string,
+  titleLevel: boolean
+) => any = (
   className: string,
   element: string,
   path: string,
@@ -31,9 +37,7 @@ const detectInsideP: any = (
       start = srcEnd;
       content.push({
         element: 'img',
-        content: `${path}\\${
-          elem.substr(srcStart, srcEnd - srcStart).split('/')[1]
-        }`,
+        content: `${path}\\${elem.substr(srcStart, srcEnd - srcStart)}`,
       });
     }
     return { element: 'img', content };
@@ -51,27 +55,27 @@ const detectInsideP: any = (
       return { element: 'h2', number: false, content: elem };
     // title h3
     case 'E2Level':
-      return { element: 'h3', content: elem };
+      return { element: 'h3', number: true, content: elem };
     case 'EHead2':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'h3', content: elem };
+      return { element: 'h3', number: true, content: elem };
     // title h4
     case 'E3Level':
-      return { element: 'h4', content: elem };
+      return { element: 'h4', number: true, content: elem };
     case 'EHead3':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'h4', content: elem };
+      return { element: 'h4', number: true, content: elem };
     // p
     case 'E4Level':
-      return { element: 'p', content: elem };
+      return { element: 'p', small: false, content: elem };
     case 'E5Level':
-      return { element: 'p', content: elem };
+      return { element: 'p', small: false, content: elem };
     case 'EHead4':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'p', content: elem };
+      return { element: 'p', small: false, content: elem };
     // p or img
     case 'MsoNormal':
-      return { element: 'p', content: elem };
+      return { element: 'p', small: false, content: elem };
     case 'MsoCaption':
       // figure caption
       return { element: 'fig-caption', content: elem };
@@ -80,7 +84,7 @@ const detectInsideP: any = (
       return { element: 'fig-caption', content: elem };
     case 'MsoListParagraph':
       // list
-      return { element: 'list', content: elem };
+      return { element: 'list', small: false, content: elem };
     case 'MsoFootnoteText':
       // footnote
       return { element: 'footnote', content: elem };
@@ -97,19 +101,23 @@ const detectInsideP: any = (
       // element of the table of content
       return { element: null };
     default:
-      console.error(`The element ${className} isn't recognize`);
       return { element: null };
   }
 };
 
 // function that understand p tag
-const detectP: any = (elem: string, path: string, titleLevel: boolean) => {
+const detectP: (elem: string, path: string, titleLevel: boolean) => any = (
+  elem: string,
+  path: string,
+  titleLevel: boolean
+) => {
   const inside = elem.substr(elem.indexOf('>') + 1, elem.length).trim();
   if (inside !== '') {
     const className = detectClassP(elem);
     if (className != null) {
       const result = detectInsideP(className, inside, path, titleLevel);
       if (result.element !== null && result.content !== '') {
+        result.id = generateId();
         return result;
       }
     }
@@ -158,6 +166,7 @@ export default function analyse(htm: string, path: string) {
   body = body.replace(/(<sup><sup>)/gm, '<sup>');
   body = body.replace(/(<\/sup><\/sup>)/gm, '</sup>');
   body = body.replace(/(b>)/gm, 'strong>');
+  body = body.replace(/( {2})/gm, ' ');
 
   const titleLevel = body.indexOf('E2Level') !== -1;
 
