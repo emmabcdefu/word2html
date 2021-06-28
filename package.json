@@ -257,6 +257,7 @@
     "electron-updater": "^4.3.4",
     "fs": "^0.0.1-security",
     "react": "^17.0.1",
+    "react-contenteditable": "^3.3.5",
     "react-dom": "^17.0.1"
   },
   "devEngines": {

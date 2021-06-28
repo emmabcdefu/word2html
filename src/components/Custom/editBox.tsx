@@ -16,6 +16,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 // import Button from '@material-ui/core/Button/Button';
 // import { AddCircle } from '@material-ui/icons';
 
+import ContentEditable from 'react-contenteditable';
 import render from '../TextTransform/Render';
 import Theme from '../../theme/theme';
 import generateId from '../Other/id';
@@ -381,20 +382,22 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
         <div style={diplay(iframe)} className={classes.firstrow}>
           <p>Width :</p>
-          <textarea
-            defaultValue={800}
+          <ContentEditable
+            html="800"
             className={clsx(classes.textarea, classes.textareasize)}
             onChange={(event: React.ChangeEvent<any>) => update(event, 'width')}
+            contentEditable
           />
         </div>
         <div style={diplay(iframe)} className={classes.firstrow}>
           <p>Height : </p>
-          <textarea
-            defaultValue={600}
+          <ContentEditable
+            html="600"
             className={clsx(classes.textarea, classes.textareasize)}
             onChange={(event: React.ChangeEvent<any>) =>
               update(event, 'height')
             }
+            contentEditable
           />
         </div>
 
@@ -441,11 +444,11 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           {props.item.content}
         </p>
       </div> */}
-      <textarea
-        // style={diplay(!image)}
-        defaultValue={content}
-        className={classes.textarea}
+      <ContentEditable
+        html={content}
+        className={clsx(classes.textarea)}
         onChange={updateContent}
+        contentEditable
       />
     </div>
   );
