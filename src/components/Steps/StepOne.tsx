@@ -17,12 +17,12 @@ const StepOne: React.FC = () => {
   return (
     <div className={classes.div}>
       <h3>
-        1. Save a copy of your word report as a &quot;Web Page, Filtered (*.htm,
+        Save a copy of your word report as a &quot;Web Page, Filtered (*.htm,
         *html)&quot;
       </h3>
-      <h3>
-        2. Put the htm file into the folder of image that has been created
-      </h3>
+      <p>
+        Warning: Do not try to delete the folder of image that has been created.
+      </p>
     </div>
   );
 };

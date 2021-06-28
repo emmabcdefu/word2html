@@ -1,10 +1,13 @@
 import React from 'react';
 import fs from 'fs';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
 import { AddCircle } from '@material-ui/icons';
+import DoneIcon from '@material-ui/icons/Done';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { green } from '@material-ui/core/colors';
 
 import analyse from '../TextTransform/Analyse';
 
@@ -12,21 +15,31 @@ const useStyles = makeStyles(() => ({
   input: {
     display: 'none',
   },
-  flex: {
+  main: {
     display: 'flex',
-    'flex-direction': 'column',
+    'flex-direction': 'row',
+    'align-items': 'stretch',
+  },
+  divstyle: {
     'max-width': 'calc(100% - 50px)',
     'background-color': '#424242',
     'border-radius': '16px',
     padding: '16px',
     margin: '10px auto 10px auto',
   },
+  flexcol: {
+    display: 'flex',
+    'flex-direction': 'column',
+    'align-items': 'center',
+    'justify-content': 'center',
+  },
   flexrow: {
     display: 'flex',
     'flex-direction': 'row',
+    'justify-content': 'center',
     'align-items': 'center',
-    '& h3': {
-      'margin-right': '15px',
+    '& label': {
+      margin: '0 15px 0 15px',
     },
   },
 }));
@@ -49,10 +62,11 @@ interface ChildProps {
 }
 
 const StepTwo: React.FC<ChildProps> = (props) => {
-  const classes: any = useStyles();
+  const classes = useStyles();
 
   const [htmInput, sethtmInput] = React.useState(false);
   const [cssInput, setcssInput] = React.useState(false);
+  const [jsonInput, setjsonInput] = React.useState(false);
   const [openAlert1, setOpenAlert1] = React.useState(false);
   const [openAlert2, setOpenAlert2] = React.useState(false);
 
@@ -92,17 +106,16 @@ const StepTwo: React.FC<ChildProps> = (props) => {
           props.info.content = analyse(data, path);
           props.info.path = path;
           props.setInfo(props.info);
+          if (cssInput) props.enableNext();
         }
       );
     } else {
       setOpenAlert1(true);
     }
     sethtmInput(true);
-    if (cssInput) props.enableNext();
   };
 
   const readCSS = (event: React.ChangeEvent<any>) => {
-    if (htmInput) props.enableNext();
     if (event.target.files && event.target.files[0]) {
       fs.readFile(
         event.target.files[0].path,
@@ -112,6 +125,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
           else setOpenAlert2(true);
           props.info.style = data;
           props.setInfo(props.info);
+          if (htmInput) props.enableNext();
         }
       );
     } else {
@@ -120,49 +134,109 @@ const StepTwo: React.FC<ChildProps> = (props) => {
     setcssInput(true);
   };
 
+  const readJSON = (event: React.ChangeEvent<any>) => {
+    if (event.target.files && event.target.files[0]) {
+      fs.readFile(
+        event.target.files[0].path,
+        'utf8',
+        (err: any, data: string) => {
+          if (err) setOpenAlert1(true);
+          else setOpenAlert2(true);
+          props.setInfo(JSON.parse(data));
+          props.enableNext();
+        }
+      );
+    } else {
+      setOpenAlert1(true);
+    }
+    setjsonInput(true);
+  };
+
   return (
-    <div className={classes.flex}>
-      <div className={classes.flexrow}>
+    <div className={classes.main}>
+      <div className={clsx(classes.divstyle, classes.flexcol)}>
         <h3>Select the htm file of your report :</h3>
-        <label htmlFor="button-html">
-          <input
-            accept=".htm"
-            className={classes.input}
-            id="button-html"
-            type="file"
-            onChange={readFile}
-            onClick={onInputClick}
+        <div className={classes.flexrow}>
+          <label htmlFor="button-html">
+            <input
+              accept=".htm"
+              className={classes.input}
+              id="button-html"
+              type="file"
+              onChange={readFile}
+              onClick={onInputClick}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              startIcon={<AddCircle />}
+            >
+              Select
+            </Button>
+          </label>
+          <DoneIcon
+            style={{ color: green[500], display: htmInput ? '' : 'none' }}
+            fontSize="large"
           />
-          <Button
-            variant="contained"
-            color="primary"
-            component="span"
-            startIcon={<AddCircle />}
-          >
-            Select
-          </Button>
-        </label>
-      </div>
-      <div className={classes.flexrow}>
+        </div>
         <h3>Select the css file for the style of your report :</h3>
-        <label htmlFor="button-css">
-          <input
-            accept=".css"
-            className={classes.input}
-            id="button-css"
-            type="file"
-            onChange={readCSS}
-            onClick={onInputClick}
+        <div className={classes.flexrow}>
+          <label htmlFor="button-css">
+            <input
+              accept=".css"
+              className={classes.input}
+              id="button-css"
+              type="file"
+              onChange={readCSS}
+              onClick={onInputClick}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              startIcon={<AddCircle />}
+            >
+              Select
+            </Button>
+          </label>
+          <DoneIcon
+            style={{ color: green[500], display: cssInput ? '' : 'none' }}
+            fontSize="large"
           />
-          <Button
-            variant="contained"
-            color="primary"
-            component="span"
-            startIcon={<AddCircle />}
-          >
-            Select
-          </Button>
-        </label>
+        </div>
+      </div>
+      <div className={classes.flexcol}>
+        <h3>OR</h3>
+      </div>
+      <div className={clsx(classes.divstyle, classes.flexcol)}>
+        <div className={classes.flexrow}>
+          <h3>Select the JSON file to continue editing your report :</h3>
+        </div>
+        <div className={classes.flexrow}>
+          <label htmlFor="button-json">
+            <input
+              accept=".json"
+              className={classes.input}
+              id="button-json"
+              type="file"
+              onChange={readJSON}
+              onClick={onInputClick}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              startIcon={<AddCircle />}
+            >
+              Select
+            </Button>
+          </label>
+          <DoneIcon
+            style={{ color: green[500], display: jsonInput ? '' : 'none' }}
+            fontSize="large"
+          />
+        </div>
       </div>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
