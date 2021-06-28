@@ -1,7 +1,18 @@
-// const toDataURL = (url: string) => {
-//   var reader = new FileReader();
-//   return reader.readAsDataURL(url);
-// };
+const img2base64 = (src: string) => {
+  // Get the image
+  const img = new Image();
+  img.src = src;
+
+  // Create canvas
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  const ctx = canvas.getContext('2d');
+  ctx!.drawImage(img, 0, 0);
+
+  return canvas.toDataURL('image/png');
+};
 
 const simpleElem: (
   content: any,
@@ -27,7 +38,10 @@ const simpleElem: (
       }
       return txt;
     case 'img':
-      if (base64) return `<img class="center-image image-clickable" src="${content[e].content}">`;
+      if (base64)
+        return `<img class="center-image image-clickable" src="${img2base64(
+          content[e].content
+        )}">`;
       return `<img class="center-image image-clickable" src="${content[e].content}">`;
     case 'iframe':
       return `<iframe class="center-image" width="${content[e].width}" height="${content[e].height}" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;
