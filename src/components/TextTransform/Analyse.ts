@@ -37,9 +37,7 @@ const detectInsideP: (
       start = srcEnd;
       content.push({
         element: 'img',
-        content: `${path}\\${
-          elem.substr(srcStart, srcEnd - srcStart).split('/')[1]
-        }`,
+        content: `${path}\\${elem.substr(srcStart, srcEnd - srcStart)}`,
       });
     }
     return { element: 'img', content };
