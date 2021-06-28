@@ -89,9 +89,18 @@ const StepThree: React.FC<ChildProps> = (props) => {
 
   const editBoxes = (object: any, inDiv: boolean) => {
     if (
-      ['p', 'list', 'h2', 'h3', 'fig-caption', 'footnote', 'img'].includes(
-        object.element
-      )
+      [
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'p',
+        'list',
+        'img',
+        'iframe',
+        'fig-caption',
+        'footnote',
+      ].includes(object.element)
     ) {
       return (
         <CustomEditBox

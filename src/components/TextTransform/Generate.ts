@@ -27,8 +27,8 @@ const simpleElem: (
       }
       return txt;
     case 'img':
-      if (base64) return `<img src="${content[e].content}">`;
-      return `<img src="${content[e].content}">`;
+      if (base64) return `<img class="center-image image-clickable" src="${content[e].content}">`;
+      return `<img class="center-image image-clickable" src="${content[e].content}">`;
     case 'iframe':
       return `<iframe class="center-image" width="${content[e].width}" height="${content[e].height}" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;
     case 'fig-caption':

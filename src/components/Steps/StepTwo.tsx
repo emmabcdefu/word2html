@@ -84,23 +84,27 @@ const StepTwo: React.FC<ChildProps> = (props) => {
   const readFile: (event: React.ChangeEvent<any>) => void = (
     event: React.ChangeEvent<any>
   ) => {
-    fs.readFile(
-      event.target.files[0].path,
-      'utf8',
-      (err: any, data: string) => {
-        if (err) setOpenAlert1(true);
-        else setOpenAlert2(true);
-        const path = event.target.files[0].path
-          .split('\\')
-          .slice(0, -1)
-          .reduce((a: string, b: string) => {
-            return `${a}\\${b}`;
-          });
-        props.info.content = analyse(data, path);
-        props.info.path = path;
-        props.setInfo(props.info);
-      }
-    );
+    if (event.target.files && event.target.files[0]) {
+      fs.readFile(
+        event.target.files[0].path,
+        'utf8',
+        (err: any, data: string) => {
+          if (err) setOpenAlert1(true);
+          else setOpenAlert2(true);
+          const path = event.target.files[0].path
+            .split('\\')
+            .slice(0, -1)
+            .reduce((a: string, b: string) => {
+              return `${a}\\${b}`;
+            });
+          props.info.content = analyse(data, path);
+          props.info.path = path;
+          props.setInfo(props.info);
+        }
+      );
+    } else {
+      setOpenAlert1(true);
+    }
     sethtmInput(true);
     if (cssInput) props.enableNext();
   };
@@ -109,16 +113,21 @@ const StepTwo: React.FC<ChildProps> = (props) => {
     event: React.ChangeEvent<any>
   ) => {
     if (htmInput) props.enableNext();
-    fs.readFile(
-      event.target.files[0].path,
-      'utf8',
-      (err: any, data: string) => {
-        if (err) setOpenAlert1(true);
-        else setOpenAlert2(true);
-        props.info.style = data;
-        props.setInfo(props.info);
-      }
-    );
+    if (event.target.files && event.target.files[0]) {
+      fs.readFile(
+        event.target.files[0].path,
+        'utf8',
+        (err: any, data: string) => {
+          if (err) setOpenAlert1(true);
+          else setOpenAlert2(true);
+          props.info.style = data;
+          props.setInfo(props.info);
+        }
+      );
+    } else {
+      setOpenAlert1(true);
+    }
+    
     setcssInput(true);
   };
 
