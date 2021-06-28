@@ -56,34 +56,26 @@ const StepTwo: React.FC<ChildProps> = (props) => {
   const [openAlert1, setOpenAlert1] = React.useState(false);
   const [openAlert2, setOpenAlert2] = React.useState(false);
 
-  const onInputClick: () => any = () => (
+  const onInputClick = () => (
     event: React.MouseEvent<HTMLInputElement, MouseEvent>
   ) => {
     const element = event.target as HTMLInputElement;
     element.value = '';
   };
 
-  const handleClose1: (
-    _event?: React.SyntheticEvent,
-    reason?: string
-  ) => void = (_event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose1 = (_event?: React.SyntheticEvent, reason?: string) => {
     if (reason !== 'clickaway') {
       setOpenAlert1(false);
     }
   };
 
-  const handleClose2: (
-    _event?: React.SyntheticEvent,
-    reason?: string
-  ) => void = (_event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose2 = (_event?: React.SyntheticEvent, reason?: string) => {
     if (reason !== 'clickaway') {
       setOpenAlert2(false);
     }
   };
 
-  const readFile: (event: React.ChangeEvent<any>) => void = (
-    event: React.ChangeEvent<any>
-  ) => {
+  const readFile = (event: React.ChangeEvent<any>) => {
     if (event.target.files && event.target.files[0]) {
       fs.readFile(
         event.target.files[0].path,
@@ -109,9 +101,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
     if (cssInput) props.enableNext();
   };
 
-  const readCSS: (event: React.ChangeEvent<any>) => void = (
-    event: React.ChangeEvent<any>
-  ) => {
+  const readCSS = (event: React.ChangeEvent<any>) => {
     if (htmInput) props.enableNext();
     if (event.target.files && event.target.files[0]) {
       fs.readFile(
@@ -127,7 +117,6 @@ const StepTwo: React.FC<ChildProps> = (props) => {
     } else {
       setOpenAlert1(true);
     }
-    
     setcssInput(true);
   };
 
