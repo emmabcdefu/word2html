@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
-import { write } from '../TextTransform/Output';
+import render from '../TextTransform/Render';
 import CustomEditBox from '../Custom/editBox';
 
 const useStyles = makeStyles(() => ({
@@ -132,7 +132,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
           <div
             className="report"
             id="html"
-            dangerouslySetInnerHTML={{ __html: write(content) }}
+            dangerouslySetInnerHTML={{ __html: render(content) }}
           />
         </div>
       </div>

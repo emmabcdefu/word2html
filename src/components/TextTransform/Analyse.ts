@@ -55,27 +55,27 @@ const detectInsideP: (
       return { element: 'h2', number: false, content: elem };
     // title h3
     case 'E2Level':
-      return { element: 'h3', content: elem };
+      return { element: 'h3', number: true, content: elem };
     case 'EHead2':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'h3', content: elem };
+      return { element: 'h3', number: true, content: elem };
     // title h4
     case 'E3Level':
-      return { element: 'h4', content: elem };
+      return { element: 'h4', number: true, content: elem };
     case 'EHead3':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'h4', content: elem };
+      return { element: 'h4', number: true, content: elem };
     // p
     case 'E4Level':
-      return { element: 'p', content: elem };
+      return { element: 'p', small: false, content: elem };
     case 'E5Level':
-      return { element: 'p', content: elem };
+      return { element: 'p', small: false, content: elem };
     case 'EHead4':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'p', content: elem };
+      return { element: 'p', small: false, content: elem };
     // p or img
     case 'MsoNormal':
-      return { element: 'p', content: elem };
+      return { element: 'p', small: false, content: elem };
     case 'MsoCaption':
       // figure caption
       return { element: 'fig-caption', content: elem };

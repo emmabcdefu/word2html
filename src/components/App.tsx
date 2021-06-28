@@ -12,7 +12,7 @@ import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import Theme from '../theme/theme';
-import { finalWrite } from './TextTransform/Output';
+import output from './TextTransform/Output';
 
 let info: any = {};
 
@@ -84,7 +84,7 @@ const App: React.FC = () => {
   };
 
   const saveHTML: () => void = () => {
-    const html = finalWrite(info.content, info.style);
+    const html = output(info.content, info.style);
     const filePath = path.join(info.path, '/my_report.html');
 
     fs.writeFile(filePath, html, (err: any) => {
