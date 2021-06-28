@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import render from '../TextTransform/Render';
 import CustomEditBox from '../Custom/editBox';
+import generateId from '../Other/id';
 
 const useStyles = makeStyles(() => ({
   textarea: {
@@ -106,10 +107,13 @@ const StepThree: React.FC<ChildProps> = (props) => {
       return (
         <div>
           <div className={classes.table}>
-            {object.content.map((listobject: any, key2: number) => (
-              <div className={classes.tableElement} key={key2}>
-                {listobject.map((subobject: any, key3: number) => (
-                  <div key={key3}>{editBoxes(subobject)}</div>
+            {object.content.map((listobject: any, row: number) => (
+              <div
+                className={classes.tableElement}
+                key={`${object.id}-row${row}`}
+              >
+                {listobject.map((subobject: any) => (
+                  <div key={subobject.id}>{editBoxes(subobject)}</div>
                 ))}
               </div>
             ))}
@@ -123,8 +127,8 @@ const StepThree: React.FC<ChildProps> = (props) => {
   return (
     <div className={classes.flex}>
       <div className={classes.flexitem} id="edit">
-        {content.map((object: any, key: number) => (
-          <div key={key}>{editBoxes(object)}</div>
+        {content.map((object: any) => (
+          <div key={object.id}>{editBoxes(object)}</div>
         ))}
       </div>
       <div className={clsx(classes.flexitem, classes.report)}>

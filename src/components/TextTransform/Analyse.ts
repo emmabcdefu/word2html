@@ -1,3 +1,5 @@
+import generateId from '../Other/id';
+
 // function to analyse what class is a p html tag
 const detectClassP: (elem: string) => any = (elem: string) => {
   if (elem.indexOf('class=') !== -1) {
@@ -117,6 +119,7 @@ const detectP: (elem: string, path: string, titleLevel: boolean) => any = (
     if (className != null) {
       const result = detectInsideP(className, inside, path, titleLevel);
       if (result.element !== null && result.content !== '') {
+        result.id = generateId();
         return result;
       }
     }
@@ -165,6 +168,7 @@ export default function analyse(htm: string, path: string) {
   body = body.replace(/(<sup><sup>)/gm, '<sup>');
   body = body.replace(/(<\/sup><\/sup>)/gm, '</sup>');
   body = body.replace(/(b>)/gm, 'strong>');
+  body = body.replace(/( {2})/gm, ' ');
 
   const titleLevel = body.indexOf('E2Level') !== -1;
 

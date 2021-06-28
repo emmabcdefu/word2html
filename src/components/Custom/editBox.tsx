@@ -19,6 +19,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import render from '../TextTransform/Render';
 import Theme from '../../theme/theme';
+import generateId from '../Other/id';
 
 const BootstrapInput = withStyles(() =>
   createStyles({
@@ -132,7 +133,7 @@ const diplay = (value: boolean) => {
 interface ChildProps {
   info: any;
   inDiv: boolean;
-  item: { [name: string]: string };
+  item: any;
   setInfo: (info: any) => void;
   update: (element: string) => void;
 }
@@ -141,7 +142,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
   const { item } = props;
-  const { element, number, content, small } = item;
+  const { id, element, number, content, small } = item;
 
   // const [image, setImg] = React.useState(props.item.element === 'img');
   const [title, settitle] = React.useState(
@@ -154,14 +155,6 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   //   const element = event.target as HTMLInputElement;
   //   element.value = '';
   // };
-
-  const hex = () => {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  };
-
-  const id = `${hex()}-${hex()}-${hex()}-${hex()}`;
 
   const index = () => {
     const child = document.getElementById(id)!.parentElement;
@@ -287,13 +280,14 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
   const addBox = () => {
     // update info
+    const newId = generateId();
     if (props.inDiv) {
       props.info.content[indexDiv()].content[
         indexColumn()
       ] = props.info.content[indexDiv()].content[indexColumn()]
         .slice(0, index() + 1)
         .concat(
-          [{ element: 'p', small: false, content: '' }].concat(
+          [{ id: newId, element: 'p', small: false, content: '' }].concat(
             props.info.content[indexDiv()].content[indexColumn()].slice(
               index() + 1,
               props.info.content[indexDiv()].content[indexColumn()].length
@@ -304,7 +298,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       props.info.content = props.info.content
         .slice(0, index() + 1)
         .concat(
-          [{ element: 'p', small: false, content: '' }].concat(
+          [{ id: newId, element: 'p', small: false, content: '' }].concat(
             props.info.content.slice(index() + 1, props.info.content.length)
           )
         );
@@ -316,7 +310,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     ReactDOM.render(
       <ThemeProvider theme={Theme}>
         <CustomEditBox
-          item={{ element: 'p', content: '' }}
+          item={{ id: newId, element: 'p', small: false, content: '' }}
           inDiv={props.inDiv}
           info={props.info}
           setInfo={props.setInfo}
