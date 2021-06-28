@@ -10,7 +10,6 @@ import clsx from 'clsx';
 import Select from '@material-ui/core/Select/Select';
 import InputBase from '@material-ui/core/InputBase/InputBase';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize/TextareaAutosize';
 import IconButton from '@material-ui/core/IconButton/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -382,7 +381,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
         <div style={diplay(iframe)} className={classes.firstrow}>
           <p>Width :</p>
-          <TextareaAutosize
+          <textarea
             defaultValue={800}
             className={clsx(classes.textarea, classes.textareasize)}
             onChange={(event: React.ChangeEvent<any>) => update(event, 'width')}
@@ -390,7 +389,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         </div>
         <div style={diplay(iframe)} className={classes.firstrow}>
           <p>Height : </p>
-          <TextareaAutosize
+          <textarea
             defaultValue={600}
             className={clsx(classes.textarea, classes.textareasize)}
             onChange={(event: React.ChangeEvent<any>) =>
@@ -442,7 +441,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           {props.item.content}
         </p>
       </div> */}
-      <TextareaAutosize
+      <textarea
         // style={diplay(!image)}
         defaultValue={content}
         className={classes.textarea}
