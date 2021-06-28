@@ -11,13 +11,17 @@ const simpleElem: (
 ) => string = (content: any, e: number, numbers: any, base64: boolean) => {
   switch (content[e].element) {
     case 'p':
-      return `<p>${content[e].content}</p>`;
+      return `<p ${content[e].small ? 'class="small"' : ''}>${
+        content[e].content
+      }</p>`;
     case 'list':
       let txt = ``;
       if (e === 0 || content[e - 1].element !== 'list') {
         txt += `<ul>`;
       }
-      txt += `<li>${content[e].content}</li>`;
+      txt += `<li ${content[e].small ? 'class="small"' : ''}>${
+        content[e].content
+      }</li>`;
       if (e === content.length - 1 || content[e + 1].element !== 'list') {
         txt += `</ul>`;
       }

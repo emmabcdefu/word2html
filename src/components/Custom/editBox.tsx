@@ -148,7 +148,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     element === 'h2' || element === 'h3' || element === 'h4'
   );
   const [iframe, setiframe] = React.useState(element === 'iframe');
-  const [p, setp] = React.useState(element === 'p');
+  const [txt, settxt] = React.useState(element === 'p' || element === 'list');
 
   // const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
   //   const element = event.target as HTMLInputElement;
@@ -195,8 +195,8 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         settitle(false);
       if (newElem === 'iframe') setiframe(true);
       else if (oldElem === 'iframe') setiframe(false);
-      if (newElem === 'p') setp(true);
-      else if (oldElem === 'p') setp(false);
+      if (newElem === 'p' || newElem === 'list') settxt(true);
+      else if (oldElem === 'p' || oldElem === 'list') settxt(false);
 
       if (newElem === 'iframe') {
         props.info.content[indexDiv()].content[indexColumn()][
@@ -225,8 +225,8 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         settitle(false);
       if (newElem === 'iframe') setiframe(true);
       else if (oldElem === 'iframe') setiframe(false);
-      if (newElem === 'p') setp(true);
-      else if (oldElem === 'p') setp(false);
+      if (newElem === 'p' || newElem === 'list') settxt(true);
+      else if (oldElem === 'p' || oldElem === 'list') settxt(false);
 
       if (newElem === 'iframe') {
         props.info.content[index()].width = 800;
@@ -371,7 +371,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         </Select>
 
         <Select
-          style={diplay(p)}
+          style={diplay(txt)}
           defaultValue={small || false}
           onChange={(event: React.ChangeEvent<any>) => update(event, 'small')}
           input={<BootstrapInput />}

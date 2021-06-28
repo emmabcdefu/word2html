@@ -84,7 +84,7 @@ const detectInsideP: (
       return { element: 'fig-caption', content: elem };
     case 'MsoListParagraph':
       // list
-      return { element: 'list', content: elem };
+      return { element: 'list', small: false, content: elem };
     case 'MsoFootnoteText':
       // footnote
       return { element: 'footnote', content: elem };
