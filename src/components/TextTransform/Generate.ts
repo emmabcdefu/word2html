@@ -13,7 +13,7 @@ const simpleElem: (
     case 'p':
       return `<p>${content[e].content}</p>`;
     case 'list':
-      let txt = '';
+      let txt = ``;
       if (e === 0 || content[e - 1].element !== 'list') {
         txt += `<ul>`;
       }
@@ -46,7 +46,7 @@ const simpleElem: (
         return `<h4 id="${numbers.h2}.${numbers.h3}.${numbers.h4}" class="number"><span class="chapter">${numbers.h2}.${numbers.h3}.${numbers.h4}</span>${content[e].content}</h4>`;
       return `<h4>${content[e].content}</h4>`;
     default:
-      console.error(`The element ${tag} is not yet handle !`);
+      console.error(`The element ${content[e].element} is not yet handle !`);
       return '';
   }
 };
