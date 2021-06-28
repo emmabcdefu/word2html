@@ -101,8 +101,8 @@ const myStyle = `
 .container li::before {
   content: "";
   background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="100 0, 100 100, 0 100" fill="%2379b51e"/></svg>');
-	background-repeat: no-repeat;
-	background-position: left center;
+  background-repeat: no-repeat;
+  background-position: left center;
   padding-right: 14px;
   margin-right: 14px;
 }
