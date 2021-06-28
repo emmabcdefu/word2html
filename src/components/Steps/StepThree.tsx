@@ -87,7 +87,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
     html.innerHTML = element;
   };
 
-  const editBoxes: (object: any) => any = (object: any) => {
+  const editBoxes = (object: any, inDiv: boolean) => {
     if (
       ['p', 'list', 'h2', 'h3', 'fig-caption', 'footnote', 'img'].includes(
         object.element
@@ -96,7 +96,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
       return (
         <CustomEditBox
           item={object}
-          inDiv={false}
+          inDiv={inDiv}
           info={props.info}
           setInfo={props.setInfo}
           update={update}
@@ -113,7 +113,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
                 key={`${object.id}-row${row}`}
               >
                 {listobject.map((subobject: any) => (
-                  <div key={subobject.id}>{editBoxes(subobject)}</div>
+                  <div key={subobject.id}>{editBoxes(subobject, true)}</div>
                 ))}
               </div>
             ))}
@@ -128,7 +128,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
     <div className={classes.flex}>
       <div className={classes.flexitem} id="edit">
         {content.map((object: any) => (
-          <div key={object.id}>{editBoxes(object)}</div>
+          <div key={object.id}>{editBoxes(object, false)}</div>
         ))}
       </div>
       <div className={clsx(classes.flexitem, classes.report)}>
