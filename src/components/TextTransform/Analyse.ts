@@ -36,6 +36,7 @@ const detectInsideP: (
       const srcEnd = elem.indexOf('"', srcStart);
       start = srcEnd;
       content.push({
+        id: generateId(),
         element: 'img',
         content: `${path}\\${elem.substr(srcStart, srcEnd - srcStart)}`,
       });
