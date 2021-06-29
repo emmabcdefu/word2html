@@ -150,8 +150,8 @@ const myStyle = `
 }
 </style>`;
 
-const render = (content: Array<any>) => {
-  return myStyle + generate(content, false);
+const render = (content: Array<any>, path: string) => {
+  return myStyle + generate(content, path, false);
 };
 
 export default render;
