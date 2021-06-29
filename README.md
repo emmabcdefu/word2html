@@ -29,7 +29,7 @@ Once all the installation is done, launch the project with `yarn start`.
 
 To package the app for windows:
 
-```bash
-electron-packager appdirectory appName --platform=win32 --arch=x64
-```
+* In main folder build the app with `yarn build`
+
+* And then package the application with `electron-packager ./ appName --platform=win32 --arch=x64`
 
