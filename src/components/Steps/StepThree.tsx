@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import render from '../TextTransform/Render';
 import CustomEditBox from '../Custom/editBox';
-import generateId from '../Other/id';
 
 const useStyles = makeStyles(() => ({
   textarea: {
