@@ -4,7 +4,7 @@ import scriptImage from './website_src/image-viewer-js';
 import styleProgressBar from './website_src/reading-progress-bar-css';
 import scriptProgressBar from './website_src/reading-progress-bar-js';
 
-const output = (info: any) => {
+const output = (content: Array<any>, style: string) => {
   const head = `
   <!DOCTYPE html>
   <html lang="en">
@@ -17,7 +17,7 @@ const output = (info: any) => {
 
   const allStyle = `
   <style>
-  ${info.style}
+  ${style}
   ${styleProgressBar}
   ${styleImage}
   </style>`;
@@ -26,7 +26,7 @@ const output = (info: any) => {
   <body>
     <div class='container'>
       <div class='report'>
-        ${generate(info.content, info.path, true)}
+        ${generate(content, true)}
       </div>
     </div>
 

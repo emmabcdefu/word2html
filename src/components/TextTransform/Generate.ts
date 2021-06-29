@@ -14,13 +14,12 @@ const img2base64 = (src: string) => {
   return canvas.toDataURL('image/png');
 };
 
-const simpleElem = (
+const simpleElem: (
   content: any,
   e: number,
   numbers: any,
-  base64: boolean,
-  path: string
-) => {
+  base64: boolean
+) => string = (content: any, e: number, numbers: any, base64: boolean) => {
   switch (content[e].element) {
     case 'p':
       return `<p ${content[e].small ? 'class="small"' : ''}>${
@@ -41,9 +40,9 @@ const simpleElem = (
     case 'img':
       if (base64)
         return `<img class="center-image image-clickable" src="${img2base64(
-          `${path}/${content[e].content}`
+          content[e].content
         )}">`;
-      return `<img class="center-image image-clickable" src="${path}/${content[e].content}">`;
+      return `<img class="center-image image-clickable" src="${content[e].content}">`;
     case 'iframe':
       return `<iframe class="center-image" width="${content[e].width}" height="${content[e].height}" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;
     case 'fig-caption':
@@ -70,7 +69,7 @@ const simpleElem = (
   }
 };
 
-const generate = (content: Array<any>, path: string, base64: boolean) => {
+const generate = (content: Array<any>, base64: boolean) => {
   let html = '';
 
   const numbers = {
@@ -114,19 +113,13 @@ const generate = (content: Array<any>, path: string, base64: boolean) => {
       for (let ee = 0; ee < content[e].content.length; ee += 1) {
         html += '<div>';
         for (let eee = 0; eee < content[e].content[ee].length; eee += 1) {
-          html += simpleElem(
-            content[e].content[ee],
-            eee,
-            numbers,
-            base64,
-            path
-          );
+          html += simpleElem(content[e].content[ee], eee, numbers, base64);
         }
         html += '</div>';
       }
       html += '</div>';
     } else {
-      html += simpleElem(content, e, numbers, base64, path);
+      html += simpleElem(content, e, numbers, base64);
     }
   }
 

@@ -89,7 +89,7 @@ const App: React.FC = () => {
   };
 
   const saveHTML = () => {
-    const html = output(info);
+    const html = output(info.content, info.style);
     const filePath = path.join(info.path, '/my_report.html');
 
     fs.writeFile(filePath, html, (err: any) => {

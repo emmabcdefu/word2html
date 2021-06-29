@@ -80,7 +80,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
   const { info } = props;
-  const { content, path } = info;
+  const { content } = info;
 
   const update = (element: string) => {
     const html = document.getElementById('html')!;
@@ -145,7 +145,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
           <div
             className="report"
             id="html"
-            dangerouslySetInnerHTML={{ __html: render(content, path) }}
+            dangerouslySetInnerHTML={{ __html: render(content) }}
           />
         </div>
       </div>

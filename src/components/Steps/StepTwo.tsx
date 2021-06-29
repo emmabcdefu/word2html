@@ -103,7 +103,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
             .reduce((a: string, b: string) => {
               return `${a}\\${b}`;
             });
-          props.info.content = analyse(data);
+          props.info.content = analyse(data, path);
           props.info.path = path;
           props.setInfo(props.info);
           if (cssInput) props.enableNext();
@@ -142,15 +142,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         (err: any, data: string) => {
           if (err) setOpenAlert1(true);
           else setOpenAlert2(true);
-          const path = event.target.files[0].path
-            .split('\\')
-            .slice(0, -1)
-            .reduce((a: string, b: string) => {
-              return `${a}\\${b}`;
-            });
-          const info = JSON.parse(data);
-          info.path = path;
-          props.setInfo(info);
+          props.setInfo(JSON.parse(data));
           props.enableNext();
         }
       );
