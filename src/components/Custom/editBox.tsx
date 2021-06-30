@@ -232,7 +232,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
     // update info
     props.setInfo(props.info);
-    props.update(render(props.info.content));
+    props.update(render(props.info.content, props.info.path));
 
     // update style of the div
     document.getElementById(id)!.style.borderLeftColor = boxborderColor(
@@ -249,7 +249,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       props.info.content[index()].content = event.target.value;
     }
     props.setInfo(props.info);
-    props.update(render(props.info.content));
+    props.update(render(props.info.content, props.info.path));
   };
 
   const update = (event: React.ChangeEvent<any>, name: string) => {
@@ -261,7 +261,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       props.info.content[index()][name] = event.target.value;
     }
     props.setInfo(props.info);
-    props.update(render(props.info.content));
+    props.update(render(props.info.content, props.info.path));
   };
 
   const deleteBox = () => {
@@ -272,7 +272,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       props.info.content.splice(index(), 1);
     }
     props.setInfo(props.info);
-    props.update(render(props.info.content));
+    props.update(render(props.info.content, props.info.path));
     // remove the box
     const child = document.getElementById(id)!.parentElement;
     child!.parentElement!.removeChild(child!);
@@ -304,7 +304,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         );
     }
     props.setInfo(props.info);
-    props.update(render(props.info.content));
+    props.update(render(props.info.content, props.info.path));
     // create a new box
     const newElement = document.createElement('div');
     ReactDOM.render(
