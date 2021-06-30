@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -30,6 +30,17 @@ const useStyles: any = makeStyles(() => ({
     height: '100vh',
   },
 }));
+
+const diplay = (value: boolean) => {
+  if (value) {
+    const mystyle: CSSProperties = {};
+    return mystyle;
+  }
+  const mystyle: CSSProperties = {
+    display: 'none',
+  };
+  return mystyle;
+};
 
 const Alert = (props: AlertProps) => {
   const { onClose, severity, children } = props;
@@ -80,9 +91,9 @@ const App: React.FC = () => {
   const saveJSON = () => {
     const json = JSON.stringify(info);
     const filePath = path.join(info.path, '/my_report.json');
+    setPath(filePath);
 
     fs.writeFile(filePath, json, (err: any) => {
-      setPath(filePath);
       if (err) setOpenAlert1(true);
       else setOpenAlert2(true);
     });
@@ -91,9 +102,9 @@ const App: React.FC = () => {
   const saveHTML = () => {
     const html = output(info.content, info.style);
     const filePath = path.join(info.path, '/my_report.html');
+    setPath(filePath);
 
     fs.writeFile(filePath, html, (err: any) => {
-      setPath(filePath);
       if (err) setOpenAlert1(true);
       else setOpenAlert2(true);
     });
@@ -137,7 +148,7 @@ const App: React.FC = () => {
               Back
             </Button>
           </div>
-          <div>
+          <div style={diplay(activeStep !== steps.length - 1)}>
             <Button
               variant="contained"
               disabled={
@@ -150,20 +161,27 @@ const App: React.FC = () => {
               Next
             </Button>
           </div>
-          {activeStep === steps.length - 1 && (
-            <div>
-              <Button variant="contained" color="primary" onClick={saveJSON}>
-                Save information
-              </Button>
-            </div>
-          )}
-          {activeStep === steps.length - 1 && (
-            <div>
-              <Button variant="contained" color="primary" onClick={saveHTML}>
-                Export your report
-              </Button>
-            </div>
-          )}
+          <div style={diplay(activeStep === steps.length - 1)}>
+            <Button variant="contained" color="primary" onClick={saveJSON}>
+              Save information
+            </Button>
+          </div>
+          <div style={diplay(activeStep === steps.length - 1)}>
+            <Button variant="contained" color="primary" onClick={saveHTML}>
+              Export your report
+            </Button>
+          </div>
+          <div style={diplay(activeStep === steps.length - 1)}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                console.log(info);
+              }}
+            >
+              console log
+            </Button>
+          </div>
         </div>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
