@@ -1,11 +1,5 @@
 import React, { CSSProperties } from 'react';
-import ReactDOM from 'react-dom';
-import {
-  ThemeProvider,
-  createStyles,
-  makeStyles,
-  withStyles,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Select from '@material-ui/core/Select/Select';
 import InputBase from '@material-ui/core/InputBase/InputBase';
@@ -18,7 +12,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 // import { AddCircle } from '@material-ui/icons';
 
 import render from '../TextTransform/Render';
-import Theme from '../../theme/theme';
 import generateId from '../Other/id';
 
 const BootstrapInput = withStyles(() =>
@@ -131,197 +124,59 @@ const diplay = (value: boolean) => {
 };
 
 interface ChildProps {
-  info: any;
   inDiv: boolean;
   item: any;
-  setInfo: (info: any) => void;
-  update: (element: string) => void;
+  updatebyID: (id: string, inDiv: boolean, newObject: any) => void;
+  deletebyID: (id: string, inDiv: boolean) => void;
+  addbyID: (id: string, inDiv: boolean) => void;
 }
 
 const CustomEditBox: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
-  const { item } = props;
-  const { id, element, number, content, small } = item;
+  const { item, inDiv, updatebyID, deletebyID, addbyID } = props;
+  const { id, element, content } = item;
 
-  // const [image, setImg] = React.useState(props.item.element === 'img');
-  const [title, settitle] = React.useState(
-    element === 'h2' || element === 'h3' || element === 'h4'
-  );
-  const [iframe, setiframe] = React.useState(element === 'iframe');
-  const [txt, settxt] = React.useState(element === 'p' || element === 'list');
+  const [myelement, setelement] = React.useState(element);
+  const title = myelement === 'h2' || myelement === 'h3' || myelement === 'h4';
+  const iframe = myelement === 'iframe';
+  const txt = myelement === 'p' || myelement === 'list';
+  // const image = myelement === 'img';
 
   // const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
   //   const element = event.target as HTMLInputElement;
   //   element.value = '';
   // };
 
-  const index = () => {
-    const child = document.getElementById(id)!.parentElement;
-    return Array.prototype.indexOf.call(child!.parentElement!.children, child);
-  };
-
-  const indexColumn = () => {
-    const child = document.getElementById(id)!.parentElement!.parentElement!;
-    return Array.prototype.indexOf.call(child!.parentElement!.children, child);
-  };
-
-  const indexDiv = () => {
-    const child = document.getElementById(id)!.parentElement!.parentElement!
-      .parentElement!.parentElement!.parentElement;
-    return Array.prototype.indexOf.call(child!.parentElement!.children, child);
-  };
-
   const updateElement = (event: React.ChangeEvent<any>) => {
-    if (props.inDiv) {
-      // update style of the div
-      // if (event.target.value === 'img') setImg(true);
-      // else if (props.info.content[index()].element === 'img') setImg(false);
-
-      const newElem = event.target.value;
-      const oldElem =
-        props.info.content[indexDiv()].content[indexColumn()][index()].element;
-
-      if (newElem === 'h2' || newElem === 'h3' || newElem === 'h4')
-        settitle(true);
-      else if (oldElem === 'h2' || oldElem === 'h3' || oldElem === 'h4')
-        settitle(false);
-      if (newElem === 'iframe') setiframe(true);
-      else if (oldElem === 'iframe') setiframe(false);
-      if (newElem === 'p' || newElem === 'list') settxt(true);
-      else if (oldElem === 'p' || oldElem === 'list') settxt(false);
-
-      if (newElem === 'iframe') {
-        props.info.content[indexDiv()].content[indexColumn()][
-          index()
-        ].width = 800;
-        props.info.content[indexDiv()].content[indexColumn()][
-          index()
-        ].height = 600;
-      }
-
-      // update info
-      props.info.content[indexDiv()].content[indexColumn()][
-        index()
-      ].element = newElem;
-    } else {
-      // update style of the div
-      // if (event.target.value === 'img') setImg(true);
-      // else if (props.info.content[index()].element === 'img') setImg(false);
-
-      const newElem = event.target.value;
-      const oldElem = props.info.content[index()].element;
-
-      if (newElem === 'h2' || newElem === 'h3' || newElem === 'h4')
-        settitle(true);
-      else if (oldElem === 'h2' || oldElem === 'h3' || oldElem === 'h4')
-        settitle(false);
-      if (newElem === 'iframe') setiframe(true);
-      else if (oldElem === 'iframe') setiframe(false);
-      if (newElem === 'p' || newElem === 'list') settxt(true);
-      else if (oldElem === 'p' || oldElem === 'list') settxt(false);
-
-      if (newElem === 'iframe') {
-        props.info.content[index()].width = 800;
-        props.info.content[index()].height = 600;
-      }
-
-      // update info
-      props.info.content[index()].element = newElem;
-    }
+    const newElem = event.target.value;
+    setelement(newElem);
 
     // update info
-    props.setInfo(props.info);
-    props.update(render(props.info.content));
-
-    // update style of the div
-    document.getElementById(id)!.style.borderLeftColor = boxborderColor(
-      event.target.value
-    );
+    item.element = newElem;
+    updatebyID(id, inDiv, item);
   };
 
   const updateContent = (event: React.ChangeEvent<any>) => {
     // update info
-    if (props.inDiv) {
-      props.info.content[indexDiv()].content[indexColumn()][index()].content =
-        event.target.value;
-    } else {
-      props.info.content[index()].content = event.target.value;
-    }
-    props.setInfo(props.info);
-    props.update(render(props.info.content));
+    item.content = event.target.value;
+    updatebyID(id, inDiv, item);
   };
 
-  const update = (event: React.ChangeEvent<any>, name: string) => {
+  const updateOption = (event: React.ChangeEvent<any>, name: string) => {
     // update info
-    if (props.inDiv) {
-      props.info.content[indexDiv()].content[indexColumn()][index()][name] =
-        event.target.value;
-    } else {
-      props.info.content[index()][name] = event.target.value;
-    }
-    props.setInfo(props.info);
-    props.update(render(props.info.content));
+    item[name] = event.target.value;
+    updatebyID(id, inDiv, item);
   };
 
   const deleteBox = () => {
     // update info
-    if (props.inDiv) {
-      props.info.content[indexDiv()].content[indexColumn()].splice(index(), 1);
-    } else {
-      props.info.content.splice(index(), 1);
-    }
-    props.setInfo(props.info);
-    props.update(render(props.info.content));
-    // remove the box
-    const child = document.getElementById(id)!.parentElement;
-    child!.parentElement!.removeChild(child!);
+    deletebyID(id, inDiv);
   };
 
   const addBox = () => {
     // update info
-    const newId = generateId();
-    if (props.inDiv) {
-      props.info.content[indexDiv()].content[
-        indexColumn()
-      ] = props.info.content[indexDiv()].content[indexColumn()]
-        .slice(0, index() + 1)
-        .concat(
-          [{ id: newId, element: 'p', small: false, content: '' }].concat(
-            props.info.content[indexDiv()].content[indexColumn()].slice(
-              index() + 1,
-              props.info.content[indexDiv()].content[indexColumn()].length
-            )
-          )
-        );
-    } else {
-      props.info.content = props.info.content
-        .slice(0, index() + 1)
-        .concat(
-          [{ id: newId, element: 'p', small: false, content: '' }].concat(
-            props.info.content.slice(index() + 1, props.info.content.length)
-          )
-        );
-    }
-    props.setInfo(props.info);
-    props.update(render(props.info.content));
-    // create a new box
-    const newElement = document.createElement('div');
-    ReactDOM.render(
-      <ThemeProvider theme={Theme}>
-        <CustomEditBox
-          item={{ id: newId, element: 'p', small: false, content: '' }}
-          inDiv={props.inDiv}
-          info={props.info}
-          setInfo={props.setInfo}
-          update={props.update}
-        />
-      </ThemeProvider>,
-      newElement
-    );
-    // add a new box
-    const parent = document.getElementById(id)!.parentElement!.parentElement;
-    parent!.insertBefore(newElement, parent!.children[index() + 1]);
+    addbyID(id, inDiv);
   };
 
   // const readPath = (event: React.ChangeEvent<any>) => {
@@ -329,9 +184,9 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   //   console.log(id) // TODO: fix id
   //   // document.getElementById(id)!.children[1].children[0].innerHTML = event.target.files[0].path;
   //   //update info
-  //   props.info.content[index()].content = event.target.files[0].path;
-  //   props.setInfo(props.info);
-  //   props.update(write(props.info.content));
+  //   info.content[index()].content = event.target.files[0].path;
+  //   setInfo(info);
+  //   update(write(info.content));
   // }
 
   return (
@@ -350,8 +205,10 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         </Select>
         <Select
           style={diplay(title)}
-          defaultValue={number || false}
-          onChange={(event: React.ChangeEvent<any>) => update(event, 'number')}
+          defaultValue={false}
+          onChange={(event: React.ChangeEvent<any>) =>
+            updateOption(event, 'number')
+          }
           input={<BootstrapInput />}
         >
           {[
@@ -366,8 +223,10 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
         <Select
           style={diplay(txt)}
-          defaultValue={small || false}
-          onChange={(event: React.ChangeEvent<any>) => update(event, 'small')}
+          defaultValue={false}
+          onChange={(event: React.ChangeEvent<any>) =>
+            updateOption(event, 'small')
+          }
           input={<BootstrapInput />}
         >
           {[
@@ -385,7 +244,9 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           <TextareaAutosize
             defaultValue={800}
             className={clsx(classes.textarea, classes.textareasize)}
-            onChange={(event: React.ChangeEvent<any>) => update(event, 'width')}
+            onChange={(event: React.ChangeEvent<any>) =>
+              updateOption(event, 'width')
+            }
           />
         </div>
         <div style={diplay(iframe)} className={classes.firstrow}>
@@ -394,7 +255,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
             defaultValue={600}
             className={clsx(classes.textarea, classes.textareasize)}
             onChange={(event: React.ChangeEvent<any>) =>
-              update(event, 'height')
+              updateOption(event, 'height')
             }
           />
         </div>
