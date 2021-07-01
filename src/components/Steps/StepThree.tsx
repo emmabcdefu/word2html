@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import render from '../TextTransform/Render';
 import CustomEditBox from '../Custom/editBox';
-import generateId from '../Other/id';
 
 const useStyles = makeStyles(() => ({
   textarea: {
@@ -79,115 +78,12 @@ interface ChildProps {
 const StepThree: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
-  const { info, setInfo } = props;
+  const { info } = props;
   const { content } = info;
 
-  const update = () => {
-    // update info
-    setInfo(info);
-    // update pre-render
+  const update = (element: string) => {
     const html = document.getElementById('html')!;
-    html.innerHTML = render(content);
-    // update boxes
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    setmymap(rendermymap);
-  };
-
-  const updatebyID = (id: string, inDiv: boolean, newObject: any) => {
-    if (inDiv) {
-      Object.values(content).forEach((objectDiv: any, indexDiv: number) => {
-        if (objectDiv.element === 'div' || objectDiv.element === 'row-images') {
-          Object.values(objectDiv.content).forEach(
-            (objectRow: any, indexColumn: number) => {
-              Object.values(objectRow).forEach((object: any, index: number) => {
-                if (object.id === id) {
-                  content[indexDiv].content[indexColumn][index] = newObject;
-                  update();
-                }
-              });
-            }
-          );
-        }
-      });
-    } else {
-      Object.values(content).forEach((object: any, index: number) => {
-        if (object.id === id) {
-          content[index] = newObject;
-          update();
-        }
-      });
-    }
-  };
-
-  const deletebyID = (id: string, inDiv: boolean) => {
-    if (inDiv) {
-      Object.values(content).forEach((objectDiv: any, indexDiv: number) => {
-        if (objectDiv.element === 'div' || objectDiv.element === 'row-images') {
-          Object.values(objectDiv.content).forEach(
-            (objectRow: any, indexColumn: number) => {
-              Object.values(objectRow).forEach((object: any, index: number) => {
-                if (object.id === id) {
-                  content[indexDiv].content[indexColumn].splice(index, 1);
-                  update();
-                }
-              });
-            }
-          );
-        }
-      });
-    } else {
-      Object.values(content).forEach((object: any, index: number) => {
-        if (object.id === id) {
-          content.splice(index, 1);
-          update();
-        }
-      });
-    }
-  };
-
-  const addbyID = (id: string, inDiv: boolean) => {
-    const newObject = {
-      id: generateId(),
-      element: 'p',
-      small: false,
-      content: '',
-    };
-    if (inDiv) {
-      Object.values(content).forEach((objectDiv: any, indexDiv: number) => {
-        if (objectDiv.element === 'div' || objectDiv.element === 'row-images') {
-          Object.values(objectDiv.content).forEach(
-            (objectRow: any, indexColumn: number) => {
-              Object.values(objectRow).forEach((object: any, index: number) => {
-                if (object.id === id) {
-                  content[indexDiv].content[indexColumn]
-                    .slice(0, index + 1)
-                    .concat(
-                      [newObject].concat(
-                        content[indexDiv].content[indexColumn].slice(
-                          index + 1,
-                          content[indexDiv].content[indexColumn].length
-                        )
-                      )
-                    );
-                  update();
-                }
-              });
-            }
-          );
-        }
-      });
-    } else {
-      Object.values(content).forEach((object: any, index: number) => {
-        if (object.id === id) {
-          content
-            .slice(0, index + 1)
-            .concat(
-              [newObject].concat(content.slice(index + 1, content.length))
-            );
-          update();
-        }
-      });
-    }
+    html.innerHTML = element;
   };
 
   const editBoxes = (object: any, inDiv: boolean) => {
@@ -209,9 +105,9 @@ const StepThree: React.FC<ChildProps> = (props) => {
         <CustomEditBox
           item={object}
           inDiv={inDiv}
-          updatebyID={updatebyID}
-          deletebyID={deletebyID}
-          addbyID={addbyID}
+          info={props.info}
+          setInfo={props.setInfo}
+          update={update}
         />
       );
     }
@@ -236,17 +132,13 @@ const StepThree: React.FC<ChildProps> = (props) => {
     return <div>Sorry, {object.element} is not yet handle.</div>;
   };
 
-  const rendermymap = () => {
-    return content.map((object: any) => (
-      <div key={object.id}>{editBoxes(object, false)}</div>
-    ));
-  };
-
-  const [mymap, setmymap] = React.useState(rendermymap);
-
   return (
     <div className={classes.flex}>
-      <div className={classes.flexitem}>{mymap}</div>
+      <div className={classes.flexitem} id="edit">
+        {content.map((object: any) => (
+          <div key={object.id}>{editBoxes(object, false)}</div>
+        ))}
+      </div>
       <div className={clsx(classes.flexitem, classes.report)}>
         <div className="container">
           <div
