@@ -92,7 +92,7 @@ const App: React.FC = () => {
   };
 
   const saveHTML = () => {
-    const html = output(info.content, info.style);
+    const html = output(info);
     const filePath = path.join(info.path, '/my_report.html');
     setPath(filePath);
 
