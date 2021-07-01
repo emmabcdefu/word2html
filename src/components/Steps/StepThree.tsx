@@ -81,9 +81,9 @@ const StepThree: React.FC<ChildProps> = (props) => {
   const { info } = props;
   const { content } = info;
 
-  const update = (element: string) => {
+  const update = () => {
     const html = document.getElementById('html')!;
-    html.innerHTML = element;
+    html.innerHTML = render(info.content);
   };
 
   const editBoxes = (object: any, inDiv: boolean) => {
@@ -107,7 +107,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
           inDiv={inDiv}
           info={props.info}
           setInfo={props.setInfo}
-          update={update}
+          render={update}
         />
       );
     }
