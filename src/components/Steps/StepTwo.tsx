@@ -4,10 +4,9 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
 import { AddCircle } from '@material-ui/icons';
-import DoneIcon from '@material-ui/icons/Done';
-import { green } from '@material-ui/core/colors';
 
 import analyse from '../TextTransform/Analyse';
+import IconStatus from '../Custom/IconStatus';
 
 const useStyles = makeStyles(() => ({
   input: {
@@ -51,9 +50,9 @@ interface ChildProps {
 const StepTwo: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
-  const [htmInput, sethtmInput] = React.useState(false);
-  const [cssInput, setcssInput] = React.useState(false);
-  const [jsonInput, setjsonInput] = React.useState(false);
+  const [htmInput, sethtmInput] = React.useState('');
+  const [cssInput, setcssInput] = React.useState('');
+  const [jsonInput, setjsonInput] = React.useState('');
 
   const onInputClick = () => (
     event: React.MouseEvent<HTMLInputElement, MouseEvent>
@@ -68,22 +67,24 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) sethtmInput(false);
-          else sethtmInput(true);
-          const path = event.target.files[0].path
-            .split('\\')
-            .slice(0, -1)
-            .reduce((a: string, b: string) => {
-              return `${a}\\${b}`;
-            });
-          props.info.content = analyse(data);
-          props.info.path = path;
-          props.setInfo(props.info);
-          if (cssInput) props.enableNext();
+          if (err) sethtmInput('Error');
+          else {
+            sethtmInput('Valide');
+            const path = event.target.files[0].path
+              .split('\\')
+              .slice(0, -1)
+              .reduce((a: string, b: string) => {
+                return `${a}\\${b}`;
+              });
+            props.info.content = analyse(data);
+            props.info.path = path;
+            props.setInfo(props.info);
+            if (cssInput === 'Valide') props.enableNext();
+          }
         }
       );
     } else {
-      sethtmInput(false);
+      sethtmInput('Error');
     }
   };
 
@@ -93,17 +94,18 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) setcssInput(false);
-          else setcssInput(true);
-          props.info.style = data;
-          props.setInfo(props.info);
-          if (htmInput) props.enableNext();
+          if (err) setcssInput('Error');
+          else {
+            setcssInput('Valide');
+            props.info.style = data;
+            props.setInfo(props.info);
+            if (htmInput === 'Valide') props.enableNext();
+          }
         }
       );
     } else {
-      setcssInput(false);
+      setcssInput('Error');
     }
-    setcssInput(true);
   };
 
   const readJSON = (event: React.ChangeEvent<any>) => {
@@ -112,22 +114,24 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) setjsonInput(false);
-          else setjsonInput(true);
-          const path = event.target.files[0].path
-            .split('\\')
-            .slice(0, -1)
-            .reduce((a: string, b: string) => {
-              return `${a}\\${b}`;
-            });
-          const info = JSON.parse(data);
-          info.path = path;
-          props.setInfo(info);
-          props.enableNext();
+          if (err) setjsonInput('Error');
+          else {
+            setjsonInput('Valide');
+            const path = event.target.files[0].path
+              .split('\\')
+              .slice(0, -1)
+              .reduce((a: string, b: string) => {
+                return `${a}\\${b}`;
+              });
+            const info = JSON.parse(data);
+            info.path = path;
+            props.setInfo(info);
+            props.enableNext();
+          }
         }
       );
     } else {
-      setjsonInput(false);
+      setjsonInput('Error');
     }
   };
 
@@ -154,10 +158,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
               Select
             </Button>
           </label>
-          <DoneIcon
-            style={{ color: green[500], display: htmInput ? '' : 'none' }}
-            fontSize="large"
-          />
+          <IconStatus status={htmInput} />
         </div>
         <h3>Select the css file for the style of your report :</h3>
         <div className={classes.flexrow}>
@@ -179,10 +180,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
               Select
             </Button>
           </label>
-          <DoneIcon
-            style={{ color: green[500], display: cssInput ? '' : 'none' }}
-            fontSize="large"
-          />
+          <IconStatus status={cssInput} />
         </div>
       </div>
       <div className={classes.flexcol}>
@@ -211,10 +209,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
               Select
             </Button>
           </label>
-          <DoneIcon
-            style={{ color: green[500], display: jsonInput ? '' : 'none' }}
-            fontSize="large"
-          />
+          <IconStatus status={jsonInput} />
         </div>
       </div>
     </div>

@@ -3,9 +3,6 @@ import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import fs from 'fs';
 import path from 'path';
-import DoneIcon from '@material-ui/icons/Done';
-import CloseIcon from '@material-ui/icons/Close';
-import { green } from '@material-ui/core/colors';
 
 import './App.global.css';
 import CustomStepper from './Custom/stepper';
@@ -14,6 +11,7 @@ import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import Theme from '../theme/theme';
 import output from './TextTransform/Output';
+import IconStatus from './Custom/IconStatus';
 
 const useStyles: any = makeStyles(() => ({
   flex: {
@@ -43,8 +41,8 @@ const App: React.FC = () => {
   const [info, setInfo] = React.useState(defaultinfo);
   const [activeStep, setActiveStep] = React.useState(0);
   const [disable, setEnable] = React.useState(false);
-  const [htmOutput, sethtmOutput] = React.useState(false);
-  const [jsonOutput, setjsonOutput] = React.useState(false);
+  const [htmlOutput, sethtmlOutput] = React.useState('');
+  const [jsonOutput, setjsonOutput] = React.useState('');
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -59,8 +57,13 @@ const App: React.FC = () => {
     const filePath = path.join(info.path, '/my_report.json');
 
     fs.writeFile(filePath, json, (err: any) => {
-      if (err) setjsonOutput(true);
-      else setjsonOutput(true);
+      if (err) setjsonOutput('Error');
+      else {
+        setjsonOutput('Valide');
+        setTimeout(() => {
+          setjsonOutput('');
+        }, 3000);
+      }
     });
   };
 
@@ -69,8 +72,13 @@ const App: React.FC = () => {
     const filePath = path.join(info.path, '/my_report.html');
 
     fs.writeFile(filePath, html, (err: any) => {
-      if (err) sethtmOutput(true);
-      else sethtmOutput(true);
+      if (err) sethtmlOutput('Error');
+      else {
+        sethtmlOutput('Valide');
+        setTimeout(() => {
+          sethtmlOutput('');
+        }, 3000);
+      }
     });
   };
 
@@ -128,10 +136,11 @@ const App: React.FC = () => {
               <Button variant="contained" color="primary" onClick={saveJSON}>
                 Save information
               </Button>
-              <DoneIcon
-                style={{ color: green[500], display: jsonOutput ? '' : 'none' }}
-                fontSize="large"
-              />
+            </div>
+          ) : null}
+          {activeStep === steps.length - 1 && jsonOutput !== '' ? (
+            <div>
+              <IconStatus status={jsonOutput} />
             </div>
           ) : null}
           {activeStep === steps.length - 1 ? (
@@ -139,10 +148,11 @@ const App: React.FC = () => {
               <Button variant="contained" color="primary" onClick={saveHTML}>
                 Export your report
               </Button>
-              <DoneIcon
-                style={{ color: green[500], display: htmOutput ? '' : 'none' }}
-                fontSize="large"
-              />
+            </div>
+          ) : null}
+          {activeStep === steps.length - 1 && htmlOutput !== '' ? (
+            <div>
+              <IconStatus status={htmlOutput} />
             </div>
           ) : null}
         </div>
