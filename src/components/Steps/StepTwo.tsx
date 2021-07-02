@@ -4,12 +4,9 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
 import { AddCircle } from '@material-ui/icons';
-import DoneIcon from '@material-ui/icons/Done';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { green } from '@material-ui/core/colors';
 
 import analyse from '../TextTransform/Analyse';
+import IconStatus from '../Custom/IconStatus';
 
 const useStyles = makeStyles(() => ({
   input: {
@@ -44,17 +41,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Alert = (props: AlertProps) => {
-  const { onClose, severity, children } = props;
-  return (
-    <MuiAlert
-      elevation={6}
-      variant="filled"
-      {...{ onClose, severity, children }}
-    />
-  );
-};
-
 interface ChildProps {
   info: any;
   setInfo: (info: any) => void;
@@ -64,11 +50,9 @@ interface ChildProps {
 const StepTwo: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
-  const [htmInput, sethtmInput] = React.useState(false);
-  const [cssInput, setcssInput] = React.useState(false);
-  const [jsonInput, setjsonInput] = React.useState(false);
-  const [openAlert1, setOpenAlert1] = React.useState(false);
-  const [openAlert2, setOpenAlert2] = React.useState(false);
+  const [htmInput, sethtmInput] = React.useState('');
+  const [cssInput, setcssInput] = React.useState('');
+  const [jsonInput, setjsonInput] = React.useState('');
 
   const onInputClick = () => (
     event: React.MouseEvent<HTMLInputElement, MouseEvent>
@@ -77,42 +61,31 @@ const StepTwo: React.FC<ChildProps> = (props) => {
     element.value = '';
   };
 
-  const handleClose1 = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason !== 'clickaway') {
-      setOpenAlert1(false);
-    }
-  };
-
-  const handleClose2 = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason !== 'clickaway') {
-      setOpenAlert2(false);
-    }
-  };
-
   const readFile = (event: React.ChangeEvent<any>) => {
     if (event.target.files && event.target.files[0]) {
       fs.readFile(
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) setOpenAlert1(true);
-          else setOpenAlert2(true);
-          const path = event.target.files[0].path
-            .split('\\')
-            .slice(0, -1)
-            .reduce((a: string, b: string) => {
-              return `${a}\\${b}`;
-            });
-          props.info.content = analyse(data);
-          props.info.path = path;
-          props.setInfo(props.info);
-          if (cssInput) props.enableNext();
+          if (err) sethtmInput('Error');
+          else {
+            sethtmInput('Valide');
+            const path = event.target.files[0].path
+              .split('\\')
+              .slice(0, -1)
+              .reduce((a: string, b: string) => {
+                return `${a}\\${b}`;
+              });
+            props.info.content = analyse(data);
+            props.info.path = path;
+            props.setInfo(props.info);
+            if (cssInput === 'Valide') props.enableNext();
+          }
         }
       );
     } else {
-      setOpenAlert1(true);
+      sethtmInput('Error');
     }
-    sethtmInput(true);
   };
 
   const readCSS = (event: React.ChangeEvent<any>) => {
@@ -121,17 +94,18 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) setOpenAlert1(true);
-          else setOpenAlert2(true);
-          props.info.style = data;
-          props.setInfo(props.info);
-          if (htmInput) props.enableNext();
+          if (err) setcssInput('Error');
+          else {
+            setcssInput('Valide');
+            props.info.style = data;
+            props.setInfo(props.info);
+            if (htmInput === 'Valide') props.enableNext();
+          }
         }
       );
     } else {
-      setOpenAlert1(true);
+      setcssInput('Error');
     }
-    setcssInput(true);
   };
 
   const readJSON = (event: React.ChangeEvent<any>) => {
@@ -140,24 +114,25 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) setOpenAlert1(true);
-          else setOpenAlert2(true);
-          const path = event.target.files[0].path
-            .split('\\')
-            .slice(0, -1)
-            .reduce((a: string, b: string) => {
-              return `${a}\\${b}`;
-            });
-          const info = JSON.parse(data);
-          info.path = path;
-          props.setInfo(info);
-          props.enableNext();
+          if (err) setjsonInput('Error');
+          else {
+            setjsonInput('Valide');
+            const path = event.target.files[0].path
+              .split('\\')
+              .slice(0, -1)
+              .reduce((a: string, b: string) => {
+                return `${a}\\${b}`;
+              });
+            const info = JSON.parse(data);
+            info.path = path;
+            props.setInfo(info);
+            props.enableNext();
+          }
         }
       );
     } else {
-      setOpenAlert1(true);
+      setjsonInput('Error');
     }
-    setjsonInput(true);
   };
 
   return (
@@ -183,10 +158,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
               Select
             </Button>
           </label>
-          <DoneIcon
-            style={{ color: green[500], display: htmInput ? '' : 'none' }}
-            fontSize="large"
-          />
+          <IconStatus status={htmInput} />
         </div>
         <h3>Select the css file for the style of your report :</h3>
         <div className={classes.flexrow}>
@@ -208,10 +180,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
               Select
             </Button>
           </label>
-          <DoneIcon
-            style={{ color: green[500], display: cssInput ? '' : 'none' }}
-            fontSize="large"
-          />
+          <IconStatus status={cssInput} />
         </div>
       </div>
       <div className={classes.flexcol}>
@@ -240,32 +209,9 @@ const StepTwo: React.FC<ChildProps> = (props) => {
               Select
             </Button>
           </label>
-          <DoneIcon
-            style={{ color: green[500], display: jsonInput ? '' : 'none' }}
-            fontSize="large"
-          />
+          <IconStatus status={jsonInput} />
         </div>
       </div>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={openAlert1}
-        autoHideDuration={2000}
-        onClose={handleClose1}
-      >
-        <Alert onClose={handleClose1} severity="error">
-          The file could not be read.
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={openAlert2}
-        autoHideDuration={2000}
-        onClose={handleClose2}
-      >
-        <Alert onClose={handleClose2} severity="success">
-          The file has successfully been read.
-        </Alert>
-      </Snackbar>
     </div>
   );
 };
