@@ -15,15 +15,9 @@ const detectClassP: (elem: string) => any = (elem: string) => {
 };
 
 // function to analyse what is inside a p html tag
-const detectInsideP: (
+const detectInsideP = (
   className: string,
   element: string,
-  path: string,
-  titleLevel: boolean
-) => any = (
-  className: string,
-  element: string,
-  path: string,
   titleLevel: boolean
 ) => {
   const elem = element.trim();
@@ -38,7 +32,7 @@ const detectInsideP: (
       content.push({
         id: generateId(),
         element: 'img',
-        content: `${path}\\${elem.substr(srcStart, srcEnd - srcStart)}`,
+        content: `${elem.substr(srcStart, srcEnd - srcStart)}`,
       });
     }
     return { element: 'img', content };
@@ -107,16 +101,15 @@ const detectInsideP: (
 };
 
 // function that understand p tag
-const detectP: (elem: string, path: string, titleLevel: boolean) => any = (
+const detectP: (elem: string, titleLevel: boolean) => any = (
   elem: string,
-  path: string,
   titleLevel: boolean
 ) => {
   const inside = elem.substr(elem.indexOf('>') + 1, elem.length).trim();
   if (inside !== '') {
     const className = detectClassP(elem);
     if (className != null) {
-      const result = detectInsideP(className, inside, path, titleLevel);
+      const result: any = detectInsideP(className, inside, titleLevel);
       if (result.element !== null && result.content !== '') {
         result.id = generateId();
         return result;
@@ -126,7 +119,7 @@ const detectP: (elem: string, path: string, titleLevel: boolean) => any = (
   return null;
 };
 
-export default function analyse(htm: string, path: string) {
+export default function analyse(htm: string) {
   // Collect only the body part
   const bodyStart = htm.indexOf('<body');
   const bodyEnd = htm.indexOf('</body>');
@@ -182,7 +175,7 @@ export default function analyse(htm: string, path: string) {
 
       end = body.indexOf('</p>', start);
       const elem = body.substr(start, end - start);
-      const result = detectP(elem, path, titleLevel);
+      const result = detectP(elem, titleLevel);
       if (result != null) {
         if (result.element === 'img') {
           Object.values(result.content).forEach((out) => content.push(out));
@@ -213,7 +206,7 @@ export default function analyse(htm: string, path: string) {
 
             // No table inside a table
             const elem = tdInside.substr(pStart, pEnd - pStart);
-            const result = detectP(elem, path, titleLevel);
+            const result = detectP(elem, titleLevel);
             if (result != null) {
               if (result.element === 'img') {
                 Object.values(result.content).forEach((out) =>
@@ -246,7 +239,7 @@ export default function analyse(htm: string, path: string) {
 
               // No table inside a table
               const elem = tdInside.substr(pStart, pEnd - pStart);
-              const result = detectP(elem, path, titleLevel);
+              const result = detectP(elem, titleLevel);
               if (result != null) {
                 if (result.element === 'img') {
                   Object.values(result.content).forEach((out) =>

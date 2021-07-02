@@ -1,8 +1,6 @@
 import React from 'react';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import fs from 'fs';
 import path from 'path';
 
@@ -13,8 +11,7 @@ import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import Theme from '../theme/theme';
 import output from './TextTransform/Output';
-
-let info: any = {};
+import IconStatus from './Custom/IconStatus';
 
 const useStyles: any = makeStyles(() => ({
   flex: {
@@ -31,43 +28,21 @@ const useStyles: any = makeStyles(() => ({
   },
 }));
 
-const Alert = (props: AlertProps) => {
-  const { onClose, severity, children } = props;
-  return (
-    <MuiAlert
-      elevation={6}
-      variant="filled"
-      {...{ onClose, severity, children }}
-    />
-  );
-};
+const steps = [
+  'Save a copy of your word report',
+  'Output your report and style',
+  'Edit your report',
+];
 
 const App: React.FC = () => {
   const classes = useStyles();
 
+  const defaultinfo: any = { path: '', content: [], style: '' };
+  const [info, setInfo] = React.useState(defaultinfo);
   const [activeStep, setActiveStep] = React.useState(0);
   const [disable, setEnable] = React.useState(false);
-  const [openAlert1, setOpenAlert1] = React.useState(false);
-  const [openAlert2, setOpenAlert2] = React.useState(false);
-  const [pathHTML, setPath] = React.useState('');
-
-  const handleClose1 = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason !== 'clickaway') {
-      setOpenAlert1(false);
-    }
-  };
-
-  const handleClose2 = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason !== 'clickaway') {
-      setOpenAlert2(false);
-    }
-  };
-
-  const steps = [
-    'Save a copy of your word report',
-    'Input your report and style',
-    'Edit your report',
-  ];
+  const [htmlOutput, sethtmlOutput] = React.useState('');
+  const [jsonOutput, setjsonOutput] = React.useState('');
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -82,25 +57,29 @@ const App: React.FC = () => {
     const filePath = path.join(info.path, '/my_report.json');
 
     fs.writeFile(filePath, json, (err: any) => {
-      setPath(filePath);
-      if (err) setOpenAlert1(true);
-      else setOpenAlert2(true);
+      if (err) setjsonOutput('Error');
+      else {
+        setjsonOutput('Valide');
+        setTimeout(() => {
+          setjsonOutput('');
+        }, 3000);
+      }
     });
   };
 
   const saveHTML = () => {
-    const html = output(info.content, info.style);
+    const html = output(info);
     const filePath = path.join(info.path, '/my_report.html');
 
     fs.writeFile(filePath, html, (err: any) => {
-      setPath(filePath);
-      if (err) setOpenAlert1(true);
-      else setOpenAlert2(true);
+      if (err) sethtmlOutput('Error');
+      else {
+        sethtmlOutput('Valide');
+        setTimeout(() => {
+          sethtmlOutput('');
+        }, 3000);
+      }
     });
-  };
-
-  const setInfo = (res: any) => {
-    info = res;
   };
 
   const step = (thisStep: number) => {
@@ -137,54 +116,46 @@ const App: React.FC = () => {
               Back
             </Button>
           </div>
-          <div>
-            <Button
-              variant="contained"
-              disabled={
-                (activeStep === 1 && !disable) ||
-                activeStep === steps.length - 1
-              }
-              color="primary"
-              onClick={handleNext}
-            >
-              Next
-            </Button>
-          </div>
-          {activeStep === steps.length - 1 && (
+          {activeStep !== steps.length - 1 ? (
+            <div>
+              <Button
+                variant="contained"
+                disabled={
+                  (activeStep === 1 && !disable) ||
+                  activeStep === steps.length - 1
+                }
+                color="primary"
+                onClick={handleNext}
+              >
+                Next
+              </Button>
+            </div>
+          ) : null}
+          {activeStep === steps.length - 1 ? (
             <div>
               <Button variant="contained" color="primary" onClick={saveJSON}>
                 Save information
               </Button>
             </div>
-          )}
-          {activeStep === steps.length - 1 && (
+          ) : null}
+          {activeStep === steps.length - 1 && jsonOutput !== '' ? (
+            <div>
+              <IconStatus status={jsonOutput} />
+            </div>
+          ) : null}
+          {activeStep === steps.length - 1 ? (
             <div>
               <Button variant="contained" color="primary" onClick={saveHTML}>
                 Export your report
               </Button>
             </div>
-          )}
+          ) : null}
+          {activeStep === steps.length - 1 && htmlOutput !== '' ? (
+            <div>
+              <IconStatus status={htmlOutput} />
+            </div>
+          ) : null}
         </div>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={openAlert1}
-          autoHideDuration={2000}
-          onClose={handleClose1}
-        >
-          <Alert onClose={handleClose1} severity="error">
-            The HTML file failed to be saved here : {pathHTML}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={openAlert2}
-          autoHideDuration={2000}
-          onClose={handleClose2}
-        >
-          <Alert onClose={handleClose2} severity="success">
-            The HTML file has been successfully saved here: {pathHTML}
-          </Alert>
-        </Snackbar>
       </ThemeProvider>
     </div>
   );
