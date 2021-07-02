@@ -30,3 +30,7 @@ jobs:
           yarn package
           yarn lint
           yarn test
+
+      - name: yarn build
+          yarn build
+          electron-packager ./ transformer
