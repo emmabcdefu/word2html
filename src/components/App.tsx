@@ -1,10 +1,11 @@
 import React from 'react';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import fs from 'fs';
 import path from 'path';
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
+import { green } from '@material-ui/core/colors';
 
 import './App.global.css';
 import CustomStepper from './Custom/stepper';
@@ -29,20 +30,9 @@ const useStyles: any = makeStyles(() => ({
   },
 }));
 
-const Alert = (props: AlertProps) => {
-  const { onClose, severity, children } = props;
-  return (
-    <MuiAlert
-      elevation={6}
-      variant="filled"
-      {...{ onClose, severity, children }}
-    />
-  );
-};
-
 const steps = [
   'Save a copy of your word report',
-  'Input your report and style',
+  'Output your report and style',
   'Edit your report',
 ];
 
@@ -53,24 +43,8 @@ const App: React.FC = () => {
   const [info, setInfo] = React.useState(defaultinfo);
   const [activeStep, setActiveStep] = React.useState(0);
   const [disable, setEnable] = React.useState(false);
-  const [openError, setOpenError] = React.useState(false);
-  const [openSuccess, setOpenSuccess] = React.useState(false);
-  const [pathHTML, setPath] = React.useState('');
-
-  const handleCloseError = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason !== 'clickaway') {
-      setOpenError(false);
-    }
-  };
-
-  const handleCloseSuccess = (
-    _event?: React.SyntheticEvent,
-    reason?: string
-  ) => {
-    if (reason !== 'clickaway') {
-      setOpenSuccess(false);
-    }
-  };
+  const [htmOutput, sethtmOutput] = React.useState(false);
+  const [jsonOutput, setjsonOutput] = React.useState(false);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -83,22 +57,20 @@ const App: React.FC = () => {
   const saveJSON = () => {
     const json = JSON.stringify(info);
     const filePath = path.join(info.path, '/my_report.json');
-    setPath(filePath);
 
     fs.writeFile(filePath, json, (err: any) => {
-      if (err) setOpenError(true);
-      else setOpenSuccess(true);
+      if (err) setjsonOutput(true);
+      else setjsonOutput(true);
     });
   };
 
   const saveHTML = () => {
     const html = output(info);
     const filePath = path.join(info.path, '/my_report.html');
-    setPath(filePath);
 
     fs.writeFile(filePath, html, (err: any) => {
-      if (err) setOpenError(true);
-      else setOpenSuccess(true);
+      if (err) sethtmOutput(true);
+      else sethtmOutput(true);
     });
   };
 
@@ -156,6 +128,10 @@ const App: React.FC = () => {
               <Button variant="contained" color="primary" onClick={saveJSON}>
                 Save information
               </Button>
+              <DoneIcon
+                style={{ color: green[500], display: jsonOutput ? '' : 'none' }}
+                fontSize="large"
+              />
             </div>
           ) : null}
           {activeStep === steps.length - 1 ? (
@@ -163,29 +139,13 @@ const App: React.FC = () => {
               <Button variant="contained" color="primary" onClick={saveHTML}>
                 Export your report
               </Button>
+              <DoneIcon
+                style={{ color: green[500], display: htmOutput ? '' : 'none' }}
+                fontSize="large"
+              />
             </div>
           ) : null}
         </div>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={openError}
-          autoHideDuration={2000}
-          onClose={handleCloseError}
-        >
-          <Alert onClose={handleCloseError} severity="error">
-            The HTML file failed to be saved here : {pathHTML}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={openSuccess}
-          autoHideDuration={2000}
-          onClose={handleCloseSuccess}
-        >
-          <Alert onClose={handleCloseSuccess} severity="success">
-            The HTML file has been successfully saved here: {pathHTML}
-          </Alert>
-        </Snackbar>
       </ThemeProvider>
     </div>
   );

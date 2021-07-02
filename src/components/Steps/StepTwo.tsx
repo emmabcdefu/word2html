@@ -5,8 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
 import { AddCircle } from '@material-ui/icons';
 import DoneIcon from '@material-ui/icons/Done';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { green } from '@material-ui/core/colors';
 
 import analyse from '../TextTransform/Analyse';
@@ -44,17 +42,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Alert = (props: AlertProps) => {
-  const { onClose, severity, children } = props;
-  return (
-    <MuiAlert
-      elevation={6}
-      variant="filled"
-      {...{ onClose, severity, children }}
-    />
-  );
-};
-
 interface ChildProps {
   info: any;
   setInfo: (info: any) => void;
@@ -67,8 +54,6 @@ const StepTwo: React.FC<ChildProps> = (props) => {
   const [htmInput, sethtmInput] = React.useState(false);
   const [cssInput, setcssInput] = React.useState(false);
   const [jsonInput, setjsonInput] = React.useState(false);
-  const [openAlert1, setOpenAlert1] = React.useState(false);
-  const [openAlert2, setOpenAlert2] = React.useState(false);
 
   const onInputClick = () => (
     event: React.MouseEvent<HTMLInputElement, MouseEvent>
@@ -77,26 +62,14 @@ const StepTwo: React.FC<ChildProps> = (props) => {
     element.value = '';
   };
 
-  const handleClose1 = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason !== 'clickaway') {
-      setOpenAlert1(false);
-    }
-  };
-
-  const handleClose2 = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason !== 'clickaway') {
-      setOpenAlert2(false);
-    }
-  };
-
   const readFile = (event: React.ChangeEvent<any>) => {
     if (event.target.files && event.target.files[0]) {
       fs.readFile(
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) setOpenAlert1(true);
-          else setOpenAlert2(true);
+          if (err) sethtmInput(false);
+          else sethtmInput(true);
           const path = event.target.files[0].path
             .split('\\')
             .slice(0, -1)
@@ -110,9 +83,8 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         }
       );
     } else {
-      setOpenAlert1(true);
+      sethtmInput(false);
     }
-    sethtmInput(true);
   };
 
   const readCSS = (event: React.ChangeEvent<any>) => {
@@ -121,15 +93,15 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) setOpenAlert1(true);
-          else setOpenAlert2(true);
+          if (err) setcssInput(false);
+          else setcssInput(true);
           props.info.style = data;
           props.setInfo(props.info);
           if (htmInput) props.enableNext();
         }
       );
     } else {
-      setOpenAlert1(true);
+      setcssInput(false);
     }
     setcssInput(true);
   };
@@ -140,8 +112,8 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         event.target.files[0].path,
         'utf8',
         (err: any, data: string) => {
-          if (err) setOpenAlert1(true);
-          else setOpenAlert2(true);
+          if (err) setjsonInput(false);
+          else setjsonInput(true);
           const path = event.target.files[0].path
             .split('\\')
             .slice(0, -1)
@@ -155,9 +127,8 @@ const StepTwo: React.FC<ChildProps> = (props) => {
         }
       );
     } else {
-      setOpenAlert1(true);
+      setjsonInput(false);
     }
-    setjsonInput(true);
   };
 
   return (
@@ -246,26 +217,6 @@ const StepTwo: React.FC<ChildProps> = (props) => {
           />
         </div>
       </div>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={openAlert1}
-        autoHideDuration={2000}
-        onClose={handleClose1}
-      >
-        <Alert onClose={handleClose1} severity="error">
-          The file could not be read.
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={openAlert2}
-        autoHideDuration={2000}
-        onClose={handleClose2}
-      >
-        <Alert onClose={handleClose2} severity="success">
-          The file has successfully been read.
-        </Alert>
-      </Snackbar>
     </div>
   );
 };
