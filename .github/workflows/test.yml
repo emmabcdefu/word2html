@@ -32,5 +32,6 @@ jobs:
           yarn test
 
       - name: yarn build
+        run: |
           yarn build
           electron-packager ./ transformer
