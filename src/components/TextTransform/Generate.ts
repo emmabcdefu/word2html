@@ -27,15 +27,15 @@ const simpleElem = (
         content[e].content
       }</p>`;
     case 'list':
-      let txt = ``;
+      let txt = '';
       if (e === 0 || content[e - 1].element !== 'list') {
-        txt += `<ul>`;
+        txt += '<ul>';
       }
       txt += `<li ${content[e].small ? 'class="small"' : ''}>${
         content[e].content
       }</li>`;
       if (e === content.length - 1 || content[e + 1].element !== 'list') {
-        txt += `</ul>`;
+        txt += '</ul>';
       }
       return txt;
     case 'img':
@@ -130,7 +130,7 @@ const generate = (content: Array<any>, path: string, base64: boolean) => {
     }
   }
 
-  if (numbers.footnote !== 0) html += `</p>`;
+  if (numbers.footnote !== 0) html += '</p>';
 
   html += '</section>';
   return html;
