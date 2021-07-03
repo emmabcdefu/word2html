@@ -80,7 +80,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
             props.setInfo(props.info);
             if (cssInput === 'Valide') props.enableNext();
           }
-        }
+        },
       );
     } else {
       sethtmInput('Error');
@@ -100,7 +100,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
             props.setInfo(props.info);
             if (htmInput === 'Valide') props.enableNext();
           }
-        }
+        },
       );
     } else {
       setcssInput('Error');
@@ -127,7 +127,7 @@ const StepTwo: React.FC<ChildProps> = (props) => {
             props.setInfo(info);
             props.enableNext();
           }
-        }
+        },
       );
     } else {
       setjsonInput('Error');

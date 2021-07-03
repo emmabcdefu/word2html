@@ -378,9 +378,9 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           <TextareaAutosize
             defaultValue={600}
             className={clsx(classes.textarea, classes.textareasize)}
-            onChange={(event: React.ChangeEvent<any>) =>
-              update(event, 'height')
-            }
+            onChange={(event: React.ChangeEvent<any>) => {
+              update(event, 'height');
+            }}
           />
         </div>
 
