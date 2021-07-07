@@ -18,7 +18,7 @@ const detectClassP: (elem: string) => any = (elem: string) => {
 const detectInsideP = (
   className: string,
   element: string,
-  titleLevel: boolean,
+  titleLevel: boolean
 ) => {
   const elem = element.trim();
   if (elem.substr(0, 4) === '<img') {
@@ -103,7 +103,7 @@ const detectInsideP = (
 // function that understand p tag
 const detectP: (elem: string, titleLevel: boolean) => any = (
   elem: string,
-  titleLevel: boolean,
+  titleLevel: boolean
 ) => {
   const inside = elem.substr(elem.indexOf('>') + 1, elem.length).trim();
   if (inside !== '') {
@@ -210,7 +210,7 @@ export default function analyse(htm: string) {
             if (result != null) {
               if (result.element === 'img') {
                 Object.values(result.content).forEach((out) =>
-                  content.push(out),
+                  content.push(out)
                 );
               } else {
                 content.push(result);
@@ -243,7 +243,7 @@ export default function analyse(htm: string) {
               if (result != null) {
                 if (result.element === 'img') {
                   Object.values(result.content).forEach((out) =>
-                    jcontent.push(out),
+                    jcontent.push(out)
                   );
                 } else {
                   jcontent.push(result);
