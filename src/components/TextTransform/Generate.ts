@@ -19,7 +19,7 @@ const simpleElem = (
   e: number,
   numbers: any,
   base64: boolean,
-  path: string,
+  path: string
 ) => {
   switch (content[e].element) {
     case 'p':
@@ -41,7 +41,7 @@ const simpleElem = (
     case 'img':
       if (base64)
         return `<img class="center-image image-clickable" src="${img2base64(
-          `${path}/${content[e].content}`,
+          `${path}/${content[e].content}`
         )}">`;
       return `<img class="center-image image-clickable" src="${path}/${content[e].content}">`;
     case 'iframe':
@@ -119,7 +119,7 @@ const generate = (content: Array<any>, path: string, base64: boolean) => {
             eee,
             numbers,
             base64,
-            path,
+            path
           );
         }
         html += '</div>';
