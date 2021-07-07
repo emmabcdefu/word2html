@@ -6,6 +6,17 @@ module.exports = {
     'react/prop-types': 'off',
     'react/no-array-index-key': 'off',
     'no-case-declarations': 'off',
+    'comma-dangle': 'off',
+    '@typescript-eslint/comma-dangle': [
+      'error',
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'never',
+        functions: 'never',
+      },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,
