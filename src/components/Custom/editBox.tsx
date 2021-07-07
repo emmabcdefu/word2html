@@ -335,7 +335,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         </Select>
         <Select
           style={diplay(title)}
-          defaultValue={false}
+          defaultValue={item.number || false}
           onChange={(event: React.ChangeEvent<any>) => update(event, 'number')}
           input={<BootstrapInput />}
         >
@@ -351,7 +351,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
         <Select
           style={diplay(txt)}
-          defaultValue={false}
+          defaultValue={item.small || false}
           onChange={(event: React.ChangeEvent<any>) => update(event, 'small')}
           input={<BootstrapInput />}
         >
@@ -368,7 +368,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         <div style={diplay(iframe)} className={classes.firstrow}>
           <p>Width :</p>
           <TextareaAutosize
-            defaultValue={800}
+            defaultValue={item.width || 800}
             className={clsx(classes.textarea, classes.textareasize)}
             onChange={(event: React.ChangeEvent<any>) => update(event, 'width')}
           />
@@ -376,7 +376,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         <div style={diplay(iframe)} className={classes.firstrow}>
           <p>Height : </p>
           <TextareaAutosize
-            defaultValue={600}
+            defaultValue={item.height || 600}
             className={clsx(classes.textarea, classes.textareasize)}
             onChange={(event: React.ChangeEvent<any>) => {
               update(event, 'height');
