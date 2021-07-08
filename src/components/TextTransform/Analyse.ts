@@ -66,8 +66,7 @@ const detectInsideP = (
     case 'E5Level':
       return { element: 'p', small: false, content: elem };
     case 'EHead4':
-      if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'p', small: false, content: elem };
+      return { element: 'list', content: elem };
     // p or img
     case 'MsoNormal':
       return { element: 'p', small: false, content: elem };
@@ -96,7 +95,7 @@ const detectInsideP = (
       // element of the table of content
       return { element: null };
     default:
-      return { element: null };
+      return { element: 'p', small: false, content: elem };
   }
 };
 
