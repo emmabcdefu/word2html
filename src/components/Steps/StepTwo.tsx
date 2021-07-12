@@ -54,12 +54,11 @@ const StepTwo: React.FC<ChildProps> = (props) => {
   const [cssInput, setcssInput] = React.useState('');
   const [jsonInput, setjsonInput] = React.useState('');
 
-  const onInputClick = () => (
-    event: React.MouseEvent<HTMLInputElement, MouseEvent>
-  ) => {
-    const element = event.target as HTMLInputElement;
-    element.value = '';
-  };
+  const onInputClick =
+    () => (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+      const element = event.target as HTMLInputElement;
+      element.value = '';
+    };
 
   const readFile = (event: React.ChangeEvent<any>) => {
     if (event.target.files && event.target.files[0]) {

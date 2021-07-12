@@ -191,9 +191,8 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
     if (inDiv) {
       const { indexDiv, indexColumn, index } = iDiv(id);
-      props.info.content[indexDiv].content[indexColumn][
-        index
-      ].element = newElem;
+      props.info.content[indexDiv].content[indexColumn][index].element =
+        newElem;
     } else {
       props.info.content[i(id)].element = newElem;
     }
@@ -209,9 +208,8 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
     if (inDiv) {
       const { indexDiv, indexColumn, index } = iDiv(id);
-      props.info.content[indexDiv].content[indexColumn][
-        index
-      ].content = newContent;
+      props.info.content[indexDiv].content[indexColumn][index].content =
+        newContent;
     } else {
       props.info.content[i(id)].content = newContent;
     }
