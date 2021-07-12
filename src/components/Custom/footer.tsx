@@ -3,8 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import fs from 'fs';
 import path from 'path';
 import Button from '@material-ui/core/Button';
-import IconStatus from './IconStatus';
+import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
+import Switch from '@material-ui/core/Switch/Switch';
 
+import IconStatus from './IconStatus';
 import output from '../TextTransform/Output';
 
 const useStyles: any = makeStyles(() => ({
@@ -12,8 +14,8 @@ const useStyles: any = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    '& div + div': {
-      marginLeft: 15,
+    '& div': {
+      marginRight: 15,
     },
     padding: 16,
   },
@@ -34,6 +36,8 @@ const Footer: React.FC<ChildProps> = (props) => {
   const classes = useStyles();
 
   const { activeStep, disable } = props;
+  const [nav, setnav] = React.useState(true);
+  const [img, setimg] = React.useState(true);
 
   const [htmlOutput, sethtmlOutput] = React.useState('');
   const [jsonOutput, setjsonOutput] = React.useState('');
@@ -122,6 +126,38 @@ const Footer: React.FC<ChildProps> = (props) => {
         <div>
           <IconStatus status={htmlOutput} />
         </div>
+      ) : null}
+      {activeStep === 2 ? (
+        <FormControlLabel
+          control={
+            <Switch
+              checked={nav}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setnav(event.target.checked);
+                props.info.navbar = event.target.checked;
+                props.setInfo(props.info);
+              }}
+              color="primary"
+            />
+          }
+          label="Navbar"
+        />
+      ) : null}
+      {activeStep === 2 ? (
+        <FormControlLabel
+          control={
+            <Switch
+              checked={img}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setimg(event.target.checked);
+                props.info.imagesClickable = event.target.checked;
+                props.setInfo(props.info);
+              }}
+              color="primary"
+            />
+          }
+          label="Images Clickable"
+        />
       ) : null}
     </div>
   );
