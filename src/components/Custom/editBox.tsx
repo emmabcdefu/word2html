@@ -118,17 +118,6 @@ const boxborder = (value: string) => {
   return mystyle;
 };
 
-const diplay = (value: boolean) => {
-  if (value) {
-    const mystyle: CSSProperties = {};
-    return mystyle;
-  }
-  const mystyle: CSSProperties = {
-    display: 'none',
-  };
-  return mystyle;
-};
-
 interface ChildProps {
   info: any;
   inDiv: boolean;
@@ -333,56 +322,60 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
             </MenuItem>
           ))}
         </Select>
-        <Select
-          style={diplay(title)}
-          defaultValue={false}
-          onChange={(event: React.ChangeEvent<any>) => update(event, 'number')}
-          input={<BootstrapInput />}
-        >
-          {[
-            { value: false, text: 'Not numbered' },
-            { value: true, text: 'Numbered' },
-          ].map((elem: any) => (
-            <MenuItem value={elem.value} key={elem.value}>
-              {elem.text}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <Select
-          style={diplay(txt)}
-          defaultValue={false}
-          onChange={(event: React.ChangeEvent<any>) => update(event, 'small')}
-          input={<BootstrapInput />}
-        >
-          {[
-            { value: false, text: 'Normal size' },
-            { value: true, text: 'Small size' },
-          ].map((elem: any) => (
-            <MenuItem value={elem.value} key={elem.value}>
-              {elem.text}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <div style={diplay(iframe)} className={classes.firstrow}>
-          <p>Width :</p>
-          <TextareaAutosize
-            defaultValue={800}
-            className={clsx(classes.textarea, classes.textareasize)}
-            onChange={(event: React.ChangeEvent<any>) => update(event, 'width')}
-          />
-        </div>
-        <div style={diplay(iframe)} className={classes.firstrow}>
-          <p>Height : </p>
-          <TextareaAutosize
-            defaultValue={600}
-            className={clsx(classes.textarea, classes.textareasize)}
+        {title ? (
+          <Select
+            defaultValue={false}
             onChange={(event: React.ChangeEvent<any>) =>
-              update(event, 'height')
+              update(event, 'number')
             }
-          />
-        </div>
+            input={<BootstrapInput />}
+          >
+            {[
+              { value: false, text: 'Not numbered' },
+              { value: true, text: 'Numbered' },
+            ].map((elem: any) => (
+              <MenuItem value={elem.value} key={elem.value}>
+                {elem.text}
+              </MenuItem>
+            ))}
+          </Select>
+        ) : null}
+        {txt ? (
+          <Select
+            defaultValue={false}
+            onChange={(event: React.ChangeEvent<any>) => update(event, 'small')}
+            input={<BootstrapInput />}
+          >
+            {[
+              { value: false, text: 'Normal size' },
+              { value: true, text: 'Small size' },
+            ].map((elem: any) => (
+              <MenuItem value={elem.value} key={elem.value}>
+                {elem.text}
+              </MenuItem>
+            ))}
+          </Select>
+        ) : null}
+        {iframe ? (
+          <div className={classes.firstrow}>
+            <p>Width :</p>
+            <TextareaAutosize
+              defaultValue={800}
+              className={clsx(classes.textarea, classes.textareasize)}
+              onChange={(event: React.ChangeEvent<any>) =>
+                update(event, 'width')
+              }
+            />
+            <p>Height : </p>
+            <TextareaAutosize
+              defaultValue={600}
+              className={clsx(classes.textarea, classes.textareasize)}
+              onChange={(event: React.ChangeEvent<any>) =>
+                update(event, 'height')
+              }
+            />
+          </div>
+        ) : null}
 
         {/* <div style={diplay(image)}>
           <input
