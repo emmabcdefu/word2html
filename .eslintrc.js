@@ -19,6 +19,7 @@ module.exports = {
     ],
     'react/jsx-curly-newline': 'off',
     'react/jsx-one-expression-per-line': 'off',
+    'react/jsx-wrap-multilines': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
