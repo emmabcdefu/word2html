@@ -17,7 +17,7 @@ If you have any problem with the instalation, need a specific version or need th
 
 * Download the code with [git](https://git-scm.com/download/win) `git clone https://github.com/Tuddual/word2html` or download the lastest [ZIP file](https://github.com/Tuddual/word2html/archive/main.zip) or a [release version](https://github.com/Tuddual/word2html/releases) and extract all folders and files from the ZIP file.
 
-* In main folder (`cd word2html`) install the dependencies with `npm install`
+* In main folder (`cd word2html`) install the dependencies with `yarn` (if yarn isn't installed, install it with `npm install -g yarn`)
 
 If you have any problem with the instalation, please [create an issue](https://github.com/Tuddual/word2html/issues/new).
 
