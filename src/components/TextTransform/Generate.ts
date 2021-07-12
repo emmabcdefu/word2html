@@ -18,8 +18,9 @@ const simpleElem = (
   content: any,
   e: number,
   numbers: any,
-  base64: boolean,
-  path: string
+  output: boolean,
+  path: string,
+  img: boolean
 ) => {
   switch (content[e].element) {
     case 'p':
@@ -39,11 +40,13 @@ const simpleElem = (
       }
       return txt;
     case 'img':
-      if (base64)
-        return `<img class="center-image image-clickable" src="${img2base64(
-          `${path}/${content[e].content}`
-        )}">`;
-      return `<img class="center-image image-clickable" src="${path}/${content[e].content}">`;
+      if (output)
+        return `<img class="center-image${
+          img ? ' image-clickable' : ''
+        }" src="${img2base64(`${path}/${content[e].content}`)}">`;
+      return `<img class="center-image${
+        img ? ' image-clickable' : ''
+      }" src="${path}/${content[e].content}">`;
     case 'iframe':
       return `<iframe class="center-image" width="${content[e].width}" height="${content[e].height}" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;
     case 'fig-caption':
@@ -70,7 +73,12 @@ const simpleElem = (
   }
 };
 
-const generate = (content: Array<any>, path: string, base64: boolean) => {
+const generate = (
+  content: Array<any>,
+  path: string,
+  output: boolean,
+  img: boolean
+) => {
   let html = '';
 
   const numbers = {
@@ -118,15 +126,16 @@ const generate = (content: Array<any>, path: string, base64: boolean) => {
             content[e].content[ee],
             eee,
             numbers,
-            base64,
-            path
+            output,
+            path,
+            img
           );
         }
         html += '</div>';
       }
       html += '</div>';
     } else {
-      html += simpleElem(content, e, numbers, base64, path);
+      html += simpleElem(content, e, numbers, output, path, img);
     }
   }
 

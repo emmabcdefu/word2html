@@ -151,7 +151,7 @@ const myStyle = `
 </style>`;
 
 const render = (content: Array<any>, path: string) => {
-  return myStyle + generate(content, path, false);
+  return myStyle + generate(content, path, false, false);
 };
 
 export default render;
