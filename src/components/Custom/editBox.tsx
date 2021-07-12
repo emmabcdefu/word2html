@@ -16,6 +16,8 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 // import Button from '@material-ui/core/Button/Button';
 // import { AddCircle } from '@material-ui/icons';
+import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
+import Switch from '@material-ui/core/Switch/Switch';
 
 import Theme from '../../theme/theme';
 import generateId from '../Other/id';
@@ -59,9 +61,12 @@ const useStyles = makeStyles(() => ({
   },
   textareasize: {
     width: 40,
-    marginTop: 0,
     marginLeft: 10,
+    marginTop: 0,
     textAlign: 'center',
+  },
+  label: {
+    marginLeft: 10,
   },
   box: {
     backgroundColor: '#424242',
@@ -118,17 +123,6 @@ const boxborder = (value: string) => {
   return mystyle;
 };
 
-const diplay = (value: boolean) => {
-  if (value) {
-    const mystyle: CSSProperties = {};
-    return mystyle;
-  }
-  const mystyle: CSSProperties = {
-    display: 'none',
-  };
-  return mystyle;
-};
-
 interface ChildProps {
   info: any;
   inDiv: boolean;
@@ -142,6 +136,8 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
   const { item, inDiv, setInfo, render } = props;
   const { id, content, element } = item;
+  const [number, setnumber] = React.useState(item.number || true);
+  const [small, setsmall] = React.useState(item.small || false);
   const [myelement, setelement] = React.useState(element);
 
   const title = myelement === 'h2' || myelement === 'h3' || myelement === 'h4';
@@ -219,7 +215,25 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     render();
   };
 
-  const update = (event: React.ChangeEvent<any>, name: string) => {
+  const updatecheck = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    name: string
+  ) => {
+    // update info
+    if (inDiv) {
+      const { indexDiv, indexColumn, index } = iDiv(id);
+      props.info.content[indexDiv].content[indexColumn][index][name] =
+        event.target.checked;
+    } else {
+      props.info.content[i(id)][name] = event.target.checked;
+    }
+    setInfo(props.info);
+
+    // pre-render
+    render();
+  };
+
+  const update = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
     // update info
     if (inDiv) {
       const { indexDiv, indexColumn, index } = iDiv(id);
@@ -333,56 +347,56 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
             </MenuItem>
           ))}
         </Select>
-        <Select
-          style={diplay(title)}
-          defaultValue={false}
-          onChange={(event: React.ChangeEvent<any>) => update(event, 'number')}
-          input={<BootstrapInput />}
-        >
-          {[
-            { value: false, text: 'Not numbered' },
-            { value: true, text: 'Numbered' },
-          ].map((elem: any) => (
-            <MenuItem value={elem.value} key={elem.value}>
-              {elem.text}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <Select
-          style={diplay(txt)}
-          defaultValue={false}
-          onChange={(event: React.ChangeEvent<any>) => update(event, 'small')}
-          input={<BootstrapInput />}
-        >
-          {[
-            { value: false, text: 'Normal size' },
-            { value: true, text: 'Small size' },
-          ].map((elem: any) => (
-            <MenuItem value={elem.value} key={elem.value}>
-              {elem.text}
-            </MenuItem>
-          ))}
-        </Select>
-
-        <div style={diplay(iframe)} className={classes.firstrow}>
-          <p>Width :</p>
-          <TextareaAutosize
-            defaultValue={800}
-            className={clsx(classes.textarea, classes.textareasize)}
-            onChange={(event: React.ChangeEvent<any>) => update(event, 'width')}
-          />
-        </div>
-        <div style={diplay(iframe)} className={classes.firstrow}>
-          <p>Height : </p>
-          <TextareaAutosize
-            defaultValue={600}
-            className={clsx(classes.textarea, classes.textareasize)}
-            onChange={(event: React.ChangeEvent<any>) =>
-              update(event, 'height')
+        {title ? (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={number}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setnumber(event.target.checked);
+                  updatecheck(event, 'number');
+                }}
+                color="primary"
+              />
             }
+            label="Numbered"
           />
-        </div>
+        ) : null}
+        {txt ? (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={small}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setsmall(event.target.checked);
+                  updatecheck(event, 'small');
+                }}
+                color="primary"
+              />
+            }
+            label="Small Size"
+          />
+        ) : null}
+        {iframe ? (
+          <div className={classes.firstrow}>
+            <p>Width :</p>
+            <TextareaAutosize
+              defaultValue={800}
+              className={clsx(classes.textarea, classes.textareasize)}
+              onChange={(event: React.ChangeEvent<any>) =>
+                update(event, 'width')
+              }
+            />
+            <p className={classes.label}>Height : </p>
+            <TextareaAutosize
+              defaultValue={600}
+              className={clsx(classes.textarea, classes.textareasize)}
+              onChange={(event: React.ChangeEvent<any>) =>
+                update(event, 'height')
+              }
+            />
+          </div>
+        ) : null}
 
         {/* <div style={diplay(image)}>
           <input
