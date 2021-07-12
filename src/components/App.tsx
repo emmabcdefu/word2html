@@ -1,8 +1,9 @@
 import React from 'react';
-import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import fs from 'fs';
 import path from 'path';
+import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import './App.global.css';
 import CustomStepper from './Custom/stepper';
@@ -39,17 +40,20 @@ const App: React.FC = () => {
 
   const defaultinfo: any = { path: '', content: [], style: '' };
   const [info, setInfo] = React.useState(defaultinfo);
+  const [loading, setloading] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [disable, setEnable] = React.useState(false);
   const [htmlOutput, sethtmlOutput] = React.useState('');
   const [jsonOutput, setjsonOutput] = React.useState('');
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 1) setloading(true);
+    else setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    if (activeStep === 2) setloading(false);
+    setActiveStep(activeStep - 1);
   };
 
   const saveJSON = () => {
@@ -131,26 +135,31 @@ const App: React.FC = () => {
               </Button>
             </div>
           ) : null}
-          {activeStep === steps.length - 1 ? (
+          {activeStep === 1 && loading ? (
+            <div>
+              <CircularProgress />
+            </div>
+          ) : null}
+          {activeStep === 2 ? (
             <div>
               <Button variant="contained" color="primary" onClick={saveJSON}>
                 Save information
               </Button>
             </div>
           ) : null}
-          {activeStep === steps.length - 1 && jsonOutput !== '' ? (
+          {activeStep === 2 && jsonOutput !== '' ? (
             <div>
               <IconStatus status={jsonOutput} />
             </div>
           ) : null}
-          {activeStep === steps.length - 1 ? (
+          {activeStep === 2 ? (
             <div>
               <Button variant="contained" color="primary" onClick={saveHTML}>
                 Export your report
               </Button>
             </div>
           ) : null}
-          {activeStep === steps.length - 1 && htmlOutput !== '' ? (
+          {activeStep === 2 && htmlOutput !== '' ? (
             <div>
               <IconStatus status={htmlOutput} />
             </div>
