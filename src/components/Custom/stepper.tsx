@@ -6,10 +6,11 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepConnector from '@material-ui/core/StepConnector';
 import { StepIconProps } from '@material-ui/core/StepIcon';
-import SaveIcon from '@material-ui/icons/Save';
-import DescriptionIcon from '@material-ui/icons/Description';
-import EditIcon from '@material-ui/icons/Edit';
 import { Typography } from '@material-ui/core';
+
+import Save from '../../mui-icons/Save';
+import Description from '../../mui-icons/Description';
+import Edit from '../../mui-icons/Edit';
 
 const useStyles = makeStyles(() => ({
   stepper: {
@@ -75,9 +76,9 @@ function StepIcon(props: StepIconProps) {
   const { active, completed } = props;
 
   const icons: { [index: string]: React.ReactElement } = {
-    1: <SaveIcon />,
-    2: <DescriptionIcon />,
-    3: <EditIcon />,
+    1: <Save />,
+    2: <Description />,
+    3: <Edit />,
   };
 
   const { icon } = props;

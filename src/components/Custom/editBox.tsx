@@ -13,15 +13,15 @@ import InputBase from '@material-ui/core/InputBase/InputBase';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize/TextareaAutosize';
 import IconButton from '@material-ui/core/IconButton/IconButton';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button/Button';
-import { AddCircle } from '@material-ui/icons';
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
 import Switch from '@material-ui/core/Switch/Switch';
 
 import Theme from '../../theme/theme';
 import generateId from '../Other/id';
+import Add from '../../mui-icons/Add';
+import Delete from '../../mui-icons/Delete';
+import AddCircle from '../../mui-icons/AddCircle';
 
 const BootstrapInput = withStyles(() =>
   createStyles({
@@ -465,10 +465,10 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
         <div>
           <IconButton onClick={deleteBox}>
-            <DeleteIcon />
+            <Delete />
           </IconButton>
           <IconButton onClick={addBox}>
-            <AddIcon />
+            <Add />
           </IconButton>
         </div>
       </div>
