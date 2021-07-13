@@ -3,10 +3,10 @@ import fs from 'fs';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
-import { AddCircle } from '@material-ui/icons';
 
 import analyse from '../TextTransform/Analyse';
 import IconStatus from '../Custom/IconStatus';
+import AddCircle from '../../mui-icons/AddCircle';
 
 const useStyles = makeStyles(() => ({
   input: {

@@ -222,6 +222,7 @@ export default function analyse(htm: string) {
           const mainResult: any = {
             element: nbTd === 2 ? 'div' : 'row-images',
             content: [],
+            id: generateId(),
           };
 
           let advence = 0;
