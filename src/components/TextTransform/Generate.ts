@@ -42,10 +42,10 @@ const simpleElem = (
     case 'img':
       if (output)
         return `<img class="center-image${
-          img ? ' image-clickable' : ''
+          img && content[e].click ? ' image-clickable' : ''
         }" src="${img2base64(`${path}/${content[e].content}`)}">`;
       return `<img class="center-image${
-        img ? ' image-clickable' : ''
+        img && content[e].click ? ' image-clickable' : ''
       }" src="${path}/${content[e].content}">`;
     case 'iframe':
       return `<iframe class="center-image" width="${content[e].width}" height="${content[e].height}" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;

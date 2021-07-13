@@ -142,12 +142,15 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   const [small, setsmall] = React.useState(
     Object.prototype.hasOwnProperty.call(item, 'small') ? item.small : true
   );
+  const [click, setclick] = React.useState(
+    Object.prototype.hasOwnProperty.call(item, 'click') ? item.click : true
+  );
   const [myelement, setelement] = React.useState(element);
 
   const title = myelement === 'h2' || myelement === 'h3' || myelement === 'h4';
   const iframe = myelement === 'iframe';
   const txt = myelement === 'p' || myelement === 'list';
-  // const image = element === 'img';
+  const img = element === 'img';
 
   // const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
   //   const element = event.target as HTMLInputElement;
@@ -379,6 +382,21 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
               />
             }
             label="Small Size"
+          />
+        ) : null}
+        {img ? (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={click}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setclick(event.target.checked);
+                  updatecheck(event, 'click');
+                }}
+                color="primary"
+              />
+            }
+            label="Image clickable"
           />
         ) : null}
         {iframe ? (
