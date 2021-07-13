@@ -7,6 +7,7 @@ import {
   withStyles,
 } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import path from 'path';
 import Select from '@material-ui/core/Select/Select';
 import InputBase from '@material-ui/core/InputBase/InputBase';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
@@ -14,8 +15,8 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize/TextareaAutosiz
 import IconButton from '@material-ui/core/IconButton/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-// import Button from '@material-ui/core/Button/Button';
-// import { AddCircle } from '@material-ui/icons';
+import Button from '@material-ui/core/Button/Button';
+import { AddCircle } from '@material-ui/icons';
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
 import Switch from '@material-ui/core/Switch/Switch';
 
@@ -77,6 +78,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
 }));
 
@@ -142,17 +144,22 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
   const [small, setsmall] = React.useState(
     Object.prototype.hasOwnProperty.call(item, 'small') ? item.small : true
   );
+  const [click, setclick] = React.useState(
+    Object.prototype.hasOwnProperty.call(item, 'click') ? item.click : true
+  );
   const [myelement, setelement] = React.useState(element);
 
   const title = myelement === 'h2' || myelement === 'h3' || myelement === 'h4';
   const iframe = myelement === 'iframe';
   const txt = myelement === 'p' || myelement === 'list';
-  // const image = element === 'img';
+  const img = element === 'img';
 
-  // const onInputClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-  //   const element = event.target as HTMLInputElement;
-  //   element.value = '';
-  // };
+  const onInputClick = (
+    event: React.MouseEvent<HTMLInputElement, MouseEvent>
+  ) => {
+    const elem = event.target as HTMLInputElement;
+    elem.value = '';
+  };
 
   const i = (myid: number) => {
     let myIndex = -1;
@@ -327,15 +334,25 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     }
   };
 
-  // const readPath = (event: React.ChangeEvent<any>) => {
-  //   // update text
-  //   console.log(id) // TODO: fix id
-  //   // document.getElementById(id)!.children[1].children[0].innerHTML = event.target.files[0].path;
-  //   //update info
-  //   info.content[index()].content = event.target.files[0].path;
-  //   setInfo(info);
-  //   update(write(info.content));
-  // }
+  const readPath = (event: React.ChangeEvent<any>) => {
+    // update info
+    const newPath = path.relative(props.info.path, event.target.files[0].path);
+
+    if (inDiv) {
+      const { indexDiv, indexColumn, index } = iDiv(id);
+      props.info.content[indexDiv].content[indexColumn][index].content =
+        newPath;
+    } else {
+      props.info.content[i(id)].content = newPath;
+    }
+    setInfo(props.info);
+
+    // update text in textarea
+    document.getElementById(`text-pict-${id}`)!.innerHTML = newPath;
+
+    // pre-render
+    render();
+  };
 
   return (
     <div className={classes.box} style={boxborder(myelement)} id={id}>
@@ -351,6 +368,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
             </MenuItem>
           ))}
         </Select>
+
         {title ? (
           <FormControlLabel
             control={
@@ -379,6 +397,41 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
               />
             }
             label="Small Size"
+          />
+        ) : null}
+        {img ? (
+          <label htmlFor={`button-pict-${id}`}>
+            <input
+              accept="image/png, image/jpeg"
+              className={classes.input}
+              id={`button-pict-${id}`}
+              type="file"
+              onChange={readPath}
+              onClick={onInputClick}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              startIcon={<AddCircle />}
+            >
+              Select file
+            </Button>
+          </label>
+        ) : null}
+        {img ? (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={click}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setclick(event.target.checked);
+                  updatecheck(event, 'click');
+                }}
+                color="primary"
+              />
+            }
+            label="Image clickable"
           />
         ) : null}
         {iframe ? (
@@ -410,34 +463,6 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           </div>
         ) : null}
 
-        {/* <div style={diplay(image)}>
-          <input
-            accept="image/png, image/jpeg"
-            className={classes.input}
-            id="button-html"
-            type="file"
-            onChange={() => (console.log(id))readPath}
-            onClick={onInputClick}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => (console.log(id))}
-          >
-            ID
-          </Button>
-          <label htmlFor="button-html">
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              startIcon={<AddCircle />}
-            >
-              Change
-            </Button>
-          </label>
-        </div> */}
-
         <div>
           <IconButton onClick={deleteBox}>
             <DeleteIcon />
@@ -448,17 +473,18 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
         </div>
       </div>
 
-      {/* <div style={diplay(image)}>
-        <p className={classes.textarea}>
+      {img ? (
+        <p className={classes.textarea} id={`text-pict-${id}`}>
           {content}
         </p>
-      </div> */}
-      <TextareaAutosize
-        // style={diplay(!image)}
-        defaultValue={content}
-        className={classes.textarea}
-        onChange={updateContent}
-      />
+      ) : (
+        <TextareaAutosize
+          defaultValue={content}
+          className={classes.textarea}
+          id={`text-pict-${id}`}
+          onChange={updateContent}
+        />
+      )}
     </div>
   );
 };

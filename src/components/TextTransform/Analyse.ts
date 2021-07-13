@@ -33,6 +33,7 @@ const detectInsideP = (
         id: generateId(),
         element: 'img',
         content: `${elem.substr(srcStart, srcEnd - srcStart)}`,
+        click: true,
       });
     }
     return { element: 'img', content };
