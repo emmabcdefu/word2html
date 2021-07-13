@@ -1,9 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import IconButton from '@material-ui/core/IconButton/IconButton';
 
 import render from '../TextTransform/Render';
 import CustomEditBox from '../Custom/editBox';
+import Delete from '../../mui-icons/Delete';
 
 const useStyles = makeStyles(() => ({
   textarea: {
@@ -14,11 +16,12 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'space-evenly',
-    height: 'calc(100vh - 206px)',
+    height: 'calc(100vh - 208px)',
   },
   flexitem: {
     width: '50%',
     padding: 16,
+    'overflow-x': 'hidden',
     'overflow-y': 'scroll',
     '&::-webkit-scrollbar': {
       width: 16,
@@ -61,11 +64,18 @@ const useStyles = makeStyles(() => ({
       borderRadius: 16,
     },
   },
+  headtable: {
+    display: 'flex',
+    border: '2px solid white',
+    justifyContent: 'center',
+  },
   table: {
     display: 'flex',
+    border: '1px solid white',
     '&> div': {
       flexGrow: 1,
     },
+    'overflow-x': 'scroll',
   },
   tableElement: {
     border: '1px solid white',
@@ -86,6 +96,16 @@ const StepThree: React.FC<ChildProps> = (props) => {
   const update = () => {
     const html = document.getElementById('html')!;
     html.innerHTML = render(info.content, info.path);
+  };
+
+  const i = (myid: number) => {
+    let myIndex = -1;
+    Object.values(content).forEach((object: any, index: number) => {
+      if (object.id === myid) {
+        myIndex = index;
+      }
+    });
+    return myIndex;
   };
 
   const editBoxes = (object: any, inDiv: boolean) => {
@@ -116,7 +136,23 @@ const StepThree: React.FC<ChildProps> = (props) => {
     if (['div', 'row-images'].includes(object.element)) {
       return (
         <div>
-          <div className={classes.table}>
+          <div className={classes.headtable}>
+            <p>Table element</p>
+            <IconButton
+              onClick={() => {
+                info.content.splice(i(object.id), 1);
+                props.setInfo(info);
+                // pre-render
+                update();
+                // remove the box
+                const child = document.getElementById(object.id)!.parentElement;
+                child!.parentElement!.removeChild(child!);
+              }}
+            >
+              <Delete />
+            </IconButton>
+          </div>
+          <div className={classes.table} id={object.id}>
             {object.content.map((listobject: any, row: number) => (
               <div
                 className={classes.tableElement}
