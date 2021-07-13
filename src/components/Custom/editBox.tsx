@@ -136,8 +136,12 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
   const { item, inDiv, setInfo, render } = props;
   const { id, content, element } = item;
-  const [number, setnumber] = React.useState(item.number || true);
-  const [small, setsmall] = React.useState(item.small || false);
+  const [number, setnumber] = React.useState(
+    Object.prototype.hasOwnProperty.call(item, 'number') ? item.number : true
+  );
+  const [small, setsmall] = React.useState(
+    Object.prototype.hasOwnProperty.call(item, 'small') ? item.small : true
+  );
   const [myelement, setelement] = React.useState(element);
 
   const title = myelement === 'h2' || myelement === 'h3' || myelement === 'h4';
@@ -381,7 +385,11 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           <div className={classes.firstrow}>
             <p>Width :</p>
             <TextareaAutosize
-              defaultValue={800}
+              defaultValue={
+                Object.prototype.hasOwnProperty.call(item, 'width')
+                  ? item.width
+                  : 800
+              }
               className={clsx(classes.textarea, classes.textareasize)}
               onChange={(event: React.ChangeEvent<any>) =>
                 update(event, 'width')
@@ -389,7 +397,11 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
             />
             <p className={classes.label}>Height : </p>
             <TextareaAutosize
-              defaultValue={600}
+              defaultValue={
+                Object.prototype.hasOwnProperty.call(item, 'height')
+                  ? item.height
+                  : 600
+              }
               className={clsx(classes.textarea, classes.textareasize)}
               onChange={(event: React.ChangeEvent<any>) =>
                 update(event, 'height')
