@@ -1,6 +1,5 @@
 # word2html
 
-![MIT License](https://img.shields.io/github/license/Tuddual/word2html)
 ![Code size](https://img.shields.io/github/languages/code-size/Tuddual/word2html)
 ![Downloads](https://img.shields.io/github/downloads/Tuddual/word2html/total)
 ![Code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
