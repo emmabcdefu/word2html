@@ -1,3 +1,7 @@
+// Types
+import ElementInfo from '../../Interface/ElementInfo';
+import ElementInfoBase from '../../Interface/ElementInfoBase';
+
 const img2base64 = (src: string) => {
   // Get the image
   const img = new Image();
@@ -15,9 +19,9 @@ const img2base64 = (src: string) => {
 };
 
 const simpleElem = (
-  content: any,
+  content: ElementInfo[],
   e: number,
-  numbers: any,
+  numbers: Numbers,
   output: boolean,
   path: string,
   img: boolean
@@ -72,9 +76,15 @@ const simpleElem = (
       return '';
   }
 };
+interface Numbers {
+  h2: number;
+  h3: number;
+  h4: number;
+  footnote: number;
+}
 
 const generate = (
-  content: Array<any>,
+  content: ElementInfo[],
   path: string,
   output: boolean,
   img: boolean
@@ -122,14 +132,8 @@ const generate = (
       for (let ee = 0; ee < content[e].content.length; ee += 1) {
         html += '<div>';
         for (let eee = 0; eee < content[e].content[ee].length; eee += 1) {
-          html += simpleElem(
-            content[e].content[ee],
-            eee,
-            numbers,
-            output,
-            path,
-            img
-          );
+          const myContent = content[e].content[ee] as ElementInfoBase[];
+          html += simpleElem(myContent, eee, numbers, output, path, img);
         }
         html += '</div>';
       }

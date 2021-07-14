@@ -1,10 +1,13 @@
+// Functions
 import generate from './Generate';
 import styleImage from './website_src/image-viewer-css';
 import scriptImage from './website_src/image-viewer-js';
 import styleProgressBar from './website_src/reading-progress-bar-css';
 import scriptProgressBar from './website_src/reading-progress-bar-js';
+// Types
+import Info from '../../Interface/info';
 
-const output = (info: any) => {
+const output = (info: Info) => {
   const head = `
   <!DOCTYPE html>
   <html lang="en">

@@ -1,4 +1,7 @@
+// Function
 import generate from './Generate';
+// Types
+import ElementInfo from '../../Interface/ElementInfo';
 
 const myStyle = `
 <style>.container {
@@ -150,7 +153,7 @@ const myStyle = `
 }
 </style>`;
 
-const render = (content: Array<any>, path: string) => {
+const render = (content: ElementInfo[], path: string) => {
   return myStyle + generate(content, path, false, false);
 };
 

@@ -2,14 +2,17 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import fs from 'fs';
 import path from 'path';
+// Mui Components
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
 import Switch from '@material-ui/core/Switch/Switch';
-
+// Mui-Icons
 import IconStatus from './IconStatus';
 import output from '../TextTransform/Output';
+// Types
+import Info from '../../Interface/info';
 
-const useStyles: any = makeStyles(() => ({
+const useStyles = makeStyles(() => ({
   flex: {
     display: 'flex',
     flexDirection: 'row',
@@ -25,8 +28,8 @@ const useStyles: any = makeStyles(() => ({
 }));
 
 interface ChildProps {
-  info: any;
-  setInfo: (info: any) => void;
+  info: Info;
+  setInfo: (info: Info) => void;
   activeStep: number;
   setActiveStep: (step: number) => void;
   disable: boolean;
@@ -54,7 +57,7 @@ const Footer: React.FC<ChildProps> = (props) => {
     const json = JSON.stringify(props.info);
     const filePath = path.join(props.info.path, '/my_report.json');
 
-    fs.writeFile(filePath, json, (err: any) => {
+    fs.writeFile(filePath, json, (err) => {
       if (err) setjsonOutput('Error');
       else {
         setjsonOutput('Valide');
@@ -69,7 +72,7 @@ const Footer: React.FC<ChildProps> = (props) => {
     const html = output(props.info);
     const filePath = path.join(props.info.path, '/my_report.html');
 
-    fs.writeFile(filePath, html, (err: any) => {
+    fs.writeFile(filePath, html, (err) => {
       if (err) sethtmlOutput('Error');
       else {
         sethtmlOutput('Valide');

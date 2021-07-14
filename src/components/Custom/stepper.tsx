@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+// Mui Components
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper/Stepper';
 import Step from '@material-ui/core/Step';
@@ -7,7 +8,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepConnector from '@material-ui/core/StepConnector';
 import { StepIconProps } from '@material-ui/core/StepIcon';
 import { Typography } from '@material-ui/core';
-
+// Mui-Icons
 import Save from '../../mui-icons/Save';
 import Description from '../../mui-icons/Description';
 import Edit from '../../mui-icons/Edit';
