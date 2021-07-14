@@ -51,7 +51,7 @@ To package the app for windows:
 
 ## Credit 
 
-All credit goes to [@tuddual](https://github.com/Tuddual) and 
+All credit goes to [@tuddual](https://github.com/Tuddual).
 
 ## License
 
