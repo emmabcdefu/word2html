@@ -3,10 +3,9 @@
 ![MIT License](https://img.shields.io/github/license/Tuddual/word2html)
 ![Code size](https://img.shields.io/github/languages/code-size/Tuddual/word2html)
 ![Downloads](https://img.shields.io/github/downloads/Tuddual/word2html/total)
+![Code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Tuddual/word2html/CodeQL/main?label=CodeQL)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Tuddual/word2html/Test/main?label=Test)
-
-----
 
 ## Description
 
@@ -43,3 +42,19 @@ To package the app for windows:
 * Before packaging the app I recommand to clean the `node_module` folder with [ModClean](https://github.com/ModClean/modclean) and/or [node-prune](https://github.com/tj/node-prune).
 * In the main folder build the app with `yarn build`
 * And then package the application with `electron-packager ./ appName --platform=win32 --arch=x64`
+
+----
+
+## Usage
+
+[A wiki](https://github.com/Tuddual/word2html/wiki) has been created, that explain how to use the application, you should look at it !
+
+## Credit 
+
+All credit goes to [@tuddual](https://github.com/Tuddual) and 
+
+## License
+
+Tuddual/word2html is [MIT licensed](./LICENSE).
+
+The Tuddual/word2html documentation (in the [wiki](https://github.com/Tuddual/word2html/wiki)) is [Creative Commons licensed](./LICENSE-docs).
