@@ -1,7 +1,7 @@
 // Function
 import generate from './Generate';
 // Types
-import ElementInfo from '../../Interface/ElementInfo';
+import ElementInfo from '../../types/ElementInfo';
 
 const myStyle = `
 <style>.container {

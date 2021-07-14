@@ -1,8 +1,8 @@
 // Functions
 import generateId from '../Other/id';
 // Types
-import ElementInfoBase from '../../Interface/ElementInfoBase';
-import ElementInfoTable from '../../Interface/ElementInfoTable';
+import ElementInfoBase from '../../types/ElementInfoBase';
+import ElementInfoTable from '../../types/ElementInfoTable';
 
 // function to analyse what class is a p html tag
 const detectClassP = (elem: string) => {

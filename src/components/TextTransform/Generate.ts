@@ -1,6 +1,6 @@
 // Types
-import ElementInfo from '../../Interface/ElementInfo';
-import ElementInfoBase from '../../Interface/ElementInfoBase';
+import ElementInfo from '../../types/ElementInfo';
+import ElementInfoBase from '../../types/ElementInfoBase';
 
 const img2base64 = (src: string) => {
   // Get the image

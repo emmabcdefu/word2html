@@ -9,10 +9,10 @@ import render from '../TextTransform/Render';
 import CustomEditBox from '../Custom/editBox';
 import Delete from '../../mui-icons/Delete';
 // Types
-import Info from '../../Interface/Info';
-import ElementInfoBase from '../../Interface/ElementInfoBase';
-import ElementInfo from '../../Interface/ElementInfo';
-import ElementInfoTable from '../../Interface/ElementInfoTable';
+import Info from '../../types/Info';
+import ElementInfoBase from '../../types/ElementInfoBase';
+import ElementInfo from '../../types/ElementInfo';
+import ElementInfoTable from '../../types/ElementInfoTable';
 
 const useStyles = makeStyles(() => ({
   textarea: {
