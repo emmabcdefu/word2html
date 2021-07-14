@@ -9,7 +9,7 @@ import render from '../TextTransform/Render';
 import CustomEditBox from '../Custom/editBox';
 import Delete from '../../mui-icons/Delete';
 // Types
-import Info from '../../Interface/info';
+import Info from '../../Interface/Info';
 import ElementInfoBase from '../../Interface/ElementInfoBase';
 import ElementInfo from '../../Interface/ElementInfo';
 import ElementInfoTable from '../../Interface/ElementInfoTable';

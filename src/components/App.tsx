@@ -11,7 +11,7 @@ import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import Footer from './Custom/footer';
 // Types
-import Info from '../Interface/info';
+import Info from '../Interface/Info';
 
 const useStyles = makeStyles(() => ({
   root: {

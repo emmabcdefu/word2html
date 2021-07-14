@@ -10,7 +10,7 @@ import Switch from '@material-ui/core/Switch/Switch';
 import IconStatus from './IconStatus';
 import output from '../TextTransform/Output';
 // Types
-import Info from '../../Interface/info';
+import Info from '../../Interface/Info';
 
 const useStyles = makeStyles(() => ({
   flex: {

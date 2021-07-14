@@ -9,7 +9,7 @@ import analyse from '../TextTransform/Analyse';
 import IconStatus from '../Custom/IconStatus';
 import AddCircle from '../../mui-icons/AddCircle';
 // Types
-import Info from '../../Interface/info';
+import Info from '../../Interface/Info';
 
 const useStyles = makeStyles(() => ({
   input: {

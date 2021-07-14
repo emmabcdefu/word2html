@@ -5,7 +5,7 @@ import scriptImage from './website_src/image-viewer-js';
 import styleProgressBar from './website_src/reading-progress-bar-css';
 import scriptProgressBar from './website_src/reading-progress-bar-js';
 // Types
-import Info from '../../Interface/info';
+import Info from '../../Interface/Info';
 
 const output = (info: Info) => {
   const head = `

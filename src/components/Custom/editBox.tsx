@@ -26,7 +26,7 @@ import Add from '../../mui-icons/Add';
 import Delete from '../../mui-icons/Delete';
 import AddCircle from '../../mui-icons/AddCircle';
 // Types
-import Info from '../../Interface/info';
+import Info from '../../Interface/Info';
 import ElementInfoBase from '../../Interface/ElementInfoBase';
 import ElementInfo from '../../Interface/ElementInfo';
 
