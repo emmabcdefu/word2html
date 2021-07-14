@@ -30,3 +30,4 @@ jobs:
           yarn package
           yarn lint
           yarn test
+          yarn tsc

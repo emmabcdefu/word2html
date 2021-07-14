@@ -3,10 +3,13 @@ import fs from 'fs';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button/Button';
-import { AddCircle } from '@material-ui/icons';
-
+// Functions
 import analyse from '../TextTransform/Analyse';
+// Mui-Icons
 import IconStatus from '../Custom/IconStatus';
+import AddCircle from '../../mui-icons/AddCircle';
+// Types
+import Info from '../../types/Info';
 
 const useStyles = makeStyles(() => ({
   input: {
@@ -42,12 +45,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface ChildProps {
-  info: any;
-  setInfo: (info: any) => void;
+  info: Info;
+  setInfo: (info: Info) => void;
   enableNext: () => void;
 }
 
-const StepTwo: React.FC<ChildProps> = (props) => {
+const StepTwo: React.FC<ChildProps> = (props: ChildProps) => {
   const classes = useStyles();
 
   const [htmInput, sethtmInput] = React.useState('');
@@ -60,77 +63,62 @@ const StepTwo: React.FC<ChildProps> = (props) => {
       element.value = '';
     };
 
-  const readFile = (event: React.ChangeEvent<any>) => {
-    if (event.target.files && event.target.files[0]) {
-      fs.readFile(
-        event.target.files[0].path,
-        'utf8',
-        (err: any, data: string) => {
-          if (err) sethtmInput('Error');
-          else {
-            sethtmInput('Valide');
-            const path = event.target.files[0].path
-              .split('\\')
-              .slice(0, -1)
-              .reduce((a: string, b: string) => {
-                return `${a}\\${b}`;
-              });
-            props.info.content = analyse(data);
-            props.info.path = path;
-            props.setInfo(props.info);
-            if (cssInput === 'Valide') props.enableNext();
-          }
+  const readFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) sethtmInput('Error');
+    else {
+      fs.readFile(event.target.files[0].path, 'utf8', (err, data) => {
+        if (!event.target.files || err) sethtmInput('Error');
+        else {
+          sethtmInput('Valide');
+          const path = event.target.files[0].path
+            .split('\\')
+            .slice(0, -1)
+            .reduce((a: string, b: string) => {
+              return `${a}\\${b}`;
+            });
+          props.info.content = analyse(data);
+          props.info.path = path;
+          props.setInfo(props.info);
+          if (cssInput === 'Valide') props.enableNext();
         }
-      );
-    } else {
-      sethtmInput('Error');
+      });
     }
   };
 
-  const readCSS = (event: React.ChangeEvent<any>) => {
-    if (event.target.files && event.target.files[0]) {
-      fs.readFile(
-        event.target.files[0].path,
-        'utf8',
-        (err: any, data: string) => {
-          if (err) setcssInput('Error');
-          else {
-            setcssInput('Valide');
-            props.info.style = data;
-            props.setInfo(props.info);
-            if (htmInput === 'Valide') props.enableNext();
-          }
+  const readCSS = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) setcssInput('Error');
+    else {
+      fs.readFile(event.target.files[0].path, 'utf8', (err, data) => {
+        if (err) setcssInput('Error');
+        else {
+          setcssInput('Valide');
+          props.info.style = data;
+          props.setInfo(props.info);
+          if (htmInput === 'Valide') props.enableNext();
         }
-      );
-    } else {
-      setcssInput('Error');
+      });
     }
   };
 
-  const readJSON = (event: React.ChangeEvent<any>) => {
-    if (event.target.files && event.target.files[0]) {
-      fs.readFile(
-        event.target.files[0].path,
-        'utf8',
-        (err: any, data: string) => {
-          if (err) setjsonInput('Error');
-          else {
-            setjsonInput('Valide');
-            const path = event.target.files[0].path
-              .split('\\')
-              .slice(0, -1)
-              .reduce((a: string, b: string) => {
-                return `${a}\\${b}`;
-              });
-            const info = JSON.parse(data);
-            info.path = path;
-            props.setInfo(info);
-            props.enableNext();
-          }
+  const readJSON = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) setjsonInput('Error');
+    else {
+      fs.readFile(event.target.files[0].path, 'utf8', (err, data) => {
+        if (!event.target.files || err) setjsonInput('Error');
+        else {
+          setjsonInput('Valide');
+          const path = event.target.files[0].path
+            .split('\\')
+            .slice(0, -1)
+            .reduce((a: string, b: string) => {
+              return `${a}\\${b}`;
+            });
+          const info = JSON.parse(data);
+          info.path = path;
+          props.setInfo(info);
+          props.enableNext();
         }
-      );
-    } else {
-      setjsonInput('Error');
+      });
     }
   };
 

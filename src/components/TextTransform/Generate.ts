@@ -1,3 +1,7 @@
+// Types
+import ElementInfo from '../../types/ElementInfo';
+import ElementInfoBase from '../../types/ElementInfoBase';
+
 const img2base64 = (src: string) => {
   // Get the image
   const img = new Image();
@@ -15,11 +19,12 @@ const img2base64 = (src: string) => {
 };
 
 const simpleElem = (
-  content: any,
+  content: ElementInfo[],
   e: number,
-  numbers: any,
-  base64: boolean,
-  path: string
+  numbers: Numbers,
+  output: boolean,
+  path: string,
+  img: boolean
 ) => {
   switch (content[e].element) {
     case 'p':
@@ -27,23 +32,23 @@ const simpleElem = (
         content[e].content
       }</p>`;
     case 'list':
-      let txt = '';
-      if (e === 0 || content[e - 1].element !== 'list') {
-        txt += '<ul>';
-      }
-      txt += `<li ${content[e].small ? 'class="small"' : ''}>${
+      return `${
+        e === 0 || content[e - 1].element !== 'list' ? '<ul>' : ''
+      } <li ${content[e].small ? 'class="small"' : ''}>${
         content[e].content
-      }</li>`;
-      if (e === content.length - 1 || content[e + 1].element !== 'list') {
-        txt += '</ul>';
-      }
-      return txt;
+      }</li> ${
+        e === content.length - 1 || content[e + 1].element !== 'list'
+          ? '</ul>'
+          : ''
+      }`;
     case 'img':
-      if (base64)
-        return `<img class="center-image image-clickable" src="${img2base64(
-          `${path}/${content[e].content}`
-        )}">`;
-      return `<img class="center-image image-clickable" src="${path}/${content[e].content}">`;
+      if (output)
+        return `<img class="center-image${
+          img && content[e].click ? ' image-clickable' : ''
+        }" src="${img2base64(`${path}/${content[e].content}`)}">`;
+      return `<img class="center-image${
+        img && content[e].click ? ' image-clickable' : ''
+      }" src="${path}/${content[e].content}">`;
     case 'iframe':
       return `<iframe class="center-image" width="${content[e].width}" height="${content[e].height}" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;
     case 'fig-caption':
@@ -69,8 +74,19 @@ const simpleElem = (
       return '';
   }
 };
+interface Numbers {
+  h2: number;
+  h3: number;
+  h4: number;
+  footnote: number;
+}
 
-const generate = (content: Array<any>, path: string, base64: boolean) => {
+const generate = (
+  content: ElementInfo[],
+  path: string,
+  output: boolean,
+  img: boolean
+) => {
   let html = '';
 
   const numbers = {
@@ -114,19 +130,14 @@ const generate = (content: Array<any>, path: string, base64: boolean) => {
       for (let ee = 0; ee < content[e].content.length; ee += 1) {
         html += '<div>';
         for (let eee = 0; eee < content[e].content[ee].length; eee += 1) {
-          html += simpleElem(
-            content[e].content[ee],
-            eee,
-            numbers,
-            base64,
-            path
-          );
+          const myContent = content[e].content[ee] as ElementInfoBase[];
+          html += simpleElem(myContent, eee, numbers, output, path, img);
         }
         html += '</div>';
       }
       html += '</div>';
     } else {
-      html += simpleElem(content, e, numbers, base64, path);
+      html += simpleElem(content, e, numbers, output, path, img);
     }
   }
 
