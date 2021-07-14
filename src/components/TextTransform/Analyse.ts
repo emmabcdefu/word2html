@@ -1,7 +1,11 @@
+// Functions
 import generateId from '../Other/id';
+// Types
+import ElementInfoBase from '../../Interface/ElementInfoBase';
+import ElementInfoTable from '../../Interface/ElementInfoTable';
 
 // function to analyse what class is a p html tag
-const detectClassP: (elem: string) => any = (elem: string) => {
+const detectClassP = (elem: string) => {
   if (elem.indexOf('class=') !== -1) {
     const cStart = elem.indexOf('class=') + 6;
     if (elem.indexOf(' ', cStart) === -1) {
@@ -24,7 +28,7 @@ const detectInsideP = (
   if (elem.substr(0, 4) === '<img') {
     // multiple image in the p tag
     let start = 0;
-    const content: Array<any> = [];
+    const content: ElementInfoBase[] = [];
     while (elem.indexOf('<img', start) !== -1) {
       const srcStart = elem.indexOf('src=', start) + 5;
       const srcEnd = elem.indexOf('"', srcStart);
@@ -46,32 +50,32 @@ const detectInsideP = (
       return { element: 'h1', content: elem };
     // title h2
     case 'E1Level':
-      return { element: 'h2', number: true, content: elem };
+      return { element: 'h2', content: elem, number: true };
     case 'EHead1':
-      return { element: 'h2', number: false, content: elem };
+      return { element: 'h2', content: elem, number: false };
     // title h3
     case 'E2Level':
-      return { element: 'h3', number: true, content: elem };
+      return { element: 'h3', content: elem, number: true };
     case 'EHead2':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'h3', number: true, content: elem };
+      return { element: 'h3', content: elem, number: true };
     // title h4
     case 'E3Level':
-      return { element: 'h4', number: true, content: elem };
+      return { element: 'h4', content: elem, number: true };
     case 'EHead3':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'h4', number: true, content: elem };
+      return { element: 'h4', content: elem, number: true };
     // p
     case 'E4Level':
-      return { element: 'p', small: false, content: elem };
+      return { element: 'p', content: elem };
     case 'E5Level':
-      return { element: 'p', small: false, content: elem };
+      return { element: 'p', content: elem };
     case 'EHead4':
       if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'p', small: false, content: elem };
+      return { element: 'p', content: elem };
     // p or img
     case 'MsoNormal':
-      return { element: 'p', small: false, content: elem };
+      return { element: 'p', content: elem };
     case 'MsoCaption':
       // figure caption
       return { element: 'fig-caption', content: elem };
@@ -80,7 +84,7 @@ const detectInsideP = (
       return { element: 'fig-caption', content: elem };
     case 'MsoListParagraph':
       // list
-      return { element: 'list', small: false, content: elem };
+      return { element: 'list', content: elem };
     case 'MsoFootnoteText':
       // footnote
       return { element: 'footnote', content: elem };
@@ -102,17 +106,14 @@ const detectInsideP = (
 };
 
 // function that understand p tag
-const detectP: (elem: string, titleLevel: boolean) => any = (
-  elem: string,
-  titleLevel: boolean
-) => {
+const detectP = (elem: string, titleLevel: boolean) => {
   const inside = elem.substr(elem.indexOf('>') + 1, elem.length).trim();
   if (inside !== '') {
     const className = detectClassP(elem);
     if (className != null) {
-      const result: any = detectInsideP(className, inside, titleLevel);
+      const result = detectInsideP(className, inside, titleLevel);
       if (result.element !== null && result.content !== '') {
-        result.id = generateId();
+        Object.defineProperty(result, 'id', generateId());
         return result;
       }
     }
@@ -179,9 +180,11 @@ export default function analyse(htm: string) {
       const result = detectP(elem, titleLevel);
       if (result != null) {
         if (result.element === 'img') {
-          Object.values(result.content).forEach((out) => content.push(out));
+          Object.values(result.content).forEach((out) =>
+            content.push(out as ElementInfoBase)
+          );
         } else {
-          content.push(result);
+          content.push(result as ElementInfoBase);
         }
       }
     } else if (body.substr(start + 1, 5) === 'table') {
@@ -211,15 +214,15 @@ export default function analyse(htm: string) {
             if (result != null) {
               if (result.element === 'img') {
                 Object.values(result.content).forEach((out) =>
-                  content.push(out)
+                  content.push(out as ElementInfoBase)
                 );
               } else {
-                content.push(result);
+                content.push(result as ElementInfoBase);
               }
             }
           }
         } else {
-          const mainResult: any = {
+          const mainResult: ElementInfoTable = {
             element: nbTd === 2 ? 'div' : 'row-images',
             content: [],
             id: generateId(),
@@ -245,10 +248,10 @@ export default function analyse(htm: string) {
               if (result != null) {
                 if (result.element === 'img') {
                   Object.values(result.content).forEach((out) =>
-                    jcontent.push(out)
+                    jcontent.push(out as ElementInfoBase)
                   );
                 } else {
-                  jcontent.push(result);
+                  jcontent.push(result as ElementInfoBase);
                 }
               }
             }

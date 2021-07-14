@@ -1,15 +1,19 @@
 import React from 'react';
+// Mui Components
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
-
+// Style and theme
 import './App.global.css';
 import Theme from '../theme/theme';
+// Components
 import CustomStepper from './Custom/stepper';
 import StepOne from './Steps/StepOne';
 import StepTwo from './Steps/StepTwo';
 import StepThree from './Steps/StepThree';
 import Footer from './Custom/footer';
+// Types
+import Info from '../Interface/Info';
 
-const useStyles: any = makeStyles(() => ({
+const useStyles = makeStyles(() => ({
   root: {
     height: '100vh',
   },
@@ -24,7 +28,7 @@ const steps = [
 const App: React.FC = () => {
   const classes = useStyles();
 
-  const defaultinfo: any = {
+  const defaultinfo: Info = {
     path: '',
     content: [],
     style: '',

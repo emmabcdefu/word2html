@@ -3,9 +3,7 @@ module.exports = {
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
-    'react/prop-types': 'off',
-    'react/no-array-index-key': 'off',
-    'no-case-declarations': 'off',
+    // Rules belows are in conflict with prettier/prettier
     'comma-dangle': 'off',
     '@typescript-eslint/comma-dangle': [
       'error',
@@ -17,7 +15,6 @@ module.exports = {
         functions: 'never',
       },
     ],
-    'react/jsx-curly-newline': 'off',
     'react/jsx-one-expression-per-line': 'off',
     'react/jsx-wrap-multilines': 'off',
   },

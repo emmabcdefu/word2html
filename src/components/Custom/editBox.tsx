@@ -1,13 +1,14 @@
 import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
+import clsx from 'clsx';
+import path from 'path';
+// Mui Components
 import {
   ThemeProvider,
   createStyles,
   makeStyles,
   withStyles,
 } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import path from 'path';
 import Select from '@material-ui/core/Select/Select';
 import InputBase from '@material-ui/core/InputBase/InputBase';
 import MenuItem from '@material-ui/core/MenuItem/MenuItem';
@@ -16,12 +17,18 @@ import IconButton from '@material-ui/core/IconButton/IconButton';
 import Button from '@material-ui/core/Button/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
 import Switch from '@material-ui/core/Switch/Switch';
-
+// Theme
 import Theme from '../../theme/theme';
+// Functions
 import generateId from '../Other/id';
+// Mui-Icons
 import Add from '../../mui-icons/Add';
 import Delete from '../../mui-icons/Delete';
 import AddCircle from '../../mui-icons/AddCircle';
+// Types
+import Info from '../../Interface/Info';
+import ElementInfoBase from '../../Interface/ElementInfoBase';
+import ElementInfo from '../../Interface/ElementInfo';
 
 const BootstrapInput = withStyles(() =>
   createStyles({
@@ -127,13 +134,13 @@ const boxborder = (value: string) => {
 
 interface ChildProps {
   info: any;
+  setInfo: (info: Info) => void;
   inDiv: boolean;
-  item: any;
-  setInfo: (info: any) => void;
+  item: ElementInfoBase;
   render: () => void;
 }
 
-const CustomEditBox: React.FC<ChildProps> = (props) => {
+const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
   const classes = useStyles();
 
   const { item, inDiv, setInfo, render } = props;
@@ -161,9 +168,10 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     elem.value = '';
   };
 
-  const i = (myid: number) => {
+  const i = (myid: string) => {
     let myIndex = -1;
-    Object.values(props.info.content).forEach((object: any, index: number) => {
+    Object.values(props.info.content).forEach((value, index) => {
+      const object = value as ElementInfoBase;
       if (object.id === myid) {
         myIndex = index;
       }
@@ -171,87 +179,31 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     return myIndex;
   };
 
-  const iDiv = (myid: number) => {
+  const iDiv = (myid: string) => {
     let myIndex = { indexDiv: -1, indexColumn: -1, index: -1 };
-    Object.values(props.info.content).forEach(
-      (objectDiv: any, indexDiv: number) => {
-        if (objectDiv.element === 'div' || objectDiv.element === 'row-images') {
-          Object.values(objectDiv.content).forEach(
-            (objectRow: any, indexColumn: number) => {
-              Object.values(objectRow).forEach((object: any, index: number) => {
-                if (object.id === myid) {
-                  myIndex = { indexDiv, indexColumn, index };
-                }
-              });
+    Object.values(props.info.content).forEach((valueDiv, indexDiv) => {
+      const objectDiv = valueDiv as ElementInfo;
+      if (objectDiv.element === 'div' || objectDiv.element === 'row-images') {
+        Object.values(objectDiv.content).forEach((valueRow, indexColumn) => {
+          const objectRow = valueRow as ElementInfoBase[];
+          Object.values(objectRow).forEach((object, index) => {
+            if (object.id === myid) {
+              myIndex = { indexDiv, indexColumn, index };
             }
-          );
-        }
+          });
+        });
       }
-    );
+    });
     return myIndex;
   };
 
-  const updateElement = (event: React.ChangeEvent<any>) => {
-    // update info
-    const newElem = event.target.value;
-    setelement(newElem);
-
-    if (inDiv) {
-      const { indexDiv, indexColumn, index } = iDiv(id);
-      props.info.content[indexDiv].content[indexColumn][index].element =
-        newElem;
-    } else {
-      props.info.content[i(id)].element = newElem;
-    }
-    setInfo(props.info);
-
-    // pre-render
-    render();
-  };
-
-  const updateContent = (event: React.ChangeEvent<any>) => {
-    // update info
-    const newContent = event.target.value;
-
-    if (inDiv) {
-      const { indexDiv, indexColumn, index } = iDiv(id);
-      props.info.content[indexDiv].content[indexColumn][index].content =
-        newContent;
-    } else {
-      props.info.content[i(id)].content = newContent;
-    }
-    setInfo(props.info);
-
-    // pre-render
-    render();
-  };
-
-  const updatecheck = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    name: string
-  ) => {
+  const update = (newValue: string | boolean | number, name: string) => {
     // update info
     if (inDiv) {
       const { indexDiv, indexColumn, index } = iDiv(id);
-      props.info.content[indexDiv].content[indexColumn][index][name] =
-        event.target.checked;
+      props.info.content[indexDiv].content[indexColumn][index][name] = newValue;
     } else {
-      props.info.content[i(id)][name] = event.target.checked;
-    }
-    setInfo(props.info);
-
-    // pre-render
-    render();
-  };
-
-  const update = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
-    // update info
-    if (inDiv) {
-      const { indexDiv, indexColumn, index } = iDiv(id);
-      props.info.content[indexDiv].content[indexColumn][index][name] =
-        event.target.value;
-    } else {
-      props.info.content[i(id)][name] = event.target.value;
+      props.info.content[i(id)][name] = newValue;
     }
     setInfo(props.info);
 
@@ -273,8 +225,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
     render();
 
     // remove the box
-    const child = document.getElementById(id)!.parentElement;
-    child!.parentElement!.removeChild(child!);
+    document.getElementById(id)!.parentElement!.remove();
   };
 
   const addBox = () => {
@@ -287,7 +238,7 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       ].content[indexColumn]
         .slice(0, index + 1)
         .concat(
-          [{ id: newId, element: 'p', small: false, content: '' }].concat(
+          [{ id: newId, element: 'p', content: '' }].concat(
             props.info.content[indexDiv].content[indexColumn].slice(
               index + 1,
               props.info.content[indexDiv].content[indexColumn].length
@@ -326,15 +277,13 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
 
     // add a new box
     const parent = document.getElementById(id)!.parentElement!.parentElement;
-    if (inDiv) {
-      const { index } = iDiv(id);
-      parent!.insertBefore(newElement, parent!.children[index + 1]);
-    } else {
-      parent!.insertBefore(newElement, parent!.children[i(id) + 1]);
-    }
+    const myindex = inDiv ? iDiv(id).index : i(id);
+    parent!.insertBefore(newElement, parent!.children[myindex + 1]);
   };
 
-  const readPath = (event: React.ChangeEvent<any>) => {
+  const readPath = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+
     // update info
     const newPath = path.relative(props.info.path, event.target.files[0].path);
 
@@ -359,7 +308,16 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
       <div className={classes.firstrow}>
         <Select
           defaultValue={element}
-          onChange={updateElement}
+          onChange={(
+            event: React.ChangeEvent<{
+              name?: string | undefined;
+              value: unknown;
+            }>
+          ) => {
+            const newValue = String(event.target.value);
+            setelement(newValue);
+            update(newValue, 'element');
+          }}
           input={<BootstrapInput />}
         >
           {items.map((elem: { [name: string]: string }) => (
@@ -375,8 +333,9 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
               <Switch
                 checked={number}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setnumber(event.target.checked);
-                  updatecheck(event, 'number');
+                  const newValue = Boolean(event.target.value);
+                  setnumber(newValue);
+                  update(newValue, 'number');
                 }}
                 color="primary"
               />
@@ -390,8 +349,9 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
               <Switch
                 checked={small}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setsmall(event.target.checked);
-                  updatecheck(event, 'small');
+                  const newValue = Boolean(event.target.value);
+                  setsmall(newValue);
+                  update(newValue, 'small');
                 }}
                 color="primary"
               />
@@ -425,8 +385,9 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
               <Switch
                 checked={click}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setclick(event.target.checked);
-                  updatecheck(event, 'click');
+                  const newValue = Boolean(event.target.value);
+                  setclick(newValue);
+                  update(newValue, 'click');
                 }}
                 color="primary"
               />
@@ -444,9 +405,15 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
                   : 800
               }
               className={clsx(classes.textarea, classes.textareasize)}
-              onChange={(event: React.ChangeEvent<any>) =>
-                update(event, 'width')
-              }
+              onChange={(
+                event: React.ChangeEvent<{
+                  name?: string | undefined;
+                  value: unknown;
+                }>
+              ) => {
+                const newValue = String(event.target.value);
+                update(newValue, 'width');
+              }}
             />
             <p className={classes.label}>Height : </p>
             <TextareaAutosize
@@ -456,9 +423,15 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
                   : 600
               }
               className={clsx(classes.textarea, classes.textareasize)}
-              onChange={(event: React.ChangeEvent<any>) =>
-                update(event, 'height')
-              }
+              onChange={(
+                event: React.ChangeEvent<{
+                  name?: string | undefined;
+                  value: unknown;
+                }>
+              ) => {
+                const newValue = String(event.target.value);
+                update(newValue, 'height');
+              }}
             />
           </div>
         ) : null}
@@ -482,7 +455,15 @@ const CustomEditBox: React.FC<ChildProps> = (props) => {
           defaultValue={content}
           className={classes.textarea}
           id={`text-pict-${id}`}
-          onChange={updateContent}
+          onChange={(
+            event: React.ChangeEvent<{
+              name?: string | undefined;
+              value: unknown;
+            }>
+          ) => {
+            const newValue = String(event.target.value);
+            update(newValue, 'content');
+          }}
         />
       )}
     </div>

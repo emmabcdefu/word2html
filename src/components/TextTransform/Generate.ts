@@ -1,3 +1,7 @@
+// Types
+import ElementInfo from '../../Interface/ElementInfo';
+import ElementInfoBase from '../../Interface/ElementInfoBase';
+
 const img2base64 = (src: string) => {
   // Get the image
   const img = new Image();
@@ -15,9 +19,9 @@ const img2base64 = (src: string) => {
 };
 
 const simpleElem = (
-  content: any,
+  content: ElementInfo[],
   e: number,
-  numbers: any,
+  numbers: Numbers,
   output: boolean,
   path: string,
   img: boolean
@@ -28,17 +32,15 @@ const simpleElem = (
         content[e].content
       }</p>`;
     case 'list':
-      let txt = '';
-      if (e === 0 || content[e - 1].element !== 'list') {
-        txt += '<ul>';
-      }
-      txt += `<li ${content[e].small ? 'class="small"' : ''}>${
+      return `${
+        e === 0 || content[e - 1].element !== 'list' ? '<ul>' : ''
+      } <li ${content[e].small ? 'class="small"' : ''}>${
         content[e].content
-      }</li>`;
-      if (e === content.length - 1 || content[e + 1].element !== 'list') {
-        txt += '</ul>';
-      }
-      return txt;
+      }</li> ${
+        e === content.length - 1 || content[e + 1].element !== 'list'
+          ? '</ul>'
+          : ''
+      }`;
     case 'img':
       if (output)
         return `<img class="center-image${
@@ -72,9 +74,15 @@ const simpleElem = (
       return '';
   }
 };
+interface Numbers {
+  h2: number;
+  h3: number;
+  h4: number;
+  footnote: number;
+}
 
 const generate = (
-  content: Array<any>,
+  content: ElementInfo[],
   path: string,
   output: boolean,
   img: boolean
@@ -122,14 +130,8 @@ const generate = (
       for (let ee = 0; ee < content[e].content.length; ee += 1) {
         html += '<div>';
         for (let eee = 0; eee < content[e].content[ee].length; eee += 1) {
-          html += simpleElem(
-            content[e].content[ee],
-            eee,
-            numbers,
-            output,
-            path,
-            img
-          );
+          const myContent = content[e].content[ee] as ElementInfoBase[];
+          html += simpleElem(myContent, eee, numbers, output, path, img);
         }
         html += '</div>';
       }

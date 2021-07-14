@@ -1,11 +1,18 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+// Mui Components
+import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton/IconButton';
-
+// Functions
 import render from '../TextTransform/Render';
+// Mui-Icons
 import CustomEditBox from '../Custom/editBox';
 import Delete from '../../mui-icons/Delete';
+// Types
+import Info from '../../Interface/Info';
+import ElementInfoBase from '../../Interface/ElementInfoBase';
+import ElementInfo from '../../Interface/ElementInfo';
+import ElementInfoTable from '../../Interface/ElementInfoTable';
 
 const useStyles = makeStyles(() => ({
   textarea: {
@@ -83,11 +90,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface ChildProps {
-  info: any;
-  setInfo: (info: string) => void;
+  info: Info;
+  setInfo: (info: Info) => void;
 }
 
-const StepThree: React.FC<ChildProps> = (props) => {
+const StepThree: React.FC<ChildProps> = (props: ChildProps) => {
   const classes = useStyles();
 
   const { info } = props;
@@ -98,9 +105,10 @@ const StepThree: React.FC<ChildProps> = (props) => {
     html.innerHTML = render(info.content, info.path);
   };
 
-  const i = (myid: number) => {
+  const i = (myid: string) => {
     let myIndex = -1;
-    Object.values(content).forEach((object: any, index: number) => {
+    Object.values(content).forEach((value, index) => {
+      const object = value as ElementInfoBase;
       if (object.id === myid) {
         myIndex = index;
       }
@@ -108,7 +116,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
     return myIndex;
   };
 
-  const editBoxes = (object: any, inDiv: boolean) => {
+  const editBoxes = (value: ElementInfo, inDiv: boolean) => {
     if (
       [
         'h1',
@@ -121,8 +129,9 @@ const StepThree: React.FC<ChildProps> = (props) => {
         'iframe',
         'fig-caption',
         'footnote',
-      ].includes(object.element)
+      ].includes(value.element)
     ) {
+      const object = value as ElementInfoBase;
       return (
         <CustomEditBox
           item={object}
@@ -133,7 +142,8 @@ const StepThree: React.FC<ChildProps> = (props) => {
         />
       );
     }
-    if (['div', 'row-images'].includes(object.element)) {
+    if (['div', 'row-images'].includes(value.element)) {
+      const object = value as ElementInfoTable;
       return (
         <div>
           <div className={classes.headtable}>
@@ -145,7 +155,9 @@ const StepThree: React.FC<ChildProps> = (props) => {
                 // pre-render
                 update();
                 // remove the box
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const child = document.getElementById(object.id)!.parentElement;
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 child!.parentElement!.removeChild(child!);
               }}
             >
@@ -153,12 +165,12 @@ const StepThree: React.FC<ChildProps> = (props) => {
             </IconButton>
           </div>
           <div className={classes.table} id={object.id}>
-            {object.content.map((listobject: any, row: number) => (
+            {object.content.map((listobject) => (
               <div
                 className={classes.tableElement}
-                key={`${object.id}-row${row}`}
+                key={`${object.id}-row${object.content.indexOf(listobject)}`}
               >
-                {listobject.map((subobject: any) => (
+                {listobject.map((subobject) => (
                   <div key={subobject.id}>{editBoxes(subobject, true)}</div>
                 ))}
               </div>
@@ -167,13 +179,13 @@ const StepThree: React.FC<ChildProps> = (props) => {
         </div>
       );
     }
-    return <div>Sorry,{object.element} is not yet handle.</div>;
+    return <div>Sorry, {value.element} is not yet handle.</div>;
   };
 
   return (
     <div className={classes.flex}>
       <div className={classes.flexitem} id="edit">
-        {content.map((object: any) => (
+        {content.map((object: ElementInfo) => (
           <div key={object.id}>{editBoxes(object, false)}</div>
         ))}
       </div>
