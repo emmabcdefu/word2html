@@ -149,7 +149,7 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
     Object.prototype.hasOwnProperty.call(item, 'number') ? item.number : true
   );
   const [small, setsmall] = React.useState(
-    Object.prototype.hasOwnProperty.call(item, 'small') ? item.small : true
+    Object.prototype.hasOwnProperty.call(item, 'small') ? item.small : false
   );
   const [click, setclick] = React.useState(
     Object.prototype.hasOwnProperty.call(item, 'click') ? item.click : true
@@ -332,10 +332,9 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
             control={
               <Switch
                 checked={number}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  const newValue = Boolean(event.target.value);
-                  setnumber(newValue);
-                  update(newValue, 'number');
+                onChange={() => {
+                  setnumber(!number);
+                  update(!number, 'number');
                 }}
                 color="primary"
               />
@@ -348,10 +347,9 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
             control={
               <Switch
                 checked={small}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  const newValue = Boolean(event.target.value);
-                  setsmall(newValue);
-                  update(newValue, 'small');
+                onChange={() => {
+                  setsmall(!small);
+                  update(!small, 'small');
                 }}
                 color="primary"
               />
@@ -384,10 +382,9 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
             control={
               <Switch
                 checked={click}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  const newValue = Boolean(event.target.value);
-                  setclick(newValue);
-                  update(newValue, 'click');
+                onChange={() => {
+                  setclick(!click);
+                  update(!click, 'click');
                 }}
                 color="primary"
               />

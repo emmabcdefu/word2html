@@ -113,7 +113,7 @@ const detectP = (elem: string, titleLevel: boolean) => {
     if (className != null) {
       const result = detectInsideP(className, inside, titleLevel);
       if (result.element !== null && result.content !== '') {
-        Object.defineProperty(result, 'id', generateId());
+        Object.defineProperty(result, 'id', { value: generateId() });
         return result;
       }
     }
