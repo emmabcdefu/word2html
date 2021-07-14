@@ -94,7 +94,7 @@ interface ChildProps {
   setInfo: (info: Info) => void;
 }
 
-const StepThree: React.FC<ChildProps> = (props) => {
+const StepThree: React.FC<ChildProps> = (props: ChildProps) => {
   const classes = useStyles();
 
   const { info } = props;
@@ -165,10 +165,10 @@ const StepThree: React.FC<ChildProps> = (props) => {
             </IconButton>
           </div>
           <div className={classes.table} id={object.id}>
-            {object.content.map((listobject, row) => (
+            {object.content.map((listobject) => (
               <div
                 className={classes.tableElement}
-                key={`${object.id}-row${row}`}
+                key={`${object.id}-row${object.content.indexOf(listobject)}`}
               >
                 {listobject.map((subobject) => (
                   <div key={subobject.id}>{editBoxes(subobject, true)}</div>
@@ -179,7 +179,7 @@ const StepThree: React.FC<ChildProps> = (props) => {
         </div>
       );
     }
-    return <div>Sorry,{value.element} is not yet handle.</div>;
+    return <div>Sorry, {value.element} is not yet handle.</div>;
   };
 
   return (

@@ -35,7 +35,7 @@ interface ChildProps {
   disable: boolean;
 }
 
-const Footer: React.FC<ChildProps> = (props) => {
+const Footer: React.FC<ChildProps> = (props: ChildProps) => {
   const classes = useStyles();
 
   const { activeStep, disable } = props;

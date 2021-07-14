@@ -32,17 +32,15 @@ const simpleElem = (
         content[e].content
       }</p>`;
     case 'list':
-      let txt = '';
-      if (e === 0 || content[e - 1].element !== 'list') {
-        txt += '<ul>';
-      }
-      txt += `<li ${content[e].small ? 'class="small"' : ''}>${
+      return `${
+        e === 0 || content[e - 1].element !== 'list' ? '<ul>' : ''
+      } <li ${content[e].small ? 'class="small"' : ''}>${
         content[e].content
-      }</li>`;
-      if (e === content.length - 1 || content[e + 1].element !== 'list') {
-        txt += '</ul>';
-      }
-      return txt;
+      }</li> ${
+        e === content.length - 1 || content[e + 1].element !== 'list'
+          ? '</ul>'
+          : ''
+      }`;
     case 'img':
       if (output)
         return `<img class="center-image${

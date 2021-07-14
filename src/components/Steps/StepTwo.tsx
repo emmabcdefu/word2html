@@ -50,7 +50,7 @@ interface ChildProps {
   enableNext: () => void;
 }
 
-const StepTwo: React.FC<ChildProps> = (props) => {
+const StepTwo: React.FC<ChildProps> = (props: ChildProps) => {
   const classes = useStyles();
 
   const [htmInput, sethtmInput] = React.useState('');

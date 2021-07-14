@@ -140,7 +140,7 @@ interface ChildProps {
   render: () => void;
 }
 
-const CustomEditBox: React.FC<ChildProps> = (props) => {
+const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
   const classes = useStyles();
 
   const { item, inDiv, setInfo, render } = props;
