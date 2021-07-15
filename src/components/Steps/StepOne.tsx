@@ -22,7 +22,8 @@ const StepOne: React.FC = () => {
         *html)&quot;
       </h3>
       <p>
-        Warning: Do not try to delete the folder of images that have been created.
+        Warning: Do not try to delete the folder of images that have been
+        created.
       </p>
     </div>
   );
