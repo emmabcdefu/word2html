@@ -45,49 +45,52 @@ const detectInsideP = (
   switch (className) {
     // title h1
     case 'EHead0':
-      return { element: 'h1', content: elem };
+      return { id: generateId(), element: 'h1', content: elem };
     case 'EHead0Sub':
-      return { element: 'h1', content: elem };
+      return { id: generateId(), element: 'h1', content: elem };
     // title h2
     case 'E1Level':
-      return { element: 'h2', content: elem, number: true };
+      return { id: generateId(), element: 'h2', content: elem, number: true };
     case 'EHead1':
-      return { element: 'h2', content: elem, number: false };
+      return { id: generateId(), element: 'h2', content: elem, number: false };
     // title h3
     case 'E2Level':
-      return { element: 'h3', content: elem, number: true };
+      return { id: generateId(), element: 'h3', content: elem, number: true };
     case 'EHead2':
-      if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'h3', content: elem, number: true };
+      if (titleLevel)
+        return { id: generateId(), element: 'list', content: elem };
+      return { id: generateId(), element: 'h3', content: elem, number: true };
     // title h4
     case 'E3Level':
-      return { element: 'h4', content: elem, number: true };
+      return { id: generateId(), element: 'h4', content: elem, number: true };
     case 'EHead3':
-      if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'h4', content: elem, number: true };
+      if (titleLevel)
+        return { id: generateId(), element: 'list', content: elem };
+      return { id: generateId(), element: 'h4', content: elem, number: true };
     // p
     case 'E4Level':
-      return { element: 'p', content: elem };
+      return { id: generateId(), element: 'p', content: elem };
     case 'E5Level':
-      return { element: 'p', content: elem };
+      return { id: generateId(), element: 'p', content: elem };
     case 'EHead4':
-      if (titleLevel) return { element: 'list', content: elem };
-      return { element: 'p', content: elem };
+      if (titleLevel)
+        return { id: generateId(), element: 'list', content: elem };
+      return { id: generateId(), element: 'p', content: elem };
     // p or img
     case 'MsoNormal':
-      return { element: 'p', content: elem };
+      return { id: generateId(), element: 'p', content: elem };
     case 'MsoCaption':
       // figure caption
-      return { element: 'fig-caption', content: elem };
+      return { id: generateId(), element: 'fig-caption', content: elem };
     case 'MsoCommentText':
       // figure caption
-      return { element: 'fig-caption', content: elem };
+      return { id: generateId(), element: 'fig-caption', content: elem };
     case 'MsoListParagraph':
       // list
-      return { element: 'list', content: elem };
+      return { id: generateId(), element: 'list', content: elem };
     case 'MsoFootnoteText':
       // footnote
-      return { element: 'footnote', content: elem };
+      return { id: generateId(), element: 'footnote', content: elem };
     case 'MsoTocHeading':
       // table of content
       return { element: null };
@@ -113,7 +116,6 @@ const detectP = (elem: string, titleLevel: boolean) => {
     if (className != null) {
       const result = detectInsideP(className, inside, titleLevel);
       if (result.element !== null && result.content !== '') {
-        Object.defineProperty(result, 'id', { value: generateId() });
         return result;
       }
     }
