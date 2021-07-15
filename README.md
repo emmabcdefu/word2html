@@ -56,4 +56,4 @@ All credit goes to [@tuddual](https://github.com/Tuddual).
 
 Tuddual/word2html is [MIT licensed](./LICENSE).
 
-The Tuddual/word2html documentation (in the [wiki](https://github.com/Tuddual/word2html/wiki)) is [Creative Commons licensed](./LICENSE-docs).
+The Tuddual/word2html documentation (in the [wiki](https://github.com/Tuddual/word2html/wiki)) is [Creative Commons licensed](./LICENSE-docs.md).
