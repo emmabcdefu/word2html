@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
 
 const steps = [
   'Save a copy of your word report',
-  'Output your report and style',
+  'Input your report and style',
   'Edit your report',
 ];
 
