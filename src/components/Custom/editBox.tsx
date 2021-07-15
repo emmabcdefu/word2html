@@ -159,7 +159,7 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
   const title = myelement === 'h2' || myelement === 'h3' || myelement === 'h4';
   const iframe = myelement === 'iframe';
   const txt = myelement === 'p' || myelement === 'list';
-  const img = element === 'img';
+  const img = myelement === 'img';
 
   const onInputClick = (
     event: React.MouseEvent<HTMLInputElement, MouseEvent>
@@ -230,7 +230,7 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
 
   const addBox = () => {
     // update info
-    const newId = generateId();
+    const newElem = { id: generateId(), element: 'p', content: '' };
     if (inDiv) {
       const { indexDiv, indexColumn, index } = iDiv(id);
       props.info.content[indexDiv].content[indexColumn] = props.info.content[
@@ -238,7 +238,7 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
       ].content[indexColumn]
         .slice(0, index + 1)
         .concat(
-          [{ id: newId, element: 'p', content: '' }].concat(
+          [newElem].concat(
             props.info.content[indexDiv].content[indexColumn].slice(
               index + 1,
               props.info.content[indexDiv].content[indexColumn].length
@@ -250,7 +250,7 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
       props.info.content = props.info.content
         .slice(0, index + 1)
         .concat(
-          [{ id: newId, element: 'p', small: false, content: '' }].concat(
+          [newElem].concat(
             props.info.content.slice(index + 1, props.info.content.length)
           )
         );
@@ -265,7 +265,7 @@ const CustomEditBox: React.FC<ChildProps> = (props: ChildProps) => {
     ReactDOM.render(
       <ThemeProvider theme={Theme}>
         <CustomEditBox
-          item={{ id: newId, element: 'p', small: false, content: '' }}
+          item={newElem}
           inDiv={inDiv}
           info={props.info}
           setInfo={setInfo}
