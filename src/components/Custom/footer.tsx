@@ -8,6 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabe
 import Switch from '@material-ui/core/Switch/Switch';
 // Mui-Icons
 import IconStatus from './IconStatus';
+// Functions
 import output from '../TextTransform/Output';
 // Types
 import Info from '../../types/Info';
