@@ -50,7 +50,17 @@ const simpleElem = (
         img && content[e].click ? ' image-clickable' : ''
       }" src="${path}/${content[e].content}">`;
     case 'iframe':
-      return `<iframe class="center-image" width="${content[e].width}" height="${content[e].height}" src="${content[e].content}" frameborder="0" allowfullscreen="true"></iframe>`;
+      return `<iframe class="center-image" width="${
+        Object.prototype.hasOwnProperty.call(content[e], 'width')
+          ? content[e].width
+          : '800'
+      }" height="${
+        Object.prototype.hasOwnProperty.call(content[e], 'height')
+          ? content[e].height
+          : '600'
+      }" src="${
+        content[e].content
+      }" frameborder="0" allowfullscreen="true"></iframe>`;
     case 'fig-caption':
       return `<p class="fig-caption">${content[e].content}</p>`;
     case 'footnote':
