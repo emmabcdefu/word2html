@@ -205,7 +205,7 @@ const StepThree: React.FC<ChildProps> = (props: ChildProps) => {
 
   const update = () => {
     const html = document.getElementById('html')!;
-    html.innerHTML = generate(content, path, false, false);
+    html.innerHTML = generate(props.info.content, path, false, false);
   };
 
   const i = (myid: string) => {
